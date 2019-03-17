@@ -1,0 +1,13 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /clients/{clientId} {
+      allow read, create, update: if request.auth != null
+      														&& request.auth.token.email.matches('.*@mozilla[.]com');
+    }
+
+    match /pings/{pingId} {
+      allow read, create: if request.auth != null
+      										&& request.auth.token.email.matches('.*@mozilla[.]com');
+    }
+  }
+}

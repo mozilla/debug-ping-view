@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 import firebase from './Firebase';
+import NavBar from './components/NavBar';
 
 class App extends Component {
   constructor(props) {
@@ -36,6 +37,8 @@ class App extends Component {
 
   render() {
     return (
+      <div>
+        <NavBar/>
         <div className="container">
           <div className="panel panel-default">
               <h4><Link to="/create">Add ping</Link></h4>
@@ -65,6 +68,7 @@ class App extends Component {
             </div>
           </div>
         </div>
+      </div>
     );
   }
 }
