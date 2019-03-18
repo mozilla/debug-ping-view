@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 class Show extends Component {
 
     constructor(props) {
-        console.log(props);
-
         super(props);
         this.pings = firebase.firestore().collection('pings')
             .where('clientId', '==', props.match.params.id)
@@ -18,10 +16,8 @@ class Show extends Component {
     }
 
     onCollectionUpdate = (querySnapshot) => {
-        console.log("QUERY UPDATE")
         const pings = [];
         querySnapshot.forEach((doc) => {
-            console.log("DOC: "+doc.id)
             const { addedAt, payload } = doc.data();
             pings.push({
                 key: doc.id,

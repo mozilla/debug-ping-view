@@ -8,15 +8,43 @@ import ActiveClients from './components/ActiveClients';
 import Create from './components/Create';
 import Show from './components/Show';
 import SignInScreen from './components/SignInScreen';
+import SecuredRoute from './components/SecuredRoute';
+
 
 class App extends Component {
+  state = { loading: true, authenticated: false, user: null };
+
+  componentWillMount() {
+    this.listener = firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          authenticated: true,
+          currentUser: user,
+          loading: false
+        });
+      } else {
+        this.setState({
+          authenticated: false,
+          currentUser: null,
+          loading: false
+        });
+      }
+    });
+  }
+  componentWillUnmount() {
+    this.listener();
+  }
   render() {
+    if (this.state.loading) {
+      return <p>Loading...</p>;
+    }
+
     return (
       <div>
         <NavBar/>
-        <Route exact path='/' component={ActiveClients} />
-        <Route path='/create' component={Create} />
-        <Route path='/pings/:id' component={Show} />
+        <SecuredRoute exact path='/' component={ActiveClients} authenticated={this.state.authenticated} />
+        <SecuredRoute path='/create' component={Create} authenticated={this.state.authenticated} />
+        <SecuredRoute path='/pings/:id' component={Show} authenticated={this.state.authenticated} />
         <Route path='/login' component={SignInScreen} />
       </div>
     );

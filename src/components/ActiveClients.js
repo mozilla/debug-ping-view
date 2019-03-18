@@ -13,12 +13,9 @@ class ActiveClients extends Component {
   }
 
   onCollectionUpdate = (querySnapshot) => {
-    console.log("QUERY UPDATE")
     const clients = [];
     querySnapshot.forEach((doc) => {
-      console.log("DOC: "+doc.id)
       const { lastActive} = doc.data();
-      console.log(lastActive.toDate().toString());
       clients.push({
         key: doc.id,
         lastActive: lastActive.toDate().toString(),
