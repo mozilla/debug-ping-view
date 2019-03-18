@@ -14,3 +14,5 @@ Technology stack:
 npm run build
 firebase deploy
 ```
+Go to https://debug-ping-preview.firebaseapp.com/
+
