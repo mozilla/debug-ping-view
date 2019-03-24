@@ -13,10 +13,14 @@ const moment = require('moment');
 
 const {gzip, ungzip} = require('node-gzip');
 
-async function storePing(ping) {
+async function storePing(pubSubMessage, rawPing) {
   // Push the new message into Firestore
   console.log("storePing");
-  return admin.firestore().collection('messages').add({p: ping}).then((writeResult)=>{
+
+
+
+  
+  return admin.firestore().collection('messages').add({p: rawPing}).then((writeResult)=>{
     console.log("WRITE RESULT: ", writeResult);
     return writeResult;
   });
@@ -24,15 +28,16 @@ async function storePing(ping) {
 
 async function handlePost(req, res) {
   // console.log("POST");
-  const namespace = req.body.message.attributes.document_namespace;
-  const debugId = req.body.message.attributes.x_debug_id;
+  const pubSubMessage = req.body.message;
+  const namespace = pubSubMessage.attributes.document_namespace;
+  const debugId = pubSubMessage.attributes.x_debug_id;
   const gleanDebugPing = namespace === "glean" && debugId;
 
   if (gleanDebugPing) {
     console.log("got glean debug ping");
     console.log(debugId);
   
-    const pingPayload = Buffer.from(req.body.message.data, 'base64');
+    const pingPayload = Buffer.from(pubSubMessage.data, 'base64');
     console.log(req.body);
     console.log(namespace);
     console.log(pingPayload.toString());
@@ -40,7 +45,7 @@ async function handlePost(req, res) {
     return ungzip(pingPayload).then((decompressed)=>{
       console.log(decompressed.toString());
       console.log("before storePing");
-      return storePing(decompressed.toString());
+      return storePing(pubSubMessage, decompressed.toString());
     });
   } else {
     // console.log("got other ping");
