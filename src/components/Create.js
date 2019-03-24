@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import firebase from '../Firebase';
-import { Link } from 'react-router-dom';
 
 class Create extends Component {
 
@@ -9,7 +7,7 @@ class Create extends Component {
 
     constructor() {
         super();
-        this.ref = firebase.firestore().collection('pings');
+        this.pingsCollection = firebase.firestore().collection('pings');
         this.clientsCollection = firebase.firestore().collection('clients');
         this.state = {
             clientId: '6ff20eb7-e80d-4452-b45f-2ea7e63547aa',
@@ -33,7 +31,7 @@ class Create extends Component {
             lastActive: now
         });
 
-        this.ref.add({
+        this.pingsCollection.add({
             clientId: clientId,
             payload: payload.replace('{{CLIENT_ID}}', clientId),
             addedAt: now
