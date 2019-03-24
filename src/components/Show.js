@@ -16,15 +16,32 @@ class Show extends Component {
     }
 
     onCollectionUpdate = (querySnapshot) => {
-        const pings = [];
-        querySnapshot.forEach((change) => {
-            const { addedAt, payload } = change.data();
-            pings.push({
-                key: change.id,
-                addedAt: addedAt.toString(),
-                payload: payload,
-            });
+        // Clear previously highlighted entries on query update
+        const pings = this.state.pings.map(p => {
+            p.changed = false;
+            return p;
         });
+        
+        querySnapshot.docChanges().forEach((change)=>{
+            if (change.type === "added") {
+                const { addedAt, payload } = change.doc.data();
+                pings.unshift({
+                    key: change.doc.id,
+                    addedAt: addedAt.toString(),
+                    payload: payload,
+                    changed: true,
+                });
+            }
+            if (change.type === "removed") {
+                // TODO: remove element by id
+                pings.pop();
+            }
+        });
+
+        pings.sort((a,b)=>{
+            return (a.addedAt > b.addedAt) ? -1 : 1;
+        });
+
         this.setState({
             pings
         });
@@ -54,7 +71,7 @@ class Show extends Component {
                             </thead>
                             <tbody>
                             {this.state.pings.map(ping =>
-                                <tr key={ping.key}>
+                                <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                     <td>{ping.addedAt}</td>
                                     <td>{ping.payload}</td>
                                 </tr>
