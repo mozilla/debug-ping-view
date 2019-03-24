@@ -17,13 +17,30 @@ async function storePing(pubSubMessage, rawPing) {
   // Push the new message into Firestore
   console.log("storePing");
 
+  const db = admin.firestore();
+  // Get a new write batch
+  var batch = db.batch();
 
+  const clientId = JSON.parse(rawPing).ping_info.client_id;
 
-  
-  return admin.firestore().collection('messages').add({p: rawPing}).then((writeResult)=>{
-    console.log("WRITE RESULT: ", writeResult);
-    return writeResult;
+  var clientRef = db.collection("clients").doc(clientId);
+  batch.set(clientRef, {lastActive: pubSubMessage.publishTime});
+
+  // Update the population of 'SF'
+  var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
+  batch.set(pingRef, {
+    clientId: clientId,
+    payload: rawPing,
+    addedAt: pubSubMessage.publishTime
   });
+
+  // Commit the batch
+  return batch.commit();
+
+  // return admin.firestore().collection('messages').add({p: rawPing}).then((writeResult)=>{
+  //   console.log("WRITE RESULT: ", writeResult);
+  //   return writeResult;
+  // });
 }
 
 async function handlePost(req, res) {
@@ -43,6 +60,10 @@ async function handlePost(req, res) {
     console.log(pingPayload.toString());
 
     return ungzip(pingPayload).then((decompressed)=>{
+      console.log("CLIENTID");
+      console.log(typeof decompressed);
+      console.log(JSON.parse(decompressed).ping_info.client_id);
+      console.log("CLIENTID");
       console.log(decompressed.toString());
       console.log("before storePing");
       return storePing(pubSubMessage, decompressed.toString());

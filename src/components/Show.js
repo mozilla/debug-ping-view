@@ -17,11 +17,11 @@ class Show extends Component {
 
     onCollectionUpdate = (querySnapshot) => {
         const pings = [];
-        querySnapshot.forEach((doc) => {
-            const { addedAt, payload } = doc.data();
+        querySnapshot.forEach((change) => {
+            const { addedAt, payload } = change.data();
             pings.push({
-                key: doc.id,
-                addedAt: addedAt.toDate().toString(),
+                key: change.id,
+                addedAt: addedAt.toString(),
                 payload: payload,
             });
         });
