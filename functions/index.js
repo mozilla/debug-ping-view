@@ -12,15 +12,26 @@ async function storePing(pubSubMessage, rawPing) {
 
   var batch = db.batch();
 
+  // TODO: make sure this is safe if some fields are missing
   const clientId = JSON.parse(rawPing).ping_info.client_id;
+  const debugId = pubSubMessage.attributes.x_debug_id;
+  const geo = pubSubMessage.attributes.geo_city + ", " + 
+              pubSubMessage.attributes.geo_country;
 
   var clientRef = db.collection("clients").doc(clientId);
-  batch.set(clientRef, { lastActive: pubSubMessage.publishTime });
+  batch.set(clientRef, { 
+    lastActive: pubSubMessage.publishTime,
+    debugId: debugId,
+    geo: geo,
+  });
+
+  const pingType = pubSubMessage.attributes.document_type;
 
   var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
   batch.set(pingRef, {
     clientId: clientId,
     payload: rawPing,
+    pingType: pingType,
     addedAt: pubSubMessage.publishTime
   });
 

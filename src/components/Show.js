@@ -28,11 +28,12 @@ class Show extends Component {
         
         querySnapshot.docChanges().forEach((change)=>{
             if (change.type === "added") {
-                const { addedAt, payload } = change.doc.data();
+                const { addedAt, payload, pingType } = change.doc.data();
                 pings.unshift({
                     key: change.doc.id,
                     addedAt: addedAt.toString(),
                     payload: payload,
+                    pingType: pingType,
                     changed: true,
                 });
             }
@@ -77,7 +78,8 @@ class Show extends Component {
                         <table className="table table-stripe">
                             <thead>
                             <tr>
-                                <th>Added at</th>
+                                <th>Received</th>
+                                <th>Ping type</th>
                                 <th>Payload</th>
                             </tr>
                             </thead>
@@ -85,6 +87,7 @@ class Show extends Component {
                             {this.state.pings.map(ping =>
                                 <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                     <td>{ping.addedAt}</td>
+                                    <td>{ping.pingType}</td>
                                     <td>{ping.payload}</td>
                                 </tr>
                             )}
