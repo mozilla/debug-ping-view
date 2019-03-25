@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore'
+
 
 const settings = {};
 
@@ -12,7 +12,6 @@ const config = {
     messagingSenderId: "83999817115"
 };
 firebase.initializeApp(config);
-
 
 firebase.firestore().settings(settings);
 
