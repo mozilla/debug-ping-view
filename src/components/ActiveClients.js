@@ -37,8 +37,6 @@ class ActiveClients extends Component {
       <div>
         <div className="container">
           <div className="panel panel-default">
-              <h4><Link to="/create">Add ping</Link></h4>
-            <hr/>
             <div className="panel-heading">
               <h3 className="panel-title">
                 Active clients

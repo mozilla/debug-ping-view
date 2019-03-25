@@ -67,7 +67,6 @@ class Show extends Component {
     render() {
         return (
             <div className="container">
-                <h4><Link to="/">Client list</Link></h4>
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h3 className="panel-title">
