@@ -12,6 +12,7 @@ class Show extends Component {
         this.clientId = props.match.params.id;
         this.state = {
             pings: [],
+            firstSnapshot: true,
         };
     }
 
@@ -42,8 +43,16 @@ class Show extends Component {
             return (a.addedAt > b.addedAt) ? -1 : 1;
         });
 
+        // Clear changed flag on page load to avoid whole table blinking
+        if (this.state.firstSnapshot) {
+            pings.forEach(p => {
+                p.changed = false;
+            });
+        }
+        
         this.setState({
-            pings
+            pings: pings,
+            firstSnapshot: false,
         });
     };
 
