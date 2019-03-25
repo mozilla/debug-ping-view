@@ -13,3 +13,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@keyframes highlight-fade {
+  from {
+    background: orange;
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.item-highlight {
+  animation: highlight-fade 2s;
+}

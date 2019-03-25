@@ -18,7 +18,7 @@ class ActiveClients extends Component {
       const { lastActive} = doc.data();
       clients.push({
         key: doc.id,
-        lastActive: lastActive.toDate().toString(),
+        lastActive: lastActive.toString(),
       });
     });
     this.setState({

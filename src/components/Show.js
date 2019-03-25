@@ -6,27 +6,56 @@ class Show extends Component {
 
     constructor(props) {
         super(props);
+        
+        // TODO: limit size of the resultset
         this.pings = firebase.firestore().collection('pings')
             .where('clientId', '==', props.match.params.id)
             .orderBy('addedAt', 'desc');
+
         this.clientId = props.match.params.id;
         this.state = {
             pings: [],
+            firstSnapshot: true,
         };
     }
 
     onCollectionUpdate = (querySnapshot) => {
-        const pings = [];
-        querySnapshot.forEach((doc) => {
-            const { addedAt, payload } = doc.data();
-            pings.push({
-                key: doc.id,
-                addedAt: addedAt.toDate().toString(),
-                payload: payload,
-            });
+        // Clear previously highlighted entries on query update
+        const pings = this.state.pings.map(p => {
+            p.changed = false;
+            return p;
         });
+        
+        querySnapshot.docChanges().forEach((change)=>{
+            if (change.type === "added") {
+                const { addedAt, payload } = change.doc.data();
+                pings.unshift({
+                    key: change.doc.id,
+                    addedAt: addedAt.toString(),
+                    payload: payload,
+                    changed: true,
+                });
+            }
+            if (change.type === "removed") {
+                // TODO: remove element by id
+                pings.pop();
+            }
+        });
+
+        pings.sort((a,b)=>{
+            return (a.addedAt > b.addedAt) ? -1 : 1;
+        });
+
+        // Clear changed flag on page load to avoid whole table blinking
+        if (this.state.firstSnapshot) {
+            pings.forEach(p => {
+                p.changed = false;
+            });
+        }
+        
         this.setState({
-            pings
+            pings: pings,
+            firstSnapshot: false,
         });
     };
 
@@ -54,7 +83,7 @@ class Show extends Component {
                             </thead>
                             <tbody>
                             {this.state.pings.map(ping =>
-                                <tr key={ping.key}>
+                                <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                     <td>{ping.addedAt}</td>
                                     <td>{ping.payload}</td>
                                 </tr>
