@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/mozilla/debug-ping-view.svg?style=svg&circle-token=75228c334c4cb4d6f7bd33e739c44267491675d7)](https://circleci.com/gh/mozilla/debug-ping-view)
 # Glean Debug View
 This is a proof of concept web application for viewing Glean debug pings in real-time.
 
@@ -14,7 +15,7 @@ npm start
 
 Send debug ping to GCP ingestion:
 ```
-curl --header 'X-Debug-ID: test-debug-id' -XPOST https://stage.ingestion.nonprod.dataops.mozgcp.net/submit/glean/events/1/$(uuidgen) -d '{"ping_info":{"ping_type":"full","app_build":"59f330e5","app_display_version":"1.0.0","telemetry_sdk_build":"abcdabcd","client_id":"9ff20eb7-e80d-4452-b45f-2ea7e63547aa","seq":1,"start_time":"2018-10-23 11:23:15-04:00","end_time":"2018-10-23 11:23:15-04:25","first_run_date":"2018-10-23-04:25","experiments":{"experiment1":{"branch":"branch_a"},"experiment2":{"branch":"branch_b","extra":{"type":"experiment_type"}}}},"events":[[123456789,"examples","event_example",{"metadata1":"extra","metadata2":"more_extra"}],[123456791,"examples","event_example"]]}'
+curl --header 'X-Debug-ID: test-debug-id' -XPOST https://stage.ingestion.nonprod.dataops.mozgcp.net/submit/glean/events/1/$(uuidgen) -d '{"$schema":"moz://mozilla.org/schemas/glean/ping/1","client_info":{"app_build":"59f330e5","app_display_version":"1.0.0","architecture":"arm","client_id":"6ff20eb7-e80d-4452-b45f-2ea7e63547aa","device_manufacturer":"Mozilla","device_model":"phone123","first_run_date":"2018-10-23-04:25","os":"Android","os_version":"3.2.1","telemetry_sdk_build":"abcdabcd"},"ping_info":{"ping_type":"full","seq":1,"start_time":"2018-10-23 11:23:15-04:00","end_time":"2018-10-23 11:23:15-04:25","experiments":{"experiment1":{"branch":"branch_a"},"experiment2":{"branch":"branch_b","extra":{"type":"experiment_type"}}}},"events":[[123456789,"examples","event_example",{"metadata1":"extra","metadata2":"more_extra"}],[123456791,"examples","event_example"]]}'
 ```
 
 ## Deployment
