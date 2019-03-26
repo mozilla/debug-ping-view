@@ -15,12 +15,14 @@ class ActiveClients extends Component {
   onCollectionUpdate = (querySnapshot) => {
     const clients = [];
     querySnapshot.forEach((doc) => {
-      const { lastActive, debugId, geo } = doc.data();
+      const { lastActive, debugId, geo, os, app_name } = doc.data();
       clients.push({
         key: doc.id,
         lastActive: lastActive.toString(),
         debugId: debugId,
         geo: geo,
+        os: os,
+        appName: app_name,
       });
     });
     this.setState({
@@ -60,8 +62,8 @@ class ActiveClients extends Component {
                       <td><Link to={`/pings/${client.key}`}>{client.key}</Link></td>
                       <td>{client.lastActive}</td>
                       <td>{client.debugId}</td>
-                      <td></td>
-                      <td></td>
+                      <td>{client.os}</td>
+                      <td>{client.appName}</td>
                       <td>{client.geo}</td>
                     </tr>
                 )}

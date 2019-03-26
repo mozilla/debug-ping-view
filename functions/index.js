@@ -13,16 +13,21 @@ async function storePing(pubSubMessage, rawPing) {
   var batch = db.batch();
 
   // TODO: make sure this is safe if some fields are missing
-  const clientId = JSON.parse(rawPing).ping_info.client_id;
+  const pingJson = JSON.parse(rawPing);
+  const clientId = pingJson.client_info.client_id;
+  const os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
+  const appName = pubSubMessage.attributes.document_namespace;
   const debugId = pubSubMessage.attributes.x_debug_id;
-  const geo = pubSubMessage.attributes.geo_city + ", " + 
-              pubSubMessage.attributes.geo_country;
+  const geo = pubSubMessage.attributes.geo_city + ", " +
+    pubSubMessage.attributes.geo_country;
 
   var clientRef = db.collection("clients").doc(clientId);
-  batch.set(clientRef, { 
+  batch.set(clientRef, {
     lastActive: pubSubMessage.publishTime,
     debugId: debugId,
     geo: geo,
+    os: os,
+    app_name: appName,
   });
 
   const pingType = pubSubMessage.attributes.document_type;
@@ -40,9 +45,12 @@ async function storePing(pubSubMessage, rawPing) {
 
 async function handlePost(req, res) {
   const pubSubMessage = req.body.message;
-  const namespace = pubSubMessage.attributes.document_namespace;
   const debugId = pubSubMessage.attributes.x_debug_id;
-  const gleanDebugPing = namespace === "glean" && debugId;
+  
+  // TODO: we should create a list of Glean applications and check the namespace below against it
+  // const namespace = pubSubMessage.attributes.document_namespace;
+  // const gleanDebugPing = namespace === "glean" && debugId;
+  const gleanDebugPing = debugId;
 
   if (gleanDebugPing) {
     console.log("got glean debug ping");
