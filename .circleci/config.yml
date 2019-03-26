@@ -1,0 +1,41 @@
+version: 2.1
+
+executors:
+  node_executor:
+    docker:
+      - image: circleci/node:8.10.0
+    # working_directory: /app
+
+jobs:
+  build:
+    executor: node_executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build webapp
+          command: npm run build
+
+  deploy:
+    executor: node_executor
+    steps:
+      - attach_workspace:
+          # at: /app
+      - run:
+          name: Deploy to Firebase
+          command: ls -la
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - hold:
+          type: approval
+          requires:
+            - build
+      - deploy:
+          requires:
+            - hold
