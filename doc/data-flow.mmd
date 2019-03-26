@@ -1,0 +1,4 @@
+graph LR
+A[PubSub] -->|Push subscription| B[Cloud Function]
+B --> C[Firestore]
+C --> D[Web application]
