@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from '../Firebase';
+import { FormatDate } from './helpers';
 
 class ActiveClients extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class ActiveClients extends Component {
       const { lastActive, debugId, geo, os, app_name } = doc.data();
       clients.push({
         key: doc.id,
-        lastActive: lastActive.toString(),
+        lastActive: lastActive,
+        displayDate: FormatDate(lastActive),
         debugId: debugId,
         geo: geo,
         os: os,
@@ -60,7 +62,7 @@ class ActiveClients extends Component {
                 {this.state.clients.map(client =>
                     <tr key={client.key}>
                       <td><Link to={`/pings/${client.key}`}>{client.key}</Link></td>
-                      <td>{client.lastActive}</td>
+                      <td>{client.displayDate}</td>
                       <td>{client.debugId}</td>
                       <td>{client.os}</td>
                       <td>{client.appName}</td>

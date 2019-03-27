@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../Firebase';
+import { FormatDate } from './helpers';
 
 class Show extends Component {
 
@@ -30,7 +31,8 @@ class Show extends Component {
                 const { addedAt, payload, pingType } = change.doc.data();
                 pings.unshift({
                     key: change.doc.id,
-                    addedAt: addedAt.toString(),
+                    addedAt: addedAt,
+                    displayDate: FormatDate(addedAt),
                     payload: payload,
                     pingType: pingType,
                     changed: true,
@@ -84,7 +86,7 @@ class Show extends Component {
                             <tbody>
                             {this.state.pings.map(ping =>
                                 <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
-                                    <td>{ping.addedAt}</td>
+                                    <td>{ping.displayDate}</td>
                                     <td>{ping.pingType}</td>
                                     <td>{ping.payload}</td>
                                 </tr>
