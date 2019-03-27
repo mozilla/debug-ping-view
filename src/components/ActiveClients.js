@@ -36,6 +36,10 @@ class ActiveClients extends Component {
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   render() {
     return (
       <div>

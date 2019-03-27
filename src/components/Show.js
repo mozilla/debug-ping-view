@@ -65,6 +65,10 @@ class Show extends Component {
         this.unsubscribe = this.pings.onSnapshot(this.onCollectionUpdate);
     }
 
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
     render() {
         return (
             <div className="container">
