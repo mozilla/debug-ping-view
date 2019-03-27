@@ -35,12 +35,12 @@ class App extends Component {
   }
   render() {
     if (this.state.loading) {
-      return <p>Loading...</p>;
+      return <p className="text-center">Loading...</p>;
     }
 
     return (
       <div>
-        <NavBar/>
+        <NavBar authenticated={this.state.authenticated} />
         <SecuredRoute exact path='/' component={ActiveClients} authenticated={this.state.authenticated} />
         <SecuredRoute path='/create' component={Create} authenticated={this.state.authenticated} />
         <SecuredRoute path='/pings/:id' component={Show} authenticated={this.state.authenticated} />
