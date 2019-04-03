@@ -53,9 +53,7 @@ async function handlePost(req, res) {
   const gleanDebugPing = debugId;
 
   if (gleanDebugPing) {
-    console.log("got glean debug ping");
     const pingPayload = Buffer.from(pubSubMessage.data, 'base64');
-    console.log(pubSubMessage);
 
     return ungzip(pingPayload).then((decompressed) => {
       return storePing(pubSubMessage, decompressed.toString());
