@@ -16,15 +16,16 @@ class ActiveClients extends Component {
   onCollectionUpdate = (querySnapshot) => {
     const clients = [];
     querySnapshot.forEach((doc) => {
-      const { lastActive, debugId, geo, os, app_name } = doc.data();
+      const { lastActive, clientId, debugId, geo, os, appName } = doc.data();
       clients.push({
         key: doc.id,
-        lastActive: lastActive,
-        displayDate: FormatDate(lastActive),
+        appName: appName,
+        clientId: clientId,
         debugId: debugId,
+        displayDate: FormatDate(lastActive),
         geo: geo,
+        lastActive: lastActive,
         os: os,
-        appName: app_name,
       });
     });
     this.setState({
@@ -54,23 +55,23 @@ class ActiveClients extends Component {
               <table className="table table-stripe">
                 <thead>
                 <tr>
-                  <th>Client ID</th>
-                  <th>Last active</th>
                   <th>Debug id</th>
+                  <th>Last active</th>
                   <th>OS</th>
                   <th>Application</th>
                   <th>Geo</th>
+                  <th>Client ID</th>
                 </tr>
                 </thead>
                 <tbody>
                 {this.state.clients.map(client =>
                     <tr key={client.key}>
-                      <td><Link to={`/pings/${client.key}`}>{client.key}</Link></td>
+                      <td><Link to={`/pings/${client.clientId}/${client.debugId}`}>{client.debugId}</Link></td>
                       <td>{client.displayDate}</td>
-                      <td>{client.debugId}</td>
                       <td>{client.os}</td>
                       <td>{client.appName}</td>
                       <td>{client.geo}</td>
+                      <td>{client.clientId}</td>
                     </tr>
                 )}
                 </tbody>

@@ -9,7 +9,8 @@ class Show extends Component {
         
         // TODO: limit size of the resultset
         this.pings = firebase.firestore().collection('pings')
-            .where('clientId', '==', props.match.params.id)
+            .where('clientId', '==', props.match.params.clientId)
+            .where('debugId', '==', props.match.params.debugId)
             .orderBy('addedAt', 'desc');
 
         this.clientId = props.match.params.id;

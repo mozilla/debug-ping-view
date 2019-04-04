@@ -9,6 +9,10 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "debugId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "addedAt",
           "order": "DESCENDING"
         }

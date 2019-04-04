@@ -21,23 +21,27 @@ async function storePing(pubSubMessage, rawPing) {
   const geo = pubSubMessage.attributes.geo_city + ", " +
     pubSubMessage.attributes.geo_country;
 
-  var clientRef = db.collection("clients").doc(clientId);
+  const clientDebugId = clientId + "_" + debugId;
+
+  var clientRef = db.collection("clients").doc(clientDebugId);
   batch.set(clientRef, {
-    lastActive: pubSubMessage.publishTime,
+    appName: appName,
+    clientId: clientId,
     debugId: debugId,
     geo: geo,
+    lastActive: pubSubMessage.publishTime,
     os: os,
-    app_name: appName,
   });
 
   const pingType = pubSubMessage.attributes.document_type;
 
   var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
   batch.set(pingRef, {
+    addedAt: pubSubMessage.publishTime,
     clientId: clientId,
+    debugId: debugId,
     payload: rawPing,
     pingType: pingType,
-    addedAt: pubSubMessage.publishTime
   });
 
   return batch.commit();
@@ -46,7 +50,7 @@ async function storePing(pubSubMessage, rawPing) {
 async function handlePost(req, res) {
   const pubSubMessage = req.body.message;
   const debugId = pubSubMessage.attributes.x_debug_id;
-  
+
   // TODO: we should create a list of Glean applications and check the namespace below against it
   // const namespace = pubSubMessage.attributes.document_namespace;
   // const gleanDebugPing = namespace === "glean" && debugId;
