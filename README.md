@@ -57,6 +57,9 @@ pings
 ```
 Ping collection is [indexed](firestore.indexes.json).
 
+### Data expiration
+Pings are retained for a limited time. Every day, a [function](functions/garbageCollector.js) that deletes pings and client entries modified earlier than 21 days ago is triggered via Cloud Scheduler.
+
 ### Web application
 Views are leveraging Firestore's realtime query updates.
 
