@@ -180,3 +180,6 @@ exports.decoderError = functions.https.onRequest((req, res) => {
 
 const schemaLoader = require('./schemaLoader');
 exports.gleanSchemaLoader = schemaLoader.gleanSchemaLoader;
+
+const garbageCollector = require('./garbageCollector');
+exports.removeOutdatedPings = garbageCollector.removeOutdatedPings;
