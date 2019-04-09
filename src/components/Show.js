@@ -6,14 +6,15 @@ class Show extends Component {
 
     constructor(props) {
         super(props);
-        
+
         // TODO: limit size of the resultset
         this.pings = firebase.firestore().collection('pings')
             .where('clientId', '==', props.match.params.clientId)
             .where('debugId', '==', props.match.params.debugId)
             .orderBy('addedAt', 'desc');
 
-        this.clientId = props.match.params.id;
+        this.clientId = props.match.params.clientId;
+        this.debugId = props.match.params.debugId;
         this.state = {
             pings: [],
             firstSnapshot: true,
@@ -26,8 +27,8 @@ class Show extends Component {
             p.changed = false;
             return p;
         });
-        
-        querySnapshot.docChanges().forEach((change)=>{
+
+        querySnapshot.docChanges().forEach((change) => {
             if (change.type === "added") {
                 const { addedAt, payload, pingType } = change.doc.data();
                 pings.unshift({
@@ -45,7 +46,7 @@ class Show extends Component {
             }
         });
 
-        pings.sort((a,b)=>{
+        pings.sort((a, b) => {
             return (a.addedAt > b.addedAt) ? -1 : 1;
         });
 
@@ -55,7 +56,7 @@ class Show extends Component {
                 p.changed = false;
             });
         }
-        
+
         this.setState({
             pings: pings,
             firstSnapshot: false,
@@ -72,30 +73,28 @@ class Show extends Component {
 
     render() {
         return (
-            <div className="container">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h3 className="panel-title">
-                            Recent pings for client {this.clientId}
+            <div className="container-fluid m-2">
+                <div className="card">
+                    <div className="card-body">
+                        <h3 className="card-title">
+                            Recent pings for tag: <b>{this.debugId}</b>, client id: {this.clientId}
                         </h3>
-                    </div>
-                    <div className="panel-body">
-                        <table className="table table-stripe">
+                        <table className="table table-stripe table-hover">
                             <thead>
-                            <tr>
-                                <th>Received</th>
-                                <th>Ping type</th>
-                                <th>Payload</th>
-                            </tr>
+                                <tr>
+                                    <th>Received</th>
+                                    <th>Ping type</th>
+                                    <th>Payload</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {this.state.pings.map(ping =>
-                                <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
-                                    <td>{ping.displayDate}</td>
-                                    <td>{ping.pingType}</td>
-                                    <td>{ping.payload}</td>
-                                </tr>
-                            )}
+                                {this.state.pings.map(ping =>
+                                    <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
+                                        <td>{ping.displayDate}</td>
+                                        <td>{ping.pingType}</td>
+                                        <td>{ping.payload}</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

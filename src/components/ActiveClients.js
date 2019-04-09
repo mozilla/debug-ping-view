@@ -44,27 +44,25 @@ class ActiveClients extends Component {
   render() {
     return (
       <div>
-        <div className="container">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h3 className="panel-title">
+        <div className="container-fluid m-2">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">
                 Active clients
               </h3>
-            </div>
-            <div className="panel-body">
-              <table className="table table-stripe">
+              <table className="table table-stripe table-hover">
                 <thead>
-                <tr>
-                  <th>Debug id</th>
-                  <th>Last active</th>
-                  <th>OS</th>
-                  <th>Application</th>
-                  <th>Geo</th>
-                  <th>Client ID</th>
-                </tr>
+                  <tr>
+                    <th>Debug id</th>
+                    <th>Last active</th>
+                    <th>OS</th>
+                    <th>Application</th>
+                    <th>Geo</th>
+                    <th>Client ID</th>
+                  </tr>
                 </thead>
                 <tbody>
-                {this.state.clients.map(client =>
+                  {this.state.clients.map(client =>
                     <tr key={client.key}>
                       <td><Link to={`/pings/${client.clientId}/${client.debugId}`}>{client.debugId}</Link></td>
                       <td>{client.displayDate}</td>
@@ -73,7 +71,7 @@ class ActiveClients extends Component {
                       <td>{client.geo}</td>
                       <td>{client.clientId}</td>
                     </tr>
-                )}
+                  )}
                 </tbody>
               </table>
             </div>
