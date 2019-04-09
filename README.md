@@ -31,7 +31,7 @@ firebase deploy --only functions
 
 Create PubSub subscription:
 ```
-gcloud pubsub subscriptions create decoded-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/debugPing/"
+gcloud pubsub subscriptions create decoded-debug-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded-debug --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/debugPing/"
 ```
 
 ## Architecture
