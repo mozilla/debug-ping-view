@@ -4,15 +4,24 @@ import { Link } from 'react-router-dom';
 
 function NavBar(props) {
   return (
-    <nav className="navbar navbar-dark bg-dark fixed-top">
+    <nav className="navbar navbar-light bg-light navbar-expand-md fixed-top">
       <Link className="navbar-brand" to="/">
         Debug ping viewer
       </Link>
       {
         props.authenticated ? (
-          <button className="btn btn-info" type="btn btn-lg " onClick={() => { firebase.auth().signOut() }}>
-            <i className="fa fa-lock"></i>Log Out
-        </button>
+          <>
+            <div id="navbarNavDropdown" class="collapse navbar-collapse justify-content-between">
+              <div></div>
+              <div class="navbar-nav" role="presentation">
+                <a class="nav-item nav-link" href="https://github.com/mozilla/debug-ping-view/issues" target="_blank" rel="noopener noreferrer">Report a bug</a>
+                <Link to={`/help`} className="nav-item nav-link"><i className="far fa-question-circle"></i>Help</Link>
+                <button className="btn btn-light" type="btn btn-lg " onClick={() => { firebase.auth().signOut() }}>
+                  <i className="fa fa-lock"></i>Log Out
+                </button>
+              </div>
+            </div>
+          </>
         ) : ("")
       }
     </nav>

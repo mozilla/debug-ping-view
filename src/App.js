@@ -6,6 +6,7 @@ import NavBar from './components/NavBar';
 import ActiveClients from './components/ActiveClients';
 import Create from './components/Create';
 import Show from './components/Show';
+import Help from './components/Help';
 import SignInScreen from './components/SignInScreen';
 import SecuredRoute from './components/SecuredRoute';
 
@@ -44,6 +45,7 @@ class App extends Component {
         <SecuredRoute exact path='/' component={ActiveClients} authenticated={this.state.authenticated} />
         <SecuredRoute path='/create' component={Create} authenticated={this.state.authenticated} />
         <SecuredRoute path='/pings/:clientId/:debugId' component={Show} authenticated={this.state.authenticated} />
+        <SecuredRoute exact path='/help' component={Help} authenticated={this.state.authenticated} />
         <Route path='/login' component={SignInScreen} />
       </div>
     );
