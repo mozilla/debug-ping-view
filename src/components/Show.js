@@ -8,11 +8,12 @@ class Show extends Component {
     constructor(props) {
         super(props);
 
-        // TODO: limit size of the resultset
+        // TODO: paginate through the full resultset
         this.pings = firebase.firestore().collection('pings')
             .where('clientId', '==', props.match.params.clientId)
             .where('debugId', '==', props.match.params.debugId)
-            .orderBy('addedAt', 'desc');
+            .orderBy('addedAt', 'desc')
+            .limit(100);
 
         this.clientId = props.match.params.clientId;
         this.debugId = props.match.params.debugId;
