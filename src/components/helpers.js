@@ -6,3 +6,7 @@ import * as moment from 'moment';
 export function FormatDate(utcDateString) {
     return moment(utcDateString).format("MMM D, YYYY, H:mm:ss");
 }
+
+export function TruncateString(str, n) {
+    return (str.length > n) ? str.substr(0, n - 1) : str;
+};

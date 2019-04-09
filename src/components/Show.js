@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../Firebase';
-import { FormatDate } from './helpers';
+import { FormatDate, TruncateString } from './helpers';
+import { Link } from 'react-router-dom';
 
 class Show extends Component {
 
@@ -92,7 +93,7 @@ class Show extends Component {
                                     <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                         <td>{ping.displayDate}</td>
                                         <td>{ping.pingType}</td>
-                                        <td>{ping.payload}</td>
+                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip; <Link to={`/rawPing/${ping.key}`}>raw JSON</Link></td>
                                     </tr>
                                 )}
                             </tbody>
