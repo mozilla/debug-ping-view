@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 
-class Show extends Component {
+class Help extends Component {
     render() {
         return (
             <div className="container">
@@ -21,4 +21,4 @@ class Show extends Component {
     }
 }
 
-export default Show;
+export default Help;
