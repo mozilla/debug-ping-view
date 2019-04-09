@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../Firebase';
 import { FormatDate, TruncateString } from './helpers';
-import { Link } from 'react-router-dom';
 
 class Show extends Component {
 
@@ -73,6 +72,10 @@ class Show extends Component {
         this.unsubscribe();
     }
 
+    jsonToDataURI(json) {
+        return "data:application/json;charset=utf-8," + encodeURIComponent(json);
+    }
+
     render() {
         return (
             <div className="container-fluid m-2">
@@ -94,7 +97,8 @@ class Show extends Component {
                                     <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                         <td>{ping.displayDate}</td>
                                         <td>{ping.pingType}</td>
-                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip; <Link to={`/rawPing/${ping.key}`}>raw JSON</Link></td>
+                                        <td><a target="_blank" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
+                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}</td>
                                     </tr>
                                 )}
                             </tbody>
