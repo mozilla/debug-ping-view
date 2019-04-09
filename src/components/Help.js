@@ -7,7 +7,7 @@ class Help extends Component {
         return (
             <div className="container">
                 <h1>Usage</h1>
-                <div class="alert alert-info" role="alert">
+                <div className="alert alert-info" role="alert">
                 This is a beta service. While we strive for making it available and reliable, there might be downtime periods.<br/>
                 In case of any issues, find us on the Mozilla Slack in #glean.
                 </div>

@@ -11,10 +11,10 @@ function NavBar(props) {
       {
         props.authenticated ? (
           <>
-            <div id="navbarNavDropdown" class="collapse navbar-collapse justify-content-between">
+            <div id="navbarNavDropdown" className="collapse navbar-collapse justify-content-between">
               <div></div>
-              <div class="navbar-nav" role="presentation">
-                <a class="nav-item nav-link" href="https://github.com/mozilla/debug-ping-view/issues" target="_blank" rel="noopener noreferrer">Report a bug</a>
+              <div className="navbar-nav" role="presentation">
+                <a className="nav-item nav-link" href="https://github.com/mozilla/debug-ping-view/issues" target="_blank" rel="noopener noreferrer">Report a bug</a>
                 <Link to={`/help`} className="nav-item nav-link"><i className="far fa-question-circle"></i>Help</Link>
                 <button className="btn btn-light" type="btn btn-lg " onClick={() => { firebase.auth().signOut() }}>
                   <i className="fa fa-lock"></i>Log Out
