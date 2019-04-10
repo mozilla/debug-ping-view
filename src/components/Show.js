@@ -89,6 +89,7 @@ class Show extends Component {
                                 <tr>
                                     <th>Received</th>
                                     <th>Ping type</th>
+                                    <th></th>
                                     <th>Payload</th>
                                 </tr>
                             </thead>
