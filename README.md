@@ -2,6 +2,9 @@
 # Glean Debug View
 This is a proof of concept web application for viewing Glean debug pings in real-time.
 
+## Contributing
+Since this repository is private, CircleCI is not able to build from forks. As a workaround PRs should be submitted from branches pushed to origin.
+
 ## Building
 ```
 npm run build
