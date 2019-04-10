@@ -98,8 +98,8 @@ class Show extends Component {
                                     <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                         <td>{ping.displayDate}</td>
                                         <td>{ping.pingType}</td>
-                                        <td><a target="_blank" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
-                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}</td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
+                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip;</td>
                                     </tr>
                                 )}
                             </tbody>
