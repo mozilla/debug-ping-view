@@ -79,33 +79,29 @@ class Show extends Component {
     render() {
         return (
             <div className="container-fluid m-2">
-                <div className="card">
-                    <div className="card-body">
-                        <h3 className="card-title">
-                            Recent pings for tag: <b>{this.debugId}</b>, client id: {this.clientId}
-                        </h3>
-                        <table className="table table-stripe table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Received</th>
-                                    <th>Ping type</th>
-                                    <th></th>
-                                    <th>Payload</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.pings.map(ping =>
-                                    <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
-                                        <td>{ping.displayDate}</td>
-                                        <td>{ping.pingType}</td>
-                                        <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
-                                        <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip;</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <h3>
+                    Recent pings for tag: <b>{this.debugId}</b>, client id: {this.clientId}
+                </h3>
+                <table className="table table-stripe table-hover">
+                    <thead>
+                        <tr>
+                            <th>Received</th>
+                            <th>Ping type</th>
+                            <th></th>
+                            <th>Payload</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.pings.map(ping =>
+                            <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
+                                <td>{ping.displayDate}</td>
+                                <td>{ping.pingType}</td>
+                                <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
+                                <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip;</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         );
 
