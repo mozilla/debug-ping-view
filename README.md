@@ -2,6 +2,9 @@
 # Glean Debug View
 This is a proof of concept web application for viewing Glean debug pings in real-time.
 
+## Contributing
+Since this repository is private, CircleCI is not able to build from forks. As a workaround PRs should be submitted from branches pushed to origin.
+
 ## Building
 ```
 npm run build
@@ -47,16 +50,20 @@ Pings from `structured-decoded` topic are pushed to [HTTP Function](functions/in
 Glean debug pings with some fields extracted are stored in Firestore. There are two collections with flat documents used:
 ```
 clients
-+ key: string // client_id
++ key: string // {client_id}_{debug_id}
++ appName: string
++ clientId: string
 + debugId: string // value of the `X-Debug-ID` header
 + geo: string // city and country of the last submitted ping, from GeoIP
 + lastActive: string // timestamp of the last ping submission
++ os: string
 ```
 ```
 pings
 + key: string // document_id
 + addedAt: string // submission timestamp
 + clientId: string
++ debugId: string
 + payload: string // submitted ping payload
 + pingType: string // document_type
 ```
