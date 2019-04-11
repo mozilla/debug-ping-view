@@ -45,37 +45,33 @@ class ActiveClients extends Component {
     return (
       <div>
         <div className="container-fluid m-2">
-          <div className="card">
-            <div className="card-body">
-              <h3 className="card-title">
-                Active clients
-              </h3>
-              <table className="table table-stripe table-hover">
-                <thead>
-                  <tr>
-                    <th>Debug id</th>
-                    <th>Last active</th>
-                    <th>OS</th>
-                    <th>Application</th>
-                    <th>Geo</th>
-                    <th>Client ID</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.clients.map(client =>
-                    <tr key={client.key}>
-                      <td><Link to={`/pings/${client.clientId}/${client.debugId}`}>{client.debugId}</Link></td>
-                      <td>{client.displayDate}</td>
-                      <td>{client.os}</td>
-                      <td>{client.appName}</td>
-                      <td>{client.geo}</td>
-                      <td>{client.clientId}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <h3>
+            Active clients
+          </h3>
+          <table className="table table-stripe table-hover">
+            <thead>
+              <tr>
+                <th>Debug id</th>
+                <th>Last active</th>
+                <th>OS</th>
+                <th>Application</th>
+                <th>Geo</th>
+                <th>Client ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.clients.map(client =>
+                <tr key={client.key}>
+                  <td><Link to={`/pings/${client.clientId}/${client.debugId}`}>{client.debugId}</Link></td>
+                  <td>{client.displayDate}</td>
+                  <td>{client.os}</td>
+                  <td>{client.appName}</td>
+                  <td>{client.geo}</td>
+                  <td>{client.clientId}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     );
