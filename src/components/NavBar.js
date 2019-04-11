@@ -6,7 +6,7 @@ function NavBar(props) {
   return (
     <nav className="navbar navbar-light bg-light navbar-expand-md fixed-top">
       <Link className="navbar-brand" to="/">
-        Debug ping viewer
+        Glean Debug ping viewer
       </Link>
       {
         props.authenticated ? (
