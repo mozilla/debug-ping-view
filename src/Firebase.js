@@ -1,19 +1,11 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-
+import config from "./config";
 
 const settings = {};
 
-const config = {
-    apiKey: "AIzaSyCYGEoBFK6AzgE7H__FjdVUQ_vVnaEKaqA",
-    authDomain: "debug-ping-preview.firebaseapp.com",
-    databaseURL: "https://debug-ping-preview.firebaseio.com",
-    projectId: "debug-ping-preview",
-    storageBucket: "debug-ping-preview.appspot.com",
-    messagingSenderId: "83999817115"
-};
-firebase.initializeApp(config);
+firebase.initializeApp(config.firebaseConfig);
 
 firebase.firestore().settings(settings);
 

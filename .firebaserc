@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "debug-ping-preview"
+    "default": "debug-ping-preview",
+    "dev": "glean-debug-view-dev-237806",
+    "prod": "debug-ping-preview"
   }
 }

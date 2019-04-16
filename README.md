@@ -5,36 +5,16 @@ This is a proof of concept web application for viewing Glean debug pings in real
 ## Contributing
 Since this repository is private, CircleCI is not able to build from forks. As a workaround PRs should be submitted from branches pushed to origin.
 
-## Building
-```
-npm run build
-```
-
 ## Development
-Run application locally:
+Run React application locally:
 ```
 npm start
 ```
+Application will start connected to development project. For details, including building and deployment, see [Deployment](doc/deployment.md).
 
 Send debug ping to GCP ingestion:
 ```
 curl --header 'X-Debug-ID: test-debug-id' -XPOST https://stage.ingestion.nonprod.dataops.mozgcp.net/submit/glean/events/1/$(uuidgen) -d '{"$schema":"moz://mozilla.org/schemas/glean/ping/1","client_info":{"app_build":"59f330e5","app_display_version":"1.0.0","architecture":"arm","client_id":"6ff20eb7-e80d-4452-b45f-2ea7e63547aa","device_manufacturer":"Mozilla","device_model":"phone123","first_run_date":"2018-10-23-04:25","os":"Android","os_version":"3.2.1","telemetry_sdk_build":"abcdabcd"},"ping_info":{"ping_type":"full","seq":1,"start_time":"2018-10-23 11:23:15-04:00","end_time":"2018-10-23 11:23:15-04:25","experiments":{"experiment1":{"branch":"branch_a"},"experiment2":{"branch":"branch_b","extra":{"type":"experiment_type"}}}},"events":[{"timestamp":123456789,"category":"examples","name":"event_example","extra":{"metadata1":"extra","metadata2":"more_extra"}},{"timestamp":123456791,"category":"examples","name":"event_example"}]}'
-```
-
-## Deployment
-```
-npm run build && firebase deploy
-```
-Go to https://debug-ping-preview.firebaseapp.com/
-
-We can deploy only selected component, for example functions:
-```
-firebase deploy --only functions
-```
-
-Create PubSub subscription:
-```
-gcloud pubsub subscriptions create decoded-debug-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded-debug --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/debugPing/"
 ```
 
 ## Architecture
