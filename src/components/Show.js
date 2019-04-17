@@ -31,7 +31,7 @@ class Show extends Component {
 
         querySnapshot.docChanges().forEach((change) => {
             if (change.type === "added") {
-                const { addedAt, payload, pingType } = change.doc.data();
+                const { addedAt, payload, pingType, error, errorType, errorMessage } = change.doc.data();
                 pings.unshift({
                     key: change.doc.id,
                     addedAt: addedAt,
@@ -39,6 +39,9 @@ class Show extends Component {
                     payload: payload,
                     pingType: pingType,
                     changed: true,
+                    error: error,
+                    errorType: errorType,
+                    errorMessage: errorMessage,
                 });
             }
             if (change.type === "removed") {
@@ -97,7 +100,7 @@ class Show extends Component {
                                 <td>{ping.displayDate}</td>
                                 <td>{ping.pingType}</td>
                                 <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
-                                <td class="text-monospace">{TruncateString(ping.payload, 150)}&hellip;</td>
+                                <td className={(ping.error ? 'text-danger ' : '') + 'text-monospace'}>{ping.error ? ping.errorType + ' ' + ping.errorMessage : TruncateString(ping.payload, 150)}&hellip;</td>
                             </tr>
                         )}
                     </tbody>

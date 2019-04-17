@@ -7,7 +7,7 @@ const { gzip, ungzip } = require('node-gzip');
 /**
  * Push ping data to Firestore
  */
-async function storePing(pubSubMessage, rawPing) {
+async function storePing(pubSubMessage, rawPing, error) {
   const db = admin.firestore();
 
   var batch = db.batch();
@@ -15,6 +15,12 @@ async function storePing(pubSubMessage, rawPing) {
   // TODO: make sure this is safe if some fields are missing
   const pingJson = JSON.parse(rawPing);
   const clientId = pingJson.client_info.client_id;
+
+  if (!clientId) {
+    // if clientId is missing, that's probably validation error and we don't have a good way to present this in the view
+    return Promise.resolve("Missing client_id");
+  }
+
   const os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
   const appName = pubSubMessage.attributes.document_namespace;
   const debugId = pubSubMessage.attributes.x_debug_id;
@@ -36,18 +42,27 @@ async function storePing(pubSubMessage, rawPing) {
   const pingType = pubSubMessage.attributes.document_type;
 
   var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
-  batch.set(pingRef, {
+  const errorFields = error ? {
+    error: true,
+    errorType: pubSubMessage.attributes.error_type,
+    errorMessage: pubSubMessage.attributes.error_message,
+  } : {}
+  const baseFields = {
     addedAt: pubSubMessage.publishTime,
     clientId: clientId,
     debugId: debugId,
     payload: rawPing,
     pingType: pingType,
+  }
+  batch.set(pingRef, {
+    ...baseFields,
+    ...errorFields,
   });
 
   return batch.commit();
 }
 
-async function handlePost(req, res) {
+async function handlePost(req, res, error) {
   const pubSubMessage = req.body.message;
   const debugId = pubSubMessage.attributes.x_debug_id;
 
@@ -60,7 +75,7 @@ async function handlePost(req, res) {
     const pingPayload = Buffer.from(pubSubMessage.data, 'base64');
 
     return ungzip(pingPayload).then((decompressed) => {
-      return storePing(pubSubMessage, decompressed.toString());
+      return storePing(pubSubMessage, decompressed.toString(), error);
     });
   } else {
     return Promise.resolve();
@@ -68,7 +83,7 @@ async function handlePost(req, res) {
 }
 
 /**
- * Cloud Function to be triggered by Pub/Sub push sunscription
+ * Cloud Function to be triggered by Pub/Sub push subscription
  * that stores Glean debug pings in Firestore.
  */
 exports.debugPing = functions.https.onRequest((req, res) => {
@@ -77,7 +92,7 @@ exports.debugPing = functions.https.onRequest((req, res) => {
       // Domain ownership verification
       return res.send(`<html><head><meta name="google-site-verification" content="FGveh31iPHURsXECLhzcauxkjdK3x3Sy8KA7RBlVz90" /></head><body></body></html>`)
     case 'POST':
-      return handlePost(req, res).then(() => {
+      return handlePost(req, res, false).then(() => {
         // A response with 204 status code is considered as an implicit acknowledgement.
         return res.status(204).end();
       });
@@ -86,3 +101,21 @@ exports.debugPing = functions.https.onRequest((req, res) => {
   }
 });
 
+/**
+ * Cloud Function to be triggered by Pub/Sub push subscription
+ * that stores Glean ping validation errors in Firestore.
+ */
+exports.decoderError = functions.https.onRequest((req, res) => {
+  switch (req.method) {
+    case 'GET':
+      // Domain ownership verification
+      return res.send(`<html><head><meta name="google-site-verification" content="FGveh31iPHURsXECLhzcauxkjdK3x3Sy8KA7RBlVz90" /></head><body></body></html>`)
+    case 'POST':
+      return handlePost(req, res, true).then(() => {
+        // A response with 204 status code is considered as an implicit acknowledgement.
+        return res.status(204).end();
+      });
+    default:
+      return res.status(403).send('Forbidden!');
+  }
+});
