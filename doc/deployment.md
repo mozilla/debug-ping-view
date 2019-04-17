@@ -37,8 +37,12 @@ firebase deploy --only functions
 PubSub subscriptions are needed to consume pings from the pipeline. For production project run:
 ```
 gcloud pubsub subscriptions create decoded-debug-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded-debug --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/debugPing/"
+
+gcloud pubsub subscriptions create structured-errors-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-error --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/decoderError/"
 ```
 For dev:
 ```
 gcloud pubsub subscriptions create decoded-debug-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded-debug --push-endpoint "https://us-central1-glean-debug-view-dev-237806.cloudfunctions.net/debugPing/"
+
+gcloud pubsub subscriptions create structured-errors-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-error --push-endpoint "https://us-central1-glean-debug-view-dev-237806.cloudfunctions.net/decoderError/"
 ```
