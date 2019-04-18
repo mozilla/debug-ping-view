@@ -14,12 +14,12 @@ async function storePing(pubSubMessage, rawPing, error) {
 
   // TODO: make sure this is safe if some fields are missing
   const pingJson = JSON.parse(rawPing);
-  const clientId = pingJson.client_info.client_id;
 
-  if (!clientId) {
+  if (!pingJson.client_info || !pingJson.client_info.client_id) {
     // if clientId is missing, that's probably validation error and we don't have a good way to present this in the view
     return Promise.resolve("Missing client_id");
   }
+  const clientId = pingJson.client_info.client_id;
 
   const os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
   const appName = pubSubMessage.attributes.document_namespace;
