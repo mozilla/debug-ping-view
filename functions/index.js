@@ -4,6 +4,29 @@ admin.initializeApp();
 
 const { gzip, ungzip } = require('node-gzip');
 
+/** 
+ * Retrieves client id from provided JSON document;
+ * If not present there, queries Firestore for the last clientId that used provided debugId;
+ * If none is found, returns `UNKNOWN` string.
+*/
+async function getClientId(pingJson, debugId, db) {
+  if (!pingJson.client_info || !pingJson.client_info.client_id) {
+    // if clientId is missing, try to find last client with the current debug id, if none exists, substitute with `UNKNOWN`
+    return db.collection("clients")
+      .where("debugId", "==", debugId)
+      .orderBy("lastActive", "desc")
+      .limit(1).get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          return "UNKNOWN";
+        } else {
+          return querySnapshot.docs[0].get("clientId");
+        }
+      })
+  } else {
+    return Promise.resolve(pingJson.client_info.client_id);
+  }
+}
+
 /**
  * Push ping data to Firestore
  */
@@ -15,51 +38,49 @@ async function storePing(pubSubMessage, rawPing, error) {
   // TODO: make sure this is safe if some fields are missing
   const pingJson = JSON.parse(rawPing);
 
-  if (!pingJson.client_info || !pingJson.client_info.client_id) {
-    // if clientId is missing, that's probably validation error and we don't have a good way to present this in the view
-    return Promise.resolve("Missing client_id");
-  }
-  const clientId = pingJson.client_info.client_id;
-
   const os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
   const appName = pubSubMessage.attributes.document_namespace;
-  const debugId = pubSubMessage.attributes.x_debug_id;
   const geo = pubSubMessage.attributes.geo_city + ", " +
     pubSubMessage.attributes.geo_country;
+  const debugId = pubSubMessage.attributes.x_debug_id;
 
-  const clientDebugId = clientId + "_" + debugId;
+  return getClientId(pingJson, debugId, db).then((clientId) => {
 
-  var clientRef = db.collection("clients").doc(clientDebugId);
-  batch.set(clientRef, {
-    appName: appName,
-    clientId: clientId,
-    debugId: debugId,
-    geo: geo,
-    lastActive: pubSubMessage.publishTime,
-    os: os,
+    console.log("XYZYXZ GOT clientId: ", clientId)
+
+    const clientDebugId = clientId + "_" + debugId;
+    var clientRef = db.collection("clients").doc(clientDebugId);
+    batch.set(clientRef, {
+      appName: appName,
+      clientId: clientId,
+      debugId: debugId,
+      geo: geo,
+      lastActive: pubSubMessage.publishTime,
+      os: os,
+    });
+
+    const pingType = pubSubMessage.attributes.document_type;
+
+    var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
+    const errorFields = error ? {
+      error: true,
+      errorType: pubSubMessage.attributes.error_type,
+      errorMessage: pubSubMessage.attributes.error_message,
+    } : {}
+    const baseFields = {
+      addedAt: pubSubMessage.publishTime,
+      clientId: clientId,
+      debugId: debugId,
+      payload: rawPing,
+      pingType: pingType,
+    }
+    batch.set(pingRef, {
+      ...baseFields,
+      ...errorFields,
+    });
+
+    return batch.commit();
   });
-
-  const pingType = pubSubMessage.attributes.document_type;
-
-  var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
-  const errorFields = error ? {
-    error: true,
-    errorType: pubSubMessage.attributes.error_type,
-    errorMessage: pubSubMessage.attributes.error_message,
-  } : {}
-  const baseFields = {
-    addedAt: pubSubMessage.publishTime,
-    clientId: clientId,
-    debugId: debugId,
-    payload: rawPing,
-    pingType: pingType,
-  }
-  batch.set(pingRef, {
-    ...baseFields,
-    ...errorFields,
-  });
-
-  return batch.commit();
 }
 
 async function handlePost(req, res, error) {
