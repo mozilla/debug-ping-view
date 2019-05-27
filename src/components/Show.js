@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import firebase from '../Firebase';
 import { FormatDate, TruncateString } from './helpers';
 
+function ErrorField(ping) {
+    if (!ping.error) {
+        return <td></td>
+    }
+
+    const errorText = ping.errorType + ' ' + ping.errorMessage;
+    return <td className='text-danger text-monospace' title={errorText}>{TruncateString(errorText, 30)}&hellip;</td>
+}
+
 class Show extends Component {
 
     constructor(props) {
@@ -80,6 +89,8 @@ class Show extends Component {
     }
 
     render() {
+        const hasError = this.state.pings.some(ping => ping.error);
+
         return (
             <div className="container-fluid m-2">
                 <h3>
@@ -91,6 +102,7 @@ class Show extends Component {
                             <th>Received</th>
                             <th>Ping type</th>
                             <th></th>
+                            { hasError && <th>Error</th> }
                             <th>Payload</th>
                         </tr>
                     </thead>
@@ -100,7 +112,8 @@ class Show extends Component {
                                 <td>{ping.displayDate}</td>
                                 <td>{ping.pingType}</td>
                                 <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
-                                <td className={(ping.error ? 'text-danger ' : '') + 'text-monospace'}>{ping.error ? ping.errorType + ' ' + ping.errorMessage : TruncateString(ping.payload, 150)}&hellip;</td>
+                                { hasError && ErrorField(ping) }
+                                <td className='text-monospace'>{TruncateString(ping.payload, 150)}&hellip;</td>
                             </tr>
                         )}
                     </tbody>
