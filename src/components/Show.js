@@ -7,8 +7,25 @@ function ErrorField(ping) {
         return <td></td>
     }
 
-    const errorText = ping.errorType + ' ' + ping.errorMessage;
-    return <td className='text-danger text-monospace' title={errorText}>{TruncateString(errorText, 30)}&hellip;</td>
+    // list of common errors - each entry is a tuple containing error string and user-friendly message
+    const commonErrors = [
+        ["com.mozilla.telemetry.schemas.SchemaNotFoundException: ",
+            "Unknown ping type",
+            "Unknown ping type - this is expected if you're developing a new ping. Reach out to the telemetry team if you need help in setting up new schema."]
+    ];
+
+    let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
+    let errorText = errorTooltip;
+
+    const matchingCommonError = commonErrors.find((e) => {
+        return ping.errorMessage.startsWith(e[0]);
+    });
+    if (matchingCommonError) {
+        errorText = matchingCommonError[1];
+        errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
+    }
+
+    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}</td>
 }
 
 class Show extends Component {
@@ -102,7 +119,7 @@ class Show extends Component {
                             <th>Received</th>
                             <th>Ping type</th>
                             <th></th>
-                            { hasError && <th>Error</th> }
+                            {hasError && <th>Error</th>}
                             <th>Payload</th>
                         </tr>
                     </thead>
@@ -112,7 +129,7 @@ class Show extends Component {
                                 <td>{ping.displayDate}</td>
                                 <td>{ping.pingType}</td>
                                 <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
-                                { hasError && ErrorField(ping) }
+                                {hasError && ErrorField(ping)}
                                 <td className='text-monospace'>{TruncateString(ping.payload, 150)}&hellip;</td>
                             </tr>
                         )}
