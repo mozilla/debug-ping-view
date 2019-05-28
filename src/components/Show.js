@@ -8,10 +8,10 @@ function ErrorField(ping) {
     }
 
     // list of common errors - each entry is a tuple containing error string and user-friendly message
-    const commonErrors = new Set([
+    const commonErrors = [[
         ["com.mozilla.telemetry.schemas.SchemaNotFoundException: ",
             "Unknown schema - this is expected if you're developing a new ping. Reach out to the telemetry team if you need help in setting up new schema."]
-    ]);
+    ]];
 
     let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
     let errorText = errorTooltip;
