@@ -8,22 +8,24 @@ function ErrorField(ping) {
     }
 
     // list of common errors - each entry is a tuple containing error string and user-friendly message
-    const commonErrors = [[
+    const commonErrors = [
         ["com.mozilla.telemetry.schemas.SchemaNotFoundException: ",
-            "Unknown schema - this is expected if you're developing a new ping. Reach out to the telemetry team if you need help in setting up new schema."]
-    ]];
+            "Unknown ping type",
+            "Unknown ping type - this is expected if you're developing a new ping. Reach out to the telemetry team if you need help in setting up new schema."]
+    ];
 
     let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
     let errorText = errorTooltip;
-    for (const knownError of commonErrors) {
-        if (ping.errorMessage.startsWith(knownError[0])) {
-            errorText = ping.errorMessage.replace(knownError[0], '');
-            errorTooltip = knownError[1] + '\n\n' + errorTooltip;
-            break;
-        }
+
+    const matchingCommonError = commonErrors.find((e) => {
+        return ping.errorMessage.startsWith(e[0]);
+    });
+    if (matchingCommonError) {
+        errorText = matchingCommonError[1];
+        errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
     }
 
-    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{TruncateString(errorText, 30)}&hellip;</td>
+    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}</td>
 }
 
 class Show extends Component {
