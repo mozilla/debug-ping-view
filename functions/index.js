@@ -4,13 +4,13 @@ admin.initializeApp();
 
 const { gzip, ungzip } = require('node-gzip');
 
-/** 
+/**
  * Retrieves client id from provided JSON document;
  * If not present there, queries Firestore for the last clientId that used provided debugId;
  * If none is found, returns `UNKNOWN` string.
 */
 async function getClientId(pingJson, debugId, db) {
-  if (!pingJson.client_info || !pingJson.client_info.client_id) {
+    if (!pingJson || !pingJson.client_info || !pingJson.client_info.client_id) {
     // if clientId is missing, try to find last client with the current debug id, if none exists, substitute with `UNKNOWN`
     return db.collection("clients")
       .where("debugId", "==", debugId)
@@ -33,21 +33,25 @@ async function getClientId(pingJson, debugId, db) {
 async function storePing(pubSubMessage, rawPing, error) {
   const db = admin.firestore();
 
-  var batch = db.batch();
+  const batch = db.batch();
 
-  // TODO: make sure this is safe if some fields are missing
-  const pingJson = JSON.parse(rawPing);
+  let pingJson = null;
+  let os = null;
+  try {
+    // TODO: make sure this is safe if some fields are missing
+    pingJson = JSON.parse(rawPing);
+    os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
+  } catch (e) {
+    // this is validation error
+    console.error(`JSON parse error: ${e}, raw ping was: ${rawPing}`);
+  }
 
-  const os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
   const appName = pubSubMessage.attributes.document_namespace;
   const geo = pubSubMessage.attributes.geo_city + ", " +
     pubSubMessage.attributes.geo_country;
   const debugId = pubSubMessage.attributes.x_debug_id;
 
   return getClientId(pingJson, debugId, db).then((clientId) => {
-
-    console.log("XYZYXZ GOT clientId: ", clientId)
-
     const clientDebugId = clientId + "_" + debugId;
     var clientRef = db.collection("clients").doc(clientDebugId);
     batch.set(clientRef, {
@@ -61,7 +65,7 @@ async function storePing(pubSubMessage, rawPing, error) {
 
     const pingType = pubSubMessage.attributes.document_type;
 
-    var pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
+    const pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
     const errorFields = error ? {
       error: true,
       errorType: pubSubMessage.attributes.error_type,
