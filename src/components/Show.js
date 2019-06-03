@@ -15,7 +15,7 @@ function ErrorField(ping) {
     ];
 
     let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
-    let errorText = errorTooltip;
+    let errorText = TruncateString(ping.errorMessage, 30);
 
     const matchingCommonError = commonErrors.find((e) => {
         return ping.errorMessage.startsWith(e[0]);
@@ -25,7 +25,7 @@ function ErrorField(ping) {
         errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
     }
 
-    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}</td>
+    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}&hellip;</td>
 }
 
 class Show extends Component {
