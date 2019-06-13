@@ -35,7 +35,6 @@ class Show extends Component {
 
         // TODO: paginate through the full resultset
         this.pings = firebase.firestore().collection('pings')
-            .where('clientId', '==', props.match.params.clientId)
             .where('debugId', '==', props.match.params.debugId)
             .orderBy('addedAt', 'desc')
             .limit(100);

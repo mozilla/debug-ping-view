@@ -16,11 +16,10 @@ class ActiveClients extends Component {
   onCollectionUpdate = (querySnapshot) => {
     const clients = [];
     querySnapshot.forEach((doc) => {
-      const { lastActive, clientId, debugId, geo, os, appName } = doc.data();
+      const { lastActive, debugId, geo, os, appName } = doc.data();
       clients.push({
         key: doc.id,
         appName: appName,
-        clientId: clientId,
         debugId: debugId,
         displayDate: FormatDate(lastActive),
         geo: geo,
@@ -62,7 +61,7 @@ class ActiveClients extends Component {
             <tbody>
               {this.state.clients.map(client =>
                 <tr key={client.key}>
-                  <td><Link to={`/pings/${client.clientId}/${client.debugId}`}>{client.debugId}</Link></td>
+                  <td><Link to={`/pings/${client.debugId}`}>{client.debugId}</Link></td>
                   <td>{client.displayDate}</td>
                   <td>{client.os}</td>
                   <td>{client.appName}</td>

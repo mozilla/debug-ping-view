@@ -45,7 +45,7 @@ class App extends Component {
         <NavBar authenticated={this.state.authenticated} />
         <SecuredRoute exact path='/' component={ActiveClients} authenticated={this.state.authenticated} />
         <SecuredRoute path='/create' component={Create} authenticated={this.state.authenticated} />
-        <SecuredRoute path='/pings/:clientId/:debugId' component={Show} authenticated={this.state.authenticated} />
+        <SecuredRoute path='/pings/:debugId' component={Show} authenticated={this.state.authenticated} />
         <SecuredRoute path='/rawPing/:docId' component={ShowRawPing} authenticated={this.state.authenticated} />
         <SecuredRoute exact path='/help' component={Help} authenticated={this.state.authenticated} />
         <Route path='/login' component={SignInScreen} />
