@@ -15,17 +15,26 @@ class ActiveClients extends Component {
 
   onCollectionUpdate = (querySnapshot) => {
     const clients = [];
+    let seenDebugIds = new Set();
     querySnapshot.forEach((doc) => {
-      const { lastActive, debugId, geo, os, appName } = doc.data();
-      clients.push({
-        key: doc.id,
-        appName: appName,
-        debugId: debugId,
-        displayDate: FormatDate(lastActive),
-        geo: geo,
-        lastActive: lastActive,
-        os: os,
-      });
+      const { lastActive, clientId, debugId, geo, os, appName } = doc.data();
+      console.log(`got ${debugId}`);
+      if (!seenDebugIds.has(debugId)) {
+        console.log(`adding ${debugId}`);
+        seenDebugIds.add(debugId);
+        clients.push({
+          key: doc.id,
+          appName: appName,
+          clientId: clientId,
+          debugId: debugId,
+          displayDate: FormatDate(lastActive),
+          geo: geo,
+          lastActive: lastActive,
+          os: os,
+        });
+      } else {
+        console.log(`nope for ${debugId}`);
+      }
     });
     this.setState({
       clients
