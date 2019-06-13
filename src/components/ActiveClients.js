@@ -20,7 +20,6 @@ class ActiveClients extends Component {
       const { lastActive, clientId, debugId, geo, os, appName } = doc.data();
       console.log(`got ${debugId}`);
       if (!seenDebugIds.has(debugId)) {
-        console.log(`adding ${debugId}`);
         seenDebugIds.add(debugId);
         clients.push({
           key: doc.id,
@@ -32,8 +31,6 @@ class ActiveClients extends Component {
           lastActive: lastActive,
           os: os,
         });
-      } else {
-        console.log(`nope for ${debugId}`);
       }
     });
     this.setState({
