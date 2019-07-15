@@ -51,40 +51,35 @@ async function storePing(pubSubMessage, rawPing, error) {
     pubSubMessage.attributes.geo_country;
   const debugId = pubSubMessage.attributes.x_debug_id;
 
-  return getClientId(pingJson, debugId, db).then((clientId) => {
-    const clientDebugId = clientId + "_" + debugId;
-    var clientRef = db.collection("clients").doc(clientDebugId);
-    batch.set(clientRef, {
-      appName: appName,
-      clientId: clientId,
-      debugId: debugId,
-      geo: geo,
-      lastActive: pubSubMessage.publishTime,
-      os: os,
-    });
-
-    const pingType = pubSubMessage.attributes.document_type;
-
-    const pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
-    const errorFields = error ? {
-      error: true,
-      errorType: pubSubMessage.attributes.error_type,
-      errorMessage: pubSubMessage.attributes.error_message,
-    } : {}
-    const baseFields = {
-      addedAt: pubSubMessage.publishTime,
-      clientId: clientId,
-      debugId: debugId,
-      payload: rawPing,
-      pingType: pingType,
-    }
-    batch.set(pingRef, {
-      ...baseFields,
-      ...errorFields,
-    });
-
-    return batch.commit();
+  const clientRef = db.collection("clients").doc(debugId);
+  batch.set(clientRef, {
+    appName: appName,
+    debugId: debugId,
+    geo: geo,
+    lastActive: pubSubMessage.publishTime,
+    os: os,
   });
+
+  const pingType = pubSubMessage.attributes.document_type;
+
+  const pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
+  const errorFields = error ? {
+    error: true,
+    errorType: pubSubMessage.attributes.error_type,
+    errorMessage: pubSubMessage.attributes.error_message,
+  } : {};
+  const baseFields = {
+    addedAt: pubSubMessage.publishTime,
+    debugId: debugId,
+    payload: rawPing,
+    pingType: pingType,
+  };
+  batch.set(pingRef, {
+    ...baseFields,
+    ...errorFields,
+  });
+
+  return batch.commit();
 }
 
 async function handlePost(req, res, error) {
