@@ -32,7 +32,6 @@ Glean debug pings with some fields extracted are stored in Firestore. There are 
 clients
 + key: string // {client_id}_{debug_id}
 + appName: string
-+ clientId: string
 + debugId: string // value of the `X-Debug-ID` header
 + geo: string // city and country of the last submitted ping, from GeoIP
 + lastActive: string // timestamp of the last ping submission
@@ -42,7 +41,6 @@ clients
 pings
 + key: string // document_id
 + addedAt: string // submission timestamp
-+ clientId: string
 + debugId: string
 + payload: string // submitted ping payload
 + pingType: string // document_type
