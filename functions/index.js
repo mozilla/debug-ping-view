@@ -4,28 +4,6 @@ admin.initializeApp();
 
 const { gzip, ungzip } = require('node-gzip');
 
-/**
- * Retrieves client id from provided JSON document;
- * If not present there, queries Firestore for the last clientId that used provided debugId;
- * If none is found, returns `UNKNOWN` string.
-*/
-async function getClientId(pingJson, debugId, db) {
-    if (!pingJson || !pingJson.client_info || !pingJson.client_info.client_id) {
-    // if clientId is missing, try to find last client with the current debug id, if none exists, substitute with `UNKNOWN`
-    return db.collection("clients")
-      .where("debugId", "==", debugId)
-      .orderBy("lastActive", "desc")
-      .limit(1).get().then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          return "UNKNOWN";
-        } else {
-          return querySnapshot.docs[0].get("clientId");
-        }
-      })
-  } else {
-    return Promise.resolve(pingJson.client_info.client_id);
-  }
-}
 
 /**
  * Push ping data to Firestore
