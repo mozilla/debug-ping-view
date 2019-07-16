@@ -5,10 +5,6 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "clientId",
-          "order": "ASCENDING"
-        },
-        {
           "fieldPath": "debugId",
           "order": "ASCENDING"
         },

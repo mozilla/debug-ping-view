@@ -35,12 +35,10 @@ class Show extends Component {
 
         // TODO: paginate through the full resultset
         this.pings = firebase.firestore().collection('pings')
-            .where('clientId', '==', props.match.params.clientId)
             .where('debugId', '==', props.match.params.debugId)
             .orderBy('addedAt', 'desc')
             .limit(100);
 
-        this.clientId = props.match.params.clientId;
         this.debugId = props.match.params.debugId;
         this.state = {
             pings: [],
@@ -111,7 +109,7 @@ class Show extends Component {
         return (
             <div className="container-fluid m-2">
                 <h3>
-                    Recent pings for tag: <b>{this.debugId}</b>, client id: {this.clientId}
+                    Recent pings for tag: <b>{this.debugId}</b>
                 </h3>
                 <table className="table table-stripe table-hover">
                     <thead>

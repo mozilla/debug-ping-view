@@ -73,7 +73,7 @@ describe('Cloud Functions', () => {
 
       collectionStub.withArgs("clients").returns({ doc: clientDocStub });
       const clientDocRef = { type: 'client' };
-      clientDocStub.withArgs('b7b6b596-3d06-4dd5-9022-071ac9aeeccb_test-session').returns(clientDocRef);
+      clientDocStub.withArgs('test-session').returns(clientDocRef);
       collectionStub.withArgs("pings").returns({ doc: pingDocStub });
       const pingDocRef = { type: 'ping' };
       pingDocStub.withArgs('7e734244-c9a1-439f-8c0e-dbb1ef435a8a').returns(pingDocRef);
@@ -120,10 +120,10 @@ describe('Cloud Functions', () => {
         end: () => {
           const clientUpdateQuery = batchSetStub.getCall(0);
           assert.equal(clientUpdateQuery.args[0], clientDocRef);
-          expect(clientUpdateQuery.args[1]).to.have.all.keys('lastActive', 'clientId', 'debugId', 'geo', 'os', 'appName');
+          expect(clientUpdateQuery.args[1]).to.have.all.keys('lastActive', 'debugId', 'geo', 'os', 'appName');
           const pingUpdateQuery = batchSetStub.getCall(1);
           assert.equal(pingUpdateQuery.args[0], pingDocRef);
-          expect(pingUpdateQuery.args[1]).to.have.all.keys('clientId', 'debugId', 'payload', 'pingType', 'addedAt');
+          expect(pingUpdateQuery.args[1]).to.have.all.keys('debugId', 'payload', 'pingType', 'addedAt');
 
           done();
         },
