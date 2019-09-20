@@ -11,7 +11,7 @@ function ErrorField(ping) {
     const commonErrors = [
         ["com.mozilla.telemetry.schemas.SchemaNotFoundException: ",
             "Unknown ping type",
-            "Unknown ping type - this is expected if you're developing a new ping. Reach out to the telemetry team if you need help in setting up new schema."]
+            "Unknown ping type - this is expected if you're developing a new ping or using local build with unregistered application id. Reach out to the telemetry team if you need help in setting up new schema."]
     ];
 
     let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
