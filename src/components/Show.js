@@ -28,7 +28,24 @@ function ErrorField(ping) {
         errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
     }
 
-    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}&hellip;</td>
+    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}&hellip;</td>;
+}
+
+function WarningIcon(ping) {
+    if (ping.warning) {
+        const commonWarnings = [
+            ["JSON_VALIDATION_IN_DEBUG_VIEW",
+                "This ping did not pass validation during ingestion (this is normal if you're using custom developer build), but was correctly validated against Glean schema in Debug Viewer.",
+            ],
+        ];
+
+        const matchingCommonWarning = commonWarnings.find((e) => {
+            return ping.warning === e[0];
+        });
+
+        const tooltip = matchingCommonWarning ? matchingCommonWarning[1] : ping.warning;
+        return <i className="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title={tooltip}/>;
+    }
 }
 
 class Show extends Component {
@@ -58,7 +75,7 @@ class Show extends Component {
 
         querySnapshot.docChanges().forEach((change) => {
             if (change.type === "added") {
-                const { addedAt, payload, pingType, error, errorType, errorMessage } = change.doc.data();
+                const { addedAt, payload, pingType, error, errorType, errorMessage, warning } = change.doc.data();
                 pings.unshift({
                     key: change.doc.id,
                     addedAt: addedAt,
@@ -69,6 +86,7 @@ class Show extends Component {
                     error: error,
                     errorType: errorType,
                     errorMessage: errorMessage,
+                    warning: warning,
                 });
             }
             if (change.type === "removed") {
@@ -128,7 +146,7 @@ class Show extends Component {
                         {this.state.pings.map(ping =>
                             <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
                                 <td>{ping.displayDate}</td>
-                                <td>{ping.pingType}</td>
+                                <td>{ping.pingType} {WarningIcon(ping)}</td>
                                 <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
                                 {hasError && ErrorField(ping)}
                                 <td className='text-monospace'>{TruncateString(ping.payload, 150)}&hellip;</td>

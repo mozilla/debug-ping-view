@@ -3,7 +3,20 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 const { gzip, ungzip } = require('node-gzip');
+const fs = require('fs');
+const util = require('util');
 
+async function getJsonValidator() {
+  const readFile = util.promisify(fs.readFile);
+  const gleanSchema = await readFile('schema/glean.1.schema.json');
+  const Ajv = require('ajv');
+  const ajv = new Ajv({unknownFormats: 'ignore'}); // options can be passed, e.g. {allErrors: true}
+  ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
+  // TODO: ajv parser doesn't support `datetime` format
+  return ajv.compile(JSON.parse(gleanSchema.toString()));
+}
+
+const validator = getJsonValidator();
 
 /**
  * Push ping data to Firestore
@@ -41,11 +54,7 @@ async function storePing(pubSubMessage, rawPing, error) {
   const pingType = pubSubMessage.attributes.document_type;
 
   const pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
-  const errorFields = error ? {
-    error: true,
-    errorType: pubSubMessage.attributes.error_type,
-    errorMessage: pubSubMessage.attributes.error_message,
-  } : {};
+  const errorFields = await revalidateAndGetErrorFields(pubSubMessage, rawPing, error);
   const baseFields = {
     addedAt: pubSubMessage.publishTime,
     debugId: debugId,
@@ -58,6 +67,31 @@ async function storePing(pubSubMessage, rawPing, error) {
   });
 
   return batch.commit();
+}
+
+/**
+ * Builds set of error fields.
+ * If provided ping originates from error stream and is a Glean one, tried to validate it against Glean schema.
+ */
+async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
+  if (error && pubSubMessage.attributes.document_namespace === "glean") {
+    // Glean ping from unreleased or development app - let's validate against Glean schema
+    const validate = await validator;
+    const valid = validate(JSON.parse(rawPing));
+    return valid ? {
+      warning: 'JSON_VALIDATION_IN_DEBUG_VIEW',
+    } : {
+      error: true,
+      errorType: 'JSON_VALIDATION_ERROR_DEBUG_VIEW',
+      errorMessage: validate.errors.toString(),
+    };
+  } else {
+    return error ? {
+      error: true,
+      errorType: pubSubMessage.attributes.error_type,
+      errorMessage: pubSubMessage.attributes.error_message,
+    } : {};
+  }
 }
 
 async function handlePost(req, res, error) {
