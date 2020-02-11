@@ -11,9 +11,10 @@
     "test": "mocha --reporter spec"
   },
   "dependencies": {
+    "ajv": "^6.11.0",
     "cors": "^2.8.5",
-    "firebase-admin": "~7.0.0",
-    "firebase-functions": "^2.2.0",
+    "firebase-admin": "^8.9.2",
+    "firebase-functions": "^3.3.0",
     "moment": "^2.24.0",
     "node-gzip": "^1.1.2"
   },
