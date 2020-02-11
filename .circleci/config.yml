@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node_executor:
     docker:
-      - image: circleci/node:8.10.0
+      - image: circleci/node:8.15.0 # Cloud Functions Node.js 8 runtime is based on Node.js version 8.15.0
     # working_directory: /app
 
 jobs:
