@@ -83,7 +83,7 @@ async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
     } : {
       error: true,
       errorType: 'JSON_VALIDATION_ERROR_DEBUG_VIEW',
-      errorMessage: validate.errors.toString(),
+      errorMessage: JSON.stringify(validate.errors),
     };
   } else {
     return error ? {
