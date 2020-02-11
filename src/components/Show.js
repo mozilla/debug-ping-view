@@ -16,6 +16,11 @@ function ErrorField(ping) {
             "Unknown ping type",
             "Unknown ping type - this is expected if you're developing a new ping or using local build with unregistered application id. Reach out to the telemetry team if you need help in setting up new schema."],
     ];
+    const commonErrorTypes = [
+        ["JSON_VALIDATION_ERROR_DEBUG_VIEW",
+            "This ping did not pass validation during ingestion (this is normal if you're using custom developer build). Validation against Glean schema was attempted in Debug Viewer, but failed with error too:"
+        ],
+    ];
 
     let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
     let errorText = TruncateString(ping.errorMessage, 30);
@@ -26,6 +31,12 @@ function ErrorField(ping) {
     if (matchingCommonError) {
         errorText = matchingCommonError[1];
         errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
+    }
+    const matchingCommonErrorType = commonErrorTypes.find((et) => {
+        return ping.errorType === et[0];
+    });
+    if (matchingCommonErrorType) {
+        errorTooltip = matchingCommonErrorType[1] + '\n\n' + ping.errorMessage;
     }
 
     return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}&hellip;</td>;
