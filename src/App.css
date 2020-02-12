@@ -31,3 +31,31 @@
     transform: rotate(360deg);
   }
 }
+
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+.received {
+  width:5%;
+  text-align: right;
+}
+.doc-type {
+  width:8%;
+}
+.raw-json-link {
+  width: 5%;
+  text-align: right;
+}
+.error {
+  width:20%;
+}
+.payload {
+  max-width:62%;
+}
+
+.cell-overflow {
+  position: relative;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
