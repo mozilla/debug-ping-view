@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import firebase from '../Firebase';
-import { FormatDate, TruncateString } from './helpers';
+import { FormatDate } from './helpers';
+import ReadMore from "./ReadMore";
+
 
 function ErrorField(ping) {
     if (!ping.error) {
-        return <td></td>
+        return <td className="error"></td>
     }
 
     // list of common errors - each entry is a tuple containing error string and user-friendly message
@@ -22,15 +24,15 @@ function ErrorField(ping) {
         ],
     ];
 
-    let errorTooltip = ping.errorType + ' ' + ping.errorMessage;
-    let errorText = TruncateString(ping.errorMessage, 30);
+    let errorTooltip = undefined;
+    let errorText = ping.errorType + ' ' + ping.errorMessage;
 
     const matchingCommonError = commonErrors.find((e) => {
         return ping.errorMessage.startsWith(e[0]);
     });
     if (matchingCommonError) {
-        errorText = matchingCommonError[1];
-        errorTooltip = matchingCommonError[2] + '\n\n' + errorTooltip;
+        errorText = matchingCommonError[1] + ': ' + errorText;
+        errorTooltip = matchingCommonError[2];
     }
     const matchingCommonErrorType = commonErrorTypes.find((et) => {
         return ping.errorType === et[0];
@@ -39,7 +41,20 @@ function ErrorField(ping) {
         errorTooltip = matchingCommonErrorType[1] + '\n\n' + ping.errorMessage;
     }
 
-    return <td className='text-danger text-monospace' data-toggle="tooltip" data-placement="top" title={errorTooltip}>{errorText}&hellip;</td>;
+    // hack to force overflow of compacted json strings
+    errorText = errorText.replace(/":"/g, "\": \"");
+    errorText = errorText.replace(/","/g, "\", \"");
+
+    const infoIcon = errorTooltip ? <i className="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title={errorTooltip}/> : '';
+
+    return <td className='text-danger text-monospace error'><ReadMore lines={3}><div className="cell-overflow">{errorText}</div></ReadMore>{infoIcon}</td>;
+}
+
+function PayloadField(pingPayload) {
+    // hack to force overflow of compacted json strings
+    pingPayload = pingPayload.replace(/":"/g, "\": \"");
+    pingPayload = pingPayload.replace(/","/g, "\", \"");
+    return <ReadMore lines={3}><p className="cell-overflow">{pingPayload}</p></ReadMore>
 }
 
 function WarningIcon(ping) {
@@ -146,21 +161,21 @@ class Show extends Component {
                 <table className="table table-stripe table-hover">
                     <thead>
                         <tr>
-                            <th>Received</th>
-                            <th>Ping type</th>
-                            <th></th>
-                            {hasError && <th>Error</th>}
-                            <th>Payload</th>
+                            <th className="received">Received</th>
+                            <th className="doc-type">Ping type</th>
+                            {hasError && <th className="error">Error</th>}
+                            <th className="raw-json-link"/>
+                            <th className="payload">Payload</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.pings.map(ping =>
                             <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
-                                <td>{ping.displayDate}</td>
-                                <td>{ping.pingType} {WarningIcon(ping)}</td>
-                                <td><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
+                                <td className="received">{ping.displayDate}</td>
+                                <td className="doc-type">{ping.pingType} {WarningIcon(ping)}</td>
                                 {hasError && ErrorField(ping)}
-                                <td className='text-monospace'>{TruncateString(ping.payload, 150)}&hellip;</td>
+                                <td className="raw-json-link"><a target="_blank" rel="noopener noreferrer" href={this.jsonToDataURI(ping.payload)}>Raw JSON</a></td>
+                                <td className='text-monospace payload'>{PayloadField(ping.payload)}</td>
                             </tr>
                         )}
                     </tbody>
