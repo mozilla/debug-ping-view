@@ -74,7 +74,7 @@ async function storePing(pubSubMessage, rawPing, error) {
  * If provided ping originates from error stream and is a Glean one, tried to validate it against Glean schema.
  */
 async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
-  if (error && pubSubMessage.attributes.document_namespace === "glean") {
+  if (error) {
     // Glean ping from unreleased or development app - let's validate against Glean schema
     const validate = await validator;
     const valid = validate(JSON.parse(rawPing));
