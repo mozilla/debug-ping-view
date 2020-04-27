@@ -6,7 +6,7 @@ curl --header 'X-Debug-ID: test-debug-id' -XPOST https://stage.ingestion.nonprod
 ```
 
 ## Deployment
-Cloud function:
+Cloud functions:
 ```
 firebase deploy --only functions
 ```
@@ -15,3 +15,8 @@ Creating PubSub subscription:
 ```
 gcloud pubsub subscriptions create decoded-to-debugview --topic projects/moz-fx-data-shar-nonprod-efed/topics/structured-decoded --push-endpoint "https://us-central1-debug-ping-preview.cloudfunctions.net/debugPing/"
 ```
+
+## Error stream ping validation
+Apart from displaying decoded pings and error messages, we try to validate all Glean pings from the error stream (`structured-error` Pub/Sub topic). This is useful for custom application builds that are not [registered in probe-scraper](https://github.com/mozilla/probe-scraper/blob/master/repositories.yaml), as their pings do not pass pipeline validation.
+
+Validator uses schema that is copied to this repository ([schema/glean.1.schema.json](schema/glean.1.schema.json)) and deployed with the functions.

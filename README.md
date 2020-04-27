@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/mozilla/debug-ping-view.svg?style=svg&circle-token=75228c334c4cb4d6f7bd33e739c44267491675d7)](https://circleci.com/gh/mozilla/debug-ping-view)
 # Glean Debug View
-This is a proof of concept web application for viewing Glean debug pings in real-time.
+Web application for viewing Glean debug pings in real-time.
 
 ## Contributing
 Since this repository is private, CircleCI is not able to build from forks. As a workaround PRs should be submitted from branches pushed to origin.
@@ -33,7 +33,9 @@ Frontend is implemented with [React](https://reactjs.org/) hosted on [Firebase](
 ![doc/data-flow.mmd](doc/data-flow.svg "Data flow diagram")
 
 ### Ingestion and data model
-Pings from `structured-decoded` topic are pushed to [HTTP Function](functions/index.js) via [Push Subscription](https://cloud.google.com/pubsub/docs/subscriber#push-subscription). We can't use PubSub-triggered function here because it doesn't support cross-project access.
+Pings from `structured-decoded-debug` and `structured-error` topics are pushed to [HTTP Functions](functions/index.js) via [Push Subscriptions](https://cloud.google.com/pubsub/docs/subscriber#push-subscription). We can't use PubSub-triggered function here because it doesn't support cross-project access.
+
+For more information about the functions, see [functions/README.md](functions/README.md).
 
 Glean debug pings with some fields extracted are stored in Firestore. There are two collections with flat documents used:
 ```
