@@ -11,7 +11,9 @@
     "test": "mocha --reporter spec"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^4.7.0",
     "ajv": "^6.11.0",
+    "axios": "^0.19.2",
     "cors": "^2.8.5",
     "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",

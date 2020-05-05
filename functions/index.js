@@ -150,3 +150,6 @@ exports.decoderError = functions.https.onRequest((req, res) => {
       return res.status(403).send('Forbidden!');
   }
 });
+
+const schemaLoader = require('./schemaLoader');
+exports.gleanSchemaLoader = schemaLoader.gleanSchemaLoader;
