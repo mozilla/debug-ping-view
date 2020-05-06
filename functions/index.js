@@ -10,9 +10,8 @@ async function getJsonValidator() {
   const readFile = util.promisify(fs.readFile);
   const gleanSchema = await readFile('schema/glean.1.schema.json');
   const Ajv = require('ajv');
-  const ajv = new Ajv({unknownFormats: 'ignore'}); // options can be passed, e.g. {allErrors: true}
+  const ajv = new Ajv({unknownFormats: ["datetime"]});
   ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-  // TODO: ajv parser doesn't support `datetime` format
   return ajv.compile(JSON.parse(gleanSchema.toString()));
 }
 
