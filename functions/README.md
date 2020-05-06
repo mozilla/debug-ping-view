@@ -19,4 +19,4 @@ gcloud pubsub subscriptions create decoded-to-debugview --topic projects/moz-fx-
 ## Error stream ping validation
 Apart from displaying decoded pings and error messages, we try to validate all Glean pings from the error stream (`structured-error` Pub/Sub topic). This is useful for custom application builds that are not [registered in probe-scraper](https://github.com/mozilla/probe-scraper/blob/master/repositories.yaml), as their pings do not pass pipeline validation.
 
-Validator uses schema that is copied to this repository ([schema/glean.1.schema.json](schema/glean.1.schema.json)) and deployed with the functions.
+Validator uses Glean schema stored in Firestore. [Schema loader](schemaLoader.js) function is periodically polling `schemas_build_id` label on the `org_mozilla_fenix_stable.baseline_v1` table and updating Firestore entry to keep it in sync with production.

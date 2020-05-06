@@ -7,15 +7,38 @@ const fs = require('fs');
 const util = require('util');
 
 async function getJsonValidator() {
-  const readFile = util.promisify(fs.readFile);
-  const gleanSchema = await readFile('schema/glean.1.schema.json');
+  console.log("Creating schema validator...")
+
+  // first, try fetching latest schema from Firestore
+  const db = admin.firestore();
+  const latestSchema = await db.collection('glean_schemas').doc('latest').get();
+  let schema;
+  let schemaVersion;
+  if (latestSchema.exists) {
+    console.log('Using schema from Firestore');
+    const data = latestSchema.data();
+    schema = data.schema;
+    schemaVersion = data.deployTimestamp;
+  } else {
+    // if there's no schema in Firestore, fall back to bundled one
+    console.log("Using bundled schema");
+    const readFile = util.promisify(fs.readFile);
+    schema = await readFile('schema/glean.1.schema.json');
+    schemaVersion = "bundled";
+  }
+
+  const gleanSchema = schema;
+
   const Ajv = require('ajv');
   const ajv = new Ajv({unknownFormats: ["datetime"]});
   ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-  return ajv.compile(JSON.parse(gleanSchema.toString()));
+  return {
+    validator: ajv.compile(JSON.parse(gleanSchema.toString())),
+    schemaVersion: schemaVersion,
+  };
 }
 
-const validator = getJsonValidator();
+const schemaValidator = getJsonValidator();
 
 /**
  * Push ping data to Firestore
@@ -75,14 +98,18 @@ async function storePing(pubSubMessage, rawPing, error) {
 async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
   if (error) {
     // Glean ping from unreleased or development app - let's validate against Glean schema
-    const validate = await validator;
+    const validator = await schemaValidator;
+    const validate = validator.validator;
+    const schemaVersion = validator.schemaVersion;
     const valid = validate(JSON.parse(rawPing));
     return valid ? {
       warning: 'JSON_VALIDATION_IN_DEBUG_VIEW',
+      debugViewSchemaVersion: schemaVersion,
     } : {
       error: true,
       errorType: 'JSON_VALIDATION_ERROR_DEBUG_VIEW',
       errorMessage: JSON.stringify(validate.errors),
+      debugViewSchemaVersion: schemaVersion,
     };
   } else {
     return error ? {
