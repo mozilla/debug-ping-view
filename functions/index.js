@@ -93,7 +93,7 @@ async function storePing(pubSubMessage, rawPing, error) {
 
 /**
  * Builds set of error fields.
- * If provided ping originates from error stream and is a Glean one, tried to validate it against Glean schema.
+ * If provided ping originates from error stream and is a Glean one, tries to validate it against Glean schema.
  */
 async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
   if (error) {
@@ -101,14 +101,24 @@ async function revalidateAndGetErrorFields(pubSubMessage, rawPing, error) {
     const validator = await schemaValidator;
     const validate = validator.validator;
     const schemaVersion = validator.schemaVersion;
-    const valid = validate(JSON.parse(rawPing));
+
+    let errorMessage = null;
+    let valid = false;
+
+    try {
+      valid = validate(JSON.parse(rawPing));
+      errorMessage = JSON.stringify(validate.errors);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+
     return valid ? {
       warning: 'JSON_VALIDATION_IN_DEBUG_VIEW',
       debugViewSchemaVersion: schemaVersion,
     } : {
       error: true,
       errorType: 'JSON_VALIDATION_ERROR_DEBUG_VIEW',
-      errorMessage: JSON.stringify(validate.errors),
+      errorMessage: errorMessage,
       debugViewSchemaVersion: schemaVersion,
     };
   } else {
