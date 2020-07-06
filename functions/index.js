@@ -49,20 +49,20 @@ async function storePing(pubSubMessage, rawPing, error) {
   const batch = db.batch();
 
   let pingJson = null;
-  let os = null;
+  let os = "???";
   try {
     // TODO: make sure this is safe if some fields are missing
     pingJson = JSON.parse(rawPing);
-    os = pingJson.client_info.os + " " + pingJson.client_info.os_version;
+    os = sanitize(pingJson.client_info.os) + " " + sanitize(pingJson.client_info.os_version);
   } catch (e) {
     // this is validation error
     console.error(`JSON parse error: ${e}, raw ping was: ${rawPing}`);
   }
 
-  const appName = pubSubMessage.attributes.document_namespace;
-  const geo = pubSubMessage.attributes.geo_city + ", " +
-    pubSubMessage.attributes.geo_country;
-  const debugId = pubSubMessage.attributes.x_debug_id;
+  const appName = sanitize(pubSubMessage.attributes.document_namespace);
+  const geo = sanitize(pubSubMessage.attributes.geo_city) + ", " +
+    sanitize(pubSubMessage.attributes.geo_country);
+  const debugId = sanitize(pubSubMessage.attributes.x_debug_id);
 
   const clientRef = db.collection("clients").doc(debugId);
   batch.set(clientRef, {
@@ -89,6 +89,11 @@ async function storePing(pubSubMessage, rawPing, error) {
   });
 
   return batch.commit();
+}
+
+function sanitize(value) {
+  // eslint-disable-next-line no-eq-null
+  return value == null ? "???" : value;
 }
 
 /**
@@ -139,7 +144,8 @@ async function handlePost(req, res, error) {
   // const gleanDebugPing = namespace === "glean" && debugId;
   const gleanDebugPing = debugId;
 
-  if (gleanDebugPing) {
+  // document_id is used as the key in Firestore, so we can't store a ping without it
+  if (gleanDebugPing && pubSubMessage.attributes.document_id != null) { // eslint-disable-line no-eq-null
     const pingPayload = Buffer.from(pubSubMessage.data, 'base64');
 
     return ungzip(pingPayload).then((decompressed) => {
