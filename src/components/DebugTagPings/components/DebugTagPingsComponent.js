@@ -10,16 +10,24 @@ import {
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 
+import SearchBar from '../../SearchBar';
 import ErrorField from './ErrorField';
 import PayloadField from './PayloadField';
 import WarningIcon from './WarningIcon';
+
 import { FormatDate } from '../../../lib/helpers';
+import { searchArrayPropertiesForSubstring } from '../../../lib/search';
+import { usePrevious } from '../../../lib/usePrevious';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
   const [firstSnapshot, setFirstSnapshot] = useState(true);
   const [pings, setPings] = useState([]);
+  const [filteredPings, setFilteredPings] = useState([]);
   const [changeQueue, setChangeQueue] = useState([]);
+
+  const [search, setSearch] = useState('');
+  const prevSearch = usePrevious(search);
 
   /// handlers ///
   const jsonToDataURI = (json) => {
@@ -77,6 +85,17 @@ const DebugTagPings = ({ debugId }) => {
     setChangeQueue([]);
   }, [pings, changeQueue, firstSnapshot]);
 
+  const handleSearchUpdate = useCallback(() => {
+    if (pings.length) {
+      const localPings = searchArrayPropertiesForSubstring(
+        pings, // Full list of pings to check.
+        search.toLowerCase().trim(), // Search query converted to lowercase.
+        ['pingType', 'payload'] // All properties to check for search.
+      );
+      setFilteredPings(localPings);
+    }
+  }, [pings, search]);
+
   /// lifecycle ///
   useEffect(() => {
     const pingsQuery = query(
@@ -103,13 +122,35 @@ const DebugTagPings = ({ debugId }) => {
     }
   }, [changeQueue, onCollectionUpdate]);
 
+  useEffect(() => {
+    if (search !== prevSearch) {
+      handleSearchUpdate();
+    }
+  }, [search, prevSearch, handleSearchUpdate]);
+
   /// render ///
+  const displayPings = () => {
+    if (search.length) {
+      return [...filteredPings];
+    } else {
+      return [...pings];
+    }
+  };
+
   const hasError = pings.some((ping) => ping.error);
   return (
     <div className='container-fluid m-2'>
       <h3>
-        Recent pings for tag: <b>{debugId}</b>
+        Recent pings for tag: <b>{debugId}</b> ({displayPings().length})
       </h3>
+      <SearchBar
+        onInput={(input) => setSearch(input)}
+        placeholder='Search'
+        containerStyles={{ margin: '10px 0' }}
+        inputStyles={{ width: '20%' }}
+        debounceTime={500}
+        tooltipContent='Searches by: Ping type, Payload'
+      />
       <table className='table table-stripe table-hover'>
         <thead>
           <tr>
@@ -121,7 +162,7 @@ const DebugTagPings = ({ debugId }) => {
           </tr>
         </thead>
         <tbody>
-          {pings.map((ping) => (
+          {displayPings().map((ping) => (
             <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
               <td className='received'>{ping.displayDate}</td>
               <td className='doc-type'>
@@ -138,6 +179,11 @@ const DebugTagPings = ({ debugId }) => {
               </td>
             </tr>
           ))}
+          {!!search.length && displayPings().length === 0 && (
+            <tr>
+              <td>No Results</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
