@@ -1,26 +1,25 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
+const SecuredRoute = ({ component: Component, authenticated }) => {
+  const params = useParams();
 
-function SecuredRoute({ component: Component, authenticated, ...rest }) {
+  return authenticated ? (
+    <Component {...params} />
+  ) : (
+    <Navigate
+      to={{
+        pathname: '/login'
+      }}
+    />
+  );
+};
 
-    return (
-        <Route
-        {...rest}
-        render={props =>
-            authenticated ? (
-                <Component {...props} />
-            ) : (
-                <Redirect
-                    to={{
-                    pathname: "/login",
-                    state: { from: props.location }
-                    }}
-                /> 
-            )
-        }
-        />
-    );
-}
+SecuredRoute.propTypes = {
+  // This handles both functional and class components.
+  component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  authenticated: PropTypes.bool.isRequired
+};
 
 export default SecuredRoute;

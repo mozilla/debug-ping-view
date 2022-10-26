@@ -1,46 +1,39 @@
-import React, { Component } from 'react';
-import firebase from '../Firebase';
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import PropTypes from 'prop-types';
 
-class ShowRawPing extends Component {
+const ShowRawPing = ({ docId }) => {
+  /// state ///
+  const [ping, setPing] = useState('Loading...');
 
-    constructor(props) {
-        super(props);
+  /// lifecycle ///
+  useEffect(() => {
+    getDoc(doc(getFirestore(), 'pings', docId)).then((doc) => {
+      if (!doc.exists) {
+        setPing('No such ping!');
+      } else {
+        setPing(JSON.stringify(JSON.parse(doc.data().payload), undefined, 4));
+      }
+    });
+  }, [docId]);
 
-        this.state = { ping: 'Loading...' };
+  /// render ///
+  return (
+    <div className='container-fluid m-2'>
+      <div className='card'>
+        <div className='card-body'>
+          <h3 className='card-title'>Raw ping:</h3>
+          <pre id='json' class='text-monospace'>
+            {ping}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-        firebase.firestore().collection('pings')
-            .doc(props.match.params.docId)
-            .get()
-            .then(doc => {
-                if (!doc.exists) {
-                    this.setState({
-                        ping: 'No such ping!'
-                    })
-                } else {
-                    this.setState({
-                        ping: JSON.stringify(JSON.parse(doc.data().payload), undefined, 4)
-                    })
-                }
-            });
-    }
-
-    render() {
-        return (
-            <div className="container-fluid m-2">
-                <div className="card">
-                    <div className="card-body">
-                        <h3 className="card-title">
-                            Raw ping:
-                        </h3>
-                        <pre id="json" class="text-monospace">
-                            {this.state.ping}
-                        </pre>
-                    </div>
-                </div>
-            </div>
-        );
-
-    }
-}
+ShowRawPing.propTypes = {
+  docId: PropTypes.string.isRequired
+};
 
 export default ShowRawPing;
