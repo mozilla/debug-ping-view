@@ -55,7 +55,7 @@ const DebugTagPings = ({ debugId }) => {
       // Doc should no longer be in our array, so we remove it.
       if (change.type === 'removed') {
         normalizedPings = normalizedPings.filter((ping) => {
-          return ping.key === change.doc.id;
+          return ping.key !== change.doc.id;
         });
       }
     });

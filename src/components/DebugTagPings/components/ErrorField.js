@@ -43,7 +43,9 @@ const ErrorField = ({ ping }) => {
 
   return (
     <td className='text-danger text-monospace error'>
-      <ReadMore charLimit={108} containerStyle='cell-overflow' text={errorText} />
+      <ReadMore lines={3}>
+        <p className='cell-overflow'>{errorText}</p>
+      </ReadMore>
       {infoIcon}
     </td>
   );
