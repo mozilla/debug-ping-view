@@ -9,7 +9,7 @@
  * @param {string[]} keys Every property that should be checked for the query.
  * @returns {Object[]} Array elements with a property that includes the query.
  */
-export const searchArrayPropertiesForSubstring = (arr, query, properties) => {
+export const searchArrayElementPropertiesForSubstring = (arr, query, properties) => {
   return arr.filter((obj) => {
     for (const key of properties) {
       if (obj[key] && obj[key].toLowerCase().includes(query.toLowerCase())) {
