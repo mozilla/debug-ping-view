@@ -1,57 +1,70 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { auth } from './Firebase';
+
 import './App.css';
-import firebase from './Firebase';
 import NavBar from './components/NavBar';
 import ActiveClients from './components/ActiveClients';
 import Create from './components/Create';
-import Show from './components/Show';
+import DebugTagPings from './components/DebugTagPings';
 import ShowRawPing from './components/ShowRawPing';
 import Help from './components/Help';
 import SignInScreen from './components/SignInScreen';
 import SecuredRoute from './components/SecuredRoute';
+import Loading from './components/Loading';
 
+const App = () => {
+  /// state ///
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
-class App extends Component {
-  state = { loading: true, authenticated: false, user: null };
-
-  componentWillMount() {
-    this.listener = firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({
-          authenticated: true,
-          currentUser: user,
-          loading: false
-        });
-      } else {
-        this.setState({
-          authenticated: false,
-          currentUser: null,
-          loading: false
-        });
-      }
+  /// lifecycle ///
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setAuthenticated(!!user);
+      setLoading(false);
     });
-  }
-  componentWillUnmount() {
-    this.listener();
-  }
-  render() {
-    if (this.state.loading) {
-      return <p className="text-center">Loading...</p>;
-    }
 
-    return (
-      <div>
-        <NavBar authenticated={this.state.authenticated} />
-        <SecuredRoute exact path='/' component={ActiveClients} authenticated={this.state.authenticated} />
-        <SecuredRoute path='/create' component={Create} authenticated={this.state.authenticated} />
-        <SecuredRoute path='/pings/:debugId' component={Show} authenticated={this.state.authenticated} />
-        <SecuredRoute path='/rawPing/:docId' component={ShowRawPing} authenticated={this.state.authenticated} />
-        <SecuredRoute exact path='/help' component={Help} authenticated={this.state.authenticated} />
-        <Route path='/login' component={SignInScreen} />
-      </div>
-    );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  /// short-circuit ///
+  if (loading) {
+    return <Loading />;
   }
-}
+
+  /// render ///
+  return (
+    <div>
+      <NavBar authenticated={authenticated} />
+      <Routes>
+        <Route
+          exact
+          path='/'
+          element={<SecuredRoute component={ActiveClients} authenticated={authenticated} />}
+        />
+        <Route
+          path='/create'
+          element={<SecuredRoute component={Create} authenticated={authenticated} />}
+        />
+        <Route
+          path='/pings/:debugId'
+          element={<SecuredRoute component={DebugTagPings} authenticated={authenticated} />}
+        />
+        <Route
+          path='/rawPing/:docId'
+          element={<SecuredRoute component={ShowRawPing} authenticated={authenticated} />}
+        />
+        <Route
+          path='/help'
+          element={<SecuredRoute component={Help} authenticated={authenticated} />}
+        />
+        <Route path='/login' element={<SignInScreen />} />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;
