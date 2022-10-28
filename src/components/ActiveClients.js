@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 import SearchBar from './SearchBar';
-import { FormatDate } from '../lib/helpers';
+import { formatDate } from '../lib/date';
 import { usePrevious } from '../lib/usePrevious';
-import { searchArrayPropertiesForSubstring } from '../lib/search';
+import { searchArrayElementPropertiesForSubstring } from '../lib/searchArrayElementPropertiesForSubstring';
 
 const q = query(collection(getFirestore(), 'clients'), orderBy('lastActive', 'desc'));
 
@@ -23,11 +23,12 @@ const ActiveClients = () => {
 
     querySnapshot.forEach((doc) => {
       const { lastActive, debugId, geo, os, appName } = doc.data();
+
       normalizedClients.push({
         key: doc.id,
         appName,
         debugId,
-        displayDate: FormatDate(lastActive),
+        displayDate: formatDate(lastActive),
         geo,
         lastActive,
         os
@@ -39,11 +40,12 @@ const ActiveClients = () => {
 
   const handleSearchUpdate = useCallback(() => {
     if (clients.length) {
-      const localClients = searchArrayPropertiesForSubstring(
-        clients, // Full list of clients to check.
-        search.toLowerCase().trim(), // Search query converted to lowercase.
-        ['key', 'os', 'appName', 'geo'] // All properties to check for search.
+      const localClients = searchArrayElementPropertiesForSubstring(
+        clients, // Full list of clients to search.
+        search.toLowerCase().trim(), // Query trimmed and converted to lowercase.
+        ['key', 'os', 'appName', 'geo'] // All client properties to search.
       );
+
       setFilteredClients(localClients);
     }
   }, [clients, search]);
@@ -51,6 +53,7 @@ const ActiveClients = () => {
   /// lifecycle ///
   useEffect(() => {
     const unsubscribe = onSnapshot(q, onCollectionUpdate);
+
     return () => {
       unsubscribe();
     };
