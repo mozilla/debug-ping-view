@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
+
+import SearchBar from './SearchBar';
 import { FormatDate } from '../lib/helpers';
+import { usePrevious } from '../lib/usePrevious';
+import { searchArrayPropertiesForSubstring } from '../lib/search';
 
 const q = query(collection(getFirestore(), 'clients'), orderBy('lastActive', 'desc'));
 
 const ActiveClients = () => {
   /// state ///
   const [clients, setClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
+
+  const [search, setSearch] = useState('');
+  const prevSearch = usePrevious(search);
 
   /// handlers ///
   const onCollectionUpdate = (querySnapshot) => {
@@ -29,6 +37,17 @@ const ActiveClients = () => {
     setClients(normalizedClients);
   };
 
+  const handleSearchUpdate = useCallback(() => {
+    if (clients.length) {
+      const localClients = searchArrayPropertiesForSubstring(
+        clients, // Full list of clients to check.
+        search.toLowerCase().trim(), // Search query converted to lowercase.
+        ['key', 'os', 'appName', 'geo'] // All properties to check for search.
+      );
+      setFilteredClients(localClients);
+    }
+  }, [clients, search]);
+
   /// lifecycle ///
   useEffect(() => {
     const unsubscribe = onSnapshot(q, onCollectionUpdate);
@@ -37,11 +56,32 @@ const ActiveClients = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (search !== prevSearch) {
+      handleSearchUpdate();
+    }
+  }, [search, prevSearch, handleSearchUpdate]);
+
   /// render ///
+  const displayClients = () => {
+    if (search.length) {
+      return [...filteredClients];
+    } else {
+      return [...clients];
+    }
+  };
+
   return (
     <div>
       <div className='container-fluid m-2'>
-        <h3>Active clients</h3>
+        <h3>Active clients ({displayClients().length})</h3>
+        <SearchBar
+          onInput={(input) => setSearch(input)}
+          placeholder='Search'
+          containerStyles={{ margin: '10px 0' }}
+          inputStyles={{ width: '20%' }}
+          tooltipContent='Searches by: Debug id, OS, Application, Geo'
+        />
         <table className='table table-stripe table-hover'>
           <thead>
             <tr>
@@ -53,7 +93,7 @@ const ActiveClients = () => {
             </tr>
           </thead>
           <tbody>
-            {clients.map((client) => {
+            {displayClients().map((client) => {
               const { key, debugId, displayDate, os, appName, geo } = client;
               return (
                 <tr key={key}>
@@ -67,6 +107,11 @@ const ActiveClients = () => {
                 </tr>
               );
             })}
+            {!!search.length && displayClients().length === 0 && (
+              <tr>
+                <td>No Results</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
