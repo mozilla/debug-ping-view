@@ -6,9 +6,9 @@ import { auth } from '../Firebase';
 
 const NavBar = ({ authenticated }) => {
   return (
-    <nav className='navbar navbar-light bg-light navbar-expand-md fixed-top'>
+    <nav className='navbar navbar-light bg-light navbar-expand-md'>
       <Link className='navbar-brand' to='/'>
-        Glean Debug ping viewer
+        <h3 style={{ marginBottom: '0px' }}>Glean Debug ping viewer</h3>
       </Link>
       {authenticated ? (
         <>

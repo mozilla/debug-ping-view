@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   collection,
   getFirestore,
@@ -156,6 +157,9 @@ const DebugTagPings = ({ debugId }) => {
               </td>
               {hasError && <ErrorField ping={ping} />}
               <td className='raw-json-link'>
+                <Link to={`/pings/${debugId}/${ping.key}`}>View</Link>
+                <br />
+                <br />
                 <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)}>
                   Raw JSON
                 </a>
