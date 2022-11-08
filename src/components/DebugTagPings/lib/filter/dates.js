@@ -1,23 +1,27 @@
+import { PING_LIFETIME } from '../../../../lib/constants';
 import { formatDay } from '../../../../lib/date';
 import { generateDateObjFromMonthAndDay } from './utils';
 
 /**
- * Generate a list of MM/DD formatted dates for the last 21 days.
+ * Generate a list of MM/DD formatted dates for the last N days where
+ * N is the `PING_LIFETIME`.
  *
- * @returns {string[]} Last 21 days in MM/DD format.
+ * @returns {string[]} Days in MM/DD format for the last N days where N is the
+ *                     `PING_LIFETIME`.
  */
-export const getDatesFromLastTwentyOneDays = () => {
+export const getDaysInPingLifetime = () => {
   const now = Date.now();
 
-  const lastTwentyOneDays = [];
-  for (let i = 0; i < 21; i++) {
+  const daysInPingLifetime = [];
+  for (let i = 0; i < PING_LIFETIME; i++) {
     const timestamp = now - 24 * 60 * 60 * 1000 * i;
     const date = new Date(timestamp).toISOString();
     const formattedDay = formatDay(date);
-    lastTwentyOneDays.push(formattedDay);
+
+    daysInPingLifetime.push(formattedDay);
   }
 
-  return lastTwentyOneDays;
+  return daysInPingLifetime;
 };
 
 /**

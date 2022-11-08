@@ -8,11 +8,7 @@ import { aggregatePingTypes, filterOnPingType } from '../lib/filter/pingType';
 import { aggregateMetricTypes, filterOnMetricType } from '../lib/filter/metricType';
 import { aggregateMetricIds, filterOnMetricId } from '../lib/filter/metricId';
 import { aggregateEventPropertyValues, filterOnEventProperty } from '../lib/filter/eventProperty';
-import {
-  filterOnEndDate,
-  filterOnStartDate,
-  getDatesFromLastTwentyOneDays
-} from '../lib/filter/dates';
+import { filterOnEndDate, filterOnStartDate, getDaysInPingLifetime } from '../lib/filter/dates';
 import { searchArrayElementPropertiesForSubstring } from '../../../lib/searchArrayElementPropertiesForSubstring';
 
 const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
@@ -175,7 +171,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
             defaultValue='Start Date'
             state={startDate}
             setState={setStartDate}
-            values={getDatesFromLastTwentyOneDays()}
+            values={getDaysInPingLifetime()}
           />
           {/* End Date */}
           <FilterDropdown
@@ -183,7 +179,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
             defaultValue='End Date'
             state={endDate}
             setState={setEndDate}
-            values={getDatesFromLastTwentyOneDays()}
+            values={getDaysInPingLifetime()}
           />
           {/* Clear Filters */}
           <div>
