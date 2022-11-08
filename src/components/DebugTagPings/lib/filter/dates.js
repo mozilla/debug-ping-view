@@ -1,6 +1,5 @@
 import moment from 'moment';
 import { PING_LIFETIME } from '../../../../lib/constants';
-import { generateDateObjFromMonthAndDay } from './utils';
 
 /**
  * Generate a list of MM/DD formatted dates for the last N days where
@@ -26,28 +25,24 @@ export const getDaysInPingLifetime = () => {
  * Apply `startDate` filter to list of pings.
  *
  * @param {Object[]} pings All pings to filter.
- * @param {string} startDate The `startDate` to filter on.
+ * @param {string} startDateStr The `startDate` to filter on.
  * @returns {Object[]} All pings sent in after the `startDate`.
  */
-export const filterOnStartDate = (pings, startDate) => {
+export const filterOnStartDate = (pings, startDateStr) => {
   // If there is no filter applied, we return all pings.
-  if (!startDate) {
+  if (!startDateStr) {
     return pings;
   }
 
+  // Create the date object from the BEGINNING of the day.
+  const startDate = moment(`${startDateStr}/${moment().year()}`, 'MM/DD/YYYY').startOf('day');
+
   // Iterate over all pings and look for ones that are after our `startDate`.
   return pings.filter((ping) => {
-    // Create date object for the `startDate` to use for comparison.
-    const startDateObj = generateDateObjFromMonthAndDay(startDate);
+    // Create moment for the current ping.
+    const pingDate = moment(ping.addedAt);
 
-    // Make sure we start from the BEGINNING of the day.
-    startDateObj.setHours(0, 0, 0, 0);
-
-    // Create date object for current ping.
-    const pingDate = new Date(ping.addedAt);
-
-    // Check if the selected start date is earlier than the date of the ping.
-    return startDateObj < pingDate;
+    return startDate.isSameOrBefore(pingDate);
   });
 };
 
@@ -55,27 +50,25 @@ export const filterOnStartDate = (pings, startDate) => {
  * Apply `endDate` filter to list of pings.
  *
  * @param {Object[]} pings All pings to filter.
- * @param {string} endDate The `endDate` to filter on.
+ * @param {string} endDateStr The `endDate` to filter on.
  * @returns {Object[]} All pings sent in before the `endDate`.
  */
-export const filterOnEndDate = (pings, endDate) => {
+export const filterOnEndDate = (pings, endDateStr) => {
   // If there is no filter applied, we return all pings.
-  if (!endDate) {
+  if (!endDateStr) {
     return pings;
   }
 
+  // Create the date object from the BEGINNING of the NEXT day.
+  const endDate = moment(`${endDateStr}/${moment().year()}`, 'MM/DD/YYYY')
+    .add(1, 'days')
+    .startOf('day');
+
   // Iterate over all pings and look for ones that are before our `endDate`.
   return pings.filter((ping) => {
-    // Create date object for the `endDate` to use for comparison.
-    const endDateObj = generateDateObjFromMonthAndDay(endDate);
+    // Create moment for the current ping.
+    const pingDate = moment(ping.addedAt);
 
-    // Make sure we end at the END of the day.
-    endDateObj.setHours(23, 59, 59, 999);
-
-    // Create date object for current ping.
-    const pingDate = new Date(ping.addedAt);
-
-    // Check if the selected end date is after than the date of the ping.
-    return pingDate < endDateObj;
+    return pingDate.isSameOrBefore(endDate);
   });
 };

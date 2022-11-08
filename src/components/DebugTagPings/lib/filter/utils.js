@@ -20,26 +20,6 @@ export const insertOrIncrementValueInMapByKey = (map, key) => {
 };
 
 /**
- * Takes a string formatted MM/DD and returns a JS `Date` object.
- *
- * @param {string} monthAndDayFormattedString String formatted MM/DD.
- * @returns {Date} Date object for the specific month and day.
- */
-export const generateDateObjFromMonthAndDay = (monthAndDayFormattedString) => {
-  // Current display format is MM/DD, so we can pull values via split.
-  const [month, day] = monthAndDayFormattedString.split('/');
-
-  // Create our new Date object to compare against our ping date.
-  const date = new Date();
-
-  // Set the month and day from our `endDate`.
-  date.setMonth(Number(month) - 1);
-  date.setDate(Number(day));
-
-  return date;
-};
-
-/**
  * Sort the entries of a map by its values in descending order and return
  * the keys.
  *
