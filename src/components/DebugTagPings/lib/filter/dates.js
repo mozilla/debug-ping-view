@@ -1,5 +1,5 @@
+import moment from 'moment';
 import { PING_LIFETIME } from '../../../../lib/constants';
-import { formatDay } from '../../../../lib/date';
 import { generateDateObjFromMonthAndDay } from './utils';
 
 /**
@@ -10,13 +10,11 @@ import { generateDateObjFromMonthAndDay } from './utils';
  *                     `PING_LIFETIME`.
  */
 export const getDaysInPingLifetime = () => {
-  const now = Date.now();
-
   const daysInPingLifetime = [];
+
   for (let i = 0; i < PING_LIFETIME; i++) {
-    const timestamp = now - 24 * 60 * 60 * 1000 * i;
-    const date = new Date(timestamp).toISOString();
-    const formattedDay = formatDay(date);
+    const day = moment().subtract(i, 'days');
+    const formattedDay = day.format('MM/DD');
 
     daysInPingLifetime.push(formattedDay);
   }
