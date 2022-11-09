@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   collection,
   getFirestore,
@@ -10,14 +10,12 @@ import {
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 
-import SearchBar from '../../SearchBar';
+import Filter from './Filter';
 import ErrorField from './ErrorField';
 import PayloadField from './PayloadField';
 import WarningIcon from './WarningIcon';
 
-import { FormatDate } from '../../../lib/helpers';
-import { searchArrayPropertiesForSubstring } from '../../../lib/search';
-import { usePrevious } from '../../../lib/usePrevious';
+import { formatDate } from '../../../lib/date';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
@@ -25,9 +23,7 @@ const DebugTagPings = ({ debugId }) => {
   const [pings, setPings] = useState([]);
   const [filteredPings, setFilteredPings] = useState([]);
   const [changeQueue, setChangeQueue] = useState([]);
-
-  const [search, setSearch] = useState('');
-  const prevSearch = usePrevious(search);
+  const [filtersApplied, setFiltersApplied] = useState(false);
 
   /// handlers ///
   const jsonToDataURI = (json) => {
@@ -41,15 +37,18 @@ const DebugTagPings = ({ debugId }) => {
       return p;
     });
 
+    // Iterate over all changes in change queue to add and/or remove pings.
     changeQueue.forEach((change) => {
       // New doc, need to append to current array.
       if (change.type === 'added') {
         const { addedAt, payload, pingType, error, errorType, errorMessage, warning } =
           change.doc.data();
+
+        // Add ping at the start of the array.
         normalizedPings.unshift({
           key: change.doc.id,
           addedAt,
-          displayDate: FormatDate(addedAt),
+          displayDate: formatDate(addedAt),
           payload,
           pingType,
           changed: true,
@@ -63,12 +62,13 @@ const DebugTagPings = ({ debugId }) => {
       // Doc should no longer be in our array, so we remove it.
       if (change.type === 'removed') {
         normalizedPings = normalizedPings.filter((ping) => {
+          // Remove all pings with corresponding ID, should only ever be 1.
           return ping.key !== change.doc.id;
         });
       }
     });
 
-    // Sort pings to show the most recent first.
+    // Sort the pings to show the most recent first.
     normalizedPings.sort((a, b) => {
       return a.addedAt > b.addedAt ? -1 : 1;
     });
@@ -82,19 +82,10 @@ const DebugTagPings = ({ debugId }) => {
 
     setFirstSnapshot(false);
     setPings(normalizedPings);
+
+    // Queued changes have been added to local pings; queue can be cleared.
     setChangeQueue([]);
   }, [pings, changeQueue, firstSnapshot]);
-
-  const handleSearchUpdate = useCallback(() => {
-    if (pings.length) {
-      const localPings = searchArrayPropertiesForSubstring(
-        pings, // Full list of pings to check.
-        search.toLowerCase().trim(), // Search query converted to lowercase.
-        ['pingType', 'payload'] // All properties to check for search.
-      );
-      setFilteredPings(localPings);
-    }
-  }, [pings, search]);
 
   /// lifecycle ///
   useEffect(() => {
@@ -105,6 +96,7 @@ const DebugTagPings = ({ debugId }) => {
       limit(100)
     );
 
+    // Listener for our realtime connection to the firestore collection.
     const unsubscribe = onSnapshot(pingsQuery, (querySnapshot) => {
       setChangeQueue(querySnapshot.docChanges());
     });
@@ -116,40 +108,34 @@ const DebugTagPings = ({ debugId }) => {
 
   useEffect(() => {
     if (changeQueue.length) {
+      // Process our queued changes.
       onCollectionUpdate();
     } else {
       // Do nothing, we have no currently queued changes.
     }
   }, [changeQueue, onCollectionUpdate]);
 
-  useEffect(() => {
-    if (search !== prevSearch) {
-      handleSearchUpdate();
-    }
-  }, [search, prevSearch, handleSearchUpdate]);
-
   /// render ///
-  const displayPings = () => {
-    if (search.length) {
+  const displayPings = useMemo(() => {
+    const shouldShowFilteredPings = filteredPings.length > 0 || filtersApplied;
+
+    if (shouldShowFilteredPings) {
       return [...filteredPings];
     } else {
       return [...pings];
     }
-  };
+  }, [pings, filteredPings, filtersApplied]);
 
   const hasError = pings.some((ping) => ping.error);
   return (
     <div className='container-fluid m-2'>
       <h3>
-        Recent pings for tag: <b>{debugId}</b> ({displayPings().length})
+        Recent pings for tag: <b>{debugId}</b> ({displayPings.length})
       </h3>
-      <SearchBar
-        onInput={(input) => setSearch(input)}
-        placeholder='Search'
-        containerStyles={{ margin: '10px 0' }}
-        inputStyles={{ width: '20%' }}
-        debounceTime={500}
-        tooltipContent='Searches by: Ping type, Payload'
+      <Filter
+        pings={pings}
+        handleFilter={(updatedPings) => setFilteredPings(updatedPings)}
+        handleFiltersApplied={(isFilterApplied) => setFiltersApplied(isFilterApplied)}
       />
       <table className='table table-stripe table-hover'>
         <thead>
@@ -162,7 +148,7 @@ const DebugTagPings = ({ debugId }) => {
           </tr>
         </thead>
         <tbody>
-          {displayPings().map((ping) => (
+          {displayPings.map((ping) => (
             <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
               <td className='received'>{ping.displayDate}</td>
               <td className='doc-type'>
@@ -179,7 +165,8 @@ const DebugTagPings = ({ debugId }) => {
               </td>
             </tr>
           ))}
-          {!!search.length && displayPings().length === 0 && (
+          {/* If we have a search or are filtering and 0 pings, then show no results message. */}
+          {filtersApplied && displayPings.length === 0 && (
             <tr>
               <td>No Results</td>
             </tr>
