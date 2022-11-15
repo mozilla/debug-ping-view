@@ -58,7 +58,7 @@ const ShowRawPing = ({ docId }) => {
           <li>The link for this page is shareable.</li>
           <li>
             Clicking on a header and sharing that link will take someone specifically to that
-            section when they open the link. I.E. clicking on <i>metadata</i>.
+            section when they open the link, i.e. clicking on <i>metadata</i>.
           </li>
           <li>
             Pings are available for up to <strong>{PING_LIFETIME} days</strong> after they are first
