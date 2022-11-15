@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { auth } from './Firebase';
 
-import './App.css';
 import NavBar from './components/NavBar';
 import ActiveClients from './components/ActiveClients';
 import Create from './components/Create';
@@ -12,6 +11,10 @@ import Help from './components/Help';
 import SignInScreen from './components/SignInScreen';
 import SecuredRoute from './components/SecuredRoute';
 import Loading from './components/Loading';
+
+// Global styles
+import './App.css';
+import '@mozilla-protocol/core';
 
 const App = () => {
   /// state ///
@@ -30,12 +33,11 @@ const App = () => {
     };
   }, []);
 
-  /// short-circuit ///
+  /// render ///
   if (loading) {
     return <Loading />;
   }
 
-  /// render ///
   return (
     <div>
       <NavBar authenticated={authenticated} />
@@ -54,7 +56,7 @@ const App = () => {
           element={<SecuredRoute component={DebugTagPings} authenticated={authenticated} />}
         />
         <Route
-          path='/rawPing/:docId'
+          path='/pings/:debugId/:docId'
           element={<SecuredRoute component={ShowRawPing} authenticated={authenticated} />}
         />
         <Route
