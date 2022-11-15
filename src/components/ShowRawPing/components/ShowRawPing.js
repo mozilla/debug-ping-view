@@ -55,7 +55,7 @@ const ShowRawPing = ({ docId }) => {
       <div>
         <h6>Using this page</h6>
         <ul className='mzp-u-list-styled'>
-          <li>The link for this page is sharable.</li>
+          <li>The link for this page is shareable.</li>
           <li>
             Clicking on a header and sharing that link will take someone specifically to that
             section when they open the link. I.E. clicking on <i>metadata</i>.
