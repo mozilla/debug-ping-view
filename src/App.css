@@ -36,26 +36,50 @@ table {
   width: 100%;
   table-layout: fixed;
 }
+
 .received {
-  width:5%;
+  width: 8%;
   text-align: right;
 }
+
 .doc-type {
-  width:8%;
+  width: 10%;
 }
-.raw-json-link {
-  width: 5%;
+
+.actions {
+  width: 10%;
   text-align: right;
 }
+
 .error {
-  width:20%;
+  width: 25%;
 }
+
 .payload {
-  max-width:62%;
+  width: 40%;
 }
 
 .cell-overflow {
   position: relative;
   overflow: hidden;
   overflow-wrap: break-word;
+}
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+th {
+  font-size: medium;
+  font-size: 1.1vw;
+}
+
+td {
+  font-size: medium;
+  font-size: 1vw;
 }

@@ -7,5 +7,5 @@ import moment from 'moment';
  * @returns {string} Formatted date: Month Day, Year, Hours:Minutes:Seconds.
  */
 export function formatDate(utcDateString) {
-  return moment(utcDateString).format('MMM D, YYYY, H:mm:ss');
+  return moment(utcDateString).format('YYYY-MM-DD HH:mm:ss');
 }

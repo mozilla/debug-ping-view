@@ -6,7 +6,7 @@ import { auth } from '../Firebase';
 
 const NavBar = ({ authenticated }) => {
   return (
-    <nav className='navbar navbar-light bg-light navbar-expand-md'>
+    <nav className='navbar navbar-light bg-light navbar-expand-md' style={{ marginBottom: 30 }}>
       <Link className='navbar-brand' to='/'>
         <h3 style={{ marginBottom: '0px' }}>Glean Debug ping viewer</h3>
       </Link>

@@ -41,7 +41,7 @@ const SearchBar = forwardRef(
       <div style={containerStyles}>
         <input
           value={search}
-          style={{ ...inputStyles, marginRight: '5px' }}
+          style={{ ...inputStyles, marginRight: '5px', marginBottom: '5px' }}
           type='text'
           onInput={handleInput}
           placeholder={placeholder}

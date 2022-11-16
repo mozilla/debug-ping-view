@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Help = () => {
   return (
     <div className='container'>
-      <h1>Usage</h1>
+      <h4>Usage</h4>
       <div className='alert alert-info' role='alert'>
         This is a beta service. While we strive for making it available and reliable, there might be
         downtime periods.

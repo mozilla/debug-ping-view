@@ -7,11 +7,7 @@ const PingSection = ({ pingSection, header, isNested }) => {
   // If the component was called recursively (isNested), then we show a smaller
   // title so that we can display all items in the correct visual hierarchy.
   const renderTitle = () => {
-    return (
-      <a href={`#${header}`}>
-        {isNested ? <h4 id={header}>{header}</h4> : <h3 id={header}>{header}</h3>}
-      </a>
-    );
+    return isNested ? <h4 id={header}>{header}</h4> : <h3 id={header}>{header}</h3>;
   };
 
   // If the `pingSection` contains nested data, we recursively render this
@@ -60,8 +56,17 @@ const PingSection = ({ pingSection, header, isNested }) => {
 
   return (
     <>
-      {renderTitle()}
-      {renderTable()}
+      {isNested ? (
+        <details>
+          <summary>{renderTitle()}</summary>
+          {renderTable()}
+        </details>
+      ) : (
+        <>
+          {renderTitle()}
+          {renderTable()}
+        </>
+      )}
     </>
   );
 };

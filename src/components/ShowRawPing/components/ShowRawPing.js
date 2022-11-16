@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 
-import { PING_LIFETIME } from '../../../lib/constants';
 import PingSection from './PingSection';
 import Loading from '../../Loading';
 
@@ -53,34 +52,35 @@ const ShowRawPing = ({ docId }) => {
   return (
     <div className='container-fluid m-2'>
       <div>
-        <h6>Using this page</h6>
+        {/* TODO Display how much longer the ping will be available for. */}
+        <h4>You can</h4>
         <ul className='mzp-u-list-styled'>
-          <li>The link for this page is shareable.</li>
           <li>
-            Clicking on a header and sharing that link will take someone specifically to that
-            section when they open the link, i.e. clicking on <i>metadata</i>.
+            <strong>Share</strong> with others by copying and sending them the URL.
           </li>
           <li>
-            Pings are available for up to <strong>{PING_LIFETIME} days</strong> after they are first
-            received. After that you will not be able to access this link. Even if the ping is not
-            in the most recent 100 for the debug tag, you still have {PING_LIFETIME} days that the
-            URL will work.
+            <strong>Click</strong> on a ping header to see more data.
+          </li>
+          <li>
+            <strong>See, copy, and link</strong> directly to the beautified version of the raw ping.
           </li>
         </ul>
-        <a href='#rawPing' className='mzp-c-cta-link'>
-          Jump to Raw Ping
-        </a>
       </div>
-      <br />
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
       <br />
       <a href='#rawPing'>
         <h3 id='rawPing'>Raw ping</h3>
       </a>
       <p>
-        If you click on a line number, you can send someone a link that opens this page already
-        scrolled to that line.
+        <strong>You can</strong>
       </p>
+      <ul className='mzp-u-list-styled'>
+        <li>Copy this JSON (line numbers are ignored).</li>
+        <li>
+          Click on a line number and share the URL. That link will open the page, highlight that
+          line, and scroll directly to that line.
+        </li>
+      </ul>
       <div className='card'>
         <div className='card-body'>
           <pre className='text-monospace'>
@@ -91,10 +91,14 @@ const ShowRawPing = ({ docId }) => {
 
               return (
                 <div key={`${line}${lineNumber}`} style={lineStyle}>
-                  <a href={'#' + anchorId} id={anchorId}>
+                  <a
+                    href={'#' + anchorId}
+                    id={anchorId}
+                    className='no-select'
+                    style={{ paddingRight: '8px' }}
+                  >
                     {lineNumber}
                   </a>
-                  {'  '}
                   {line}
                 </div>
               );

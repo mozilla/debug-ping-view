@@ -94,7 +94,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     // applied.
     handleFiltersApplied(areAnyFiltersApplied);
 
-    // This ok to be disabled. The exhaustive dependency eslint rule is more
+    // This is ok to be disabled. The exhaustive dependency eslint rule is more
     // of a nuisance than anything else. If we add all required dependencies
     // then React will infinitely re-render. We only want to trigger re-renders
     // whenever one of our filter options update.
@@ -108,10 +108,8 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
       <SearchBar
         onInput={(input) => setSearch(input)}
         placeholder='Search'
-        containerStyles={{ margin: '10px 0' }}
         inputStyles={{ width: '20%' }}
         debounceTime={500}
-        tooltipContent='Searches by: Ping type, Payload'
         ref={searchRef}
       />
       {!showOptions && (
@@ -120,7 +118,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
           onClick={handleToggleRenderOptions}
           className='btn btn-sm btn-outline-secondary'
         >
-          Show Filters
+          Add Filters
         </button>
       )}
       {showOptions && (
