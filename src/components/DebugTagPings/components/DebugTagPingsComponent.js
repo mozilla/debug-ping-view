@@ -20,6 +20,7 @@ import { formatDate } from '../../../lib/date';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
+  const [copySuccessKey, setCopySuccessKey] = useState(null);
   const [isFirstSnapshot, setIsFirstSnapshot] = useState(true);
   const [pings, setPings] = useState([]);
   const [filteredPings, setFilteredPings] = useState([]);
@@ -29,6 +30,21 @@ const DebugTagPings = ({ debugId }) => {
   /// handlers ///
   const jsonToDataURI = (json) => {
     return 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  };
+
+  // Copies the beautified JSON payload to the clipboard.
+  const handleCopyPayload = (key, payload) => () => {
+    try {
+      const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 4);
+      navigator.clipboard.writeText(beautifiedJson);
+
+      setCopySuccessKey(key);
+      setTimeout(() => {
+        setCopySuccessKey(null);
+      }, 2000);
+    } catch (e) {
+      console.error('Unable to copy beautified JSON.');
+    }
   };
 
   const onCollectionUpdate = useCallback(() => {
@@ -163,7 +179,7 @@ const DebugTagPings = ({ debugId }) => {
             <th className='received'>Received</th>
             <th className='doc-type'>Type</th>
             {hasError && <th className='error'>Error</th>}
-            <th className='actions'>View</th>
+            <th className='actions'>Actions</th>
             <th className='payload'>Payload</th>
           </tr>
         </thead>
@@ -178,16 +194,19 @@ const DebugTagPings = ({ debugId }) => {
               </td>
               {hasError && <ErrorField ping={ping} />}
               <td className='actions'>
-                <ul style={{ margin: 'unset' }}>
-                  <li>
-                    <Link to={`/pings/${debugId}/${ping.key}`}>Details</Link>
-                  </li>
-                  <li>
-                    <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)}>
-                      Raw JSON
-                    </a>
-                  </li>
-                </ul>
+                <Link to={`/pings/${debugId}/${ping.key}`}>Details</Link>
+                <br />
+                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)}>
+                  Raw JSON
+                </a>
+                <br />
+                <button
+                  className='btn btn-sm btn-outline-secondary'
+                  style={{ fontSize: '1vw' }}
+                  onClick={handleCopyPayload(ping.key, ping.payload)}
+                >
+                  {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}
+                </button>
               </td>
               <td className='text-monospace payload'>
                 <PayloadField pingPayload={ping.payload} />
