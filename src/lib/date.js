@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { PING_LIFETIME } from './constants';
 
 /**
  * Converts UTC date string to local timezone and formats it for display
@@ -8,4 +9,9 @@ import moment from 'moment';
  */
 export function formatDate(utcDateString) {
   return moment(utcDateString).format('YYYY-MM-DD HH:mm:ss');
+}
+
+export function calculateDaysRemainingForPing(pingAddedAt) {
+  const pingDate = moment(pingAddedAt);
+  return PING_LIFETIME - moment().diff(pingDate, 'days');
 }

@@ -5,11 +5,13 @@ import PropTypes from 'prop-types';
 
 import PingSection from './PingSection';
 import Loading from '../../Loading';
+import { calculateDaysRemainingForPing } from '../../../lib/date';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
 
   /// state ///
+  const [pingAddedAt, setPingAddedAt] = useState(null);
   const [ping, setPing] = useState(null);
   const [activeLine, setActiveLine] = useState(null);
 
@@ -19,6 +21,7 @@ const ShowRawPing = ({ docId }) => {
     getDoc(doc(getFirestore(), 'pings', docId)).then((doc) => {
       if (doc.exists()) {
         setPing(JSON.stringify(JSON.parse(doc.data().payload), undefined, 4));
+        setPingAddedAt(doc.data().addedAt);
       } else {
         setPing('No such ping!');
       }
@@ -49,10 +52,29 @@ const ShowRawPing = ({ docId }) => {
     return <Loading />;
   }
 
+  const renderDaysLeftForPing = () => {
+    const daysRemaining = calculateDaysRemainingForPing(pingAddedAt);
+
+    // Change message if today is the final day.
+    if (daysRemaining === 0) {
+      return (
+        <p>
+          <strong>Today is the last day you will be able to access this ping.</strong>
+        </p>
+      );
+    }
+
+    return (
+      <p>
+        <strong>{daysRemaining} day(s)</strong> until this ping is no longer accessible.
+      </p>
+    );
+  };
+
   return (
     <div className='container-fluid m-2'>
       <div>
-        {/* TODO Display how much longer the ping will be available for. */}
+        {renderDaysLeftForPing()}
         <h4>You can</h4>
         <ul className='mzp-u-list-styled'>
           <li>
