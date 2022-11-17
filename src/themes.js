@@ -3,7 +3,8 @@ export const lightTheme = {
   text: '#282C34',
   toggleBorder: '#999',
   links: '#0060df',
-  rawPingActiveLineBackground: '#fff8c5'
+  rawPingActiveLineBackground: '#fff8c5',
+  invert: '0%'
 };
 
 export const darkTheme = {
@@ -11,5 +12,6 @@ export const darkTheme = {
   text: '#FAFAFA',
   toggleBorder: '#6B8096',
   links: '#9da2ff',
-  rawPingActiveLineBackground: '#c69026'
+  rawPingActiveLineBackground: '#c69026',
+  invert: '100%'
 };
