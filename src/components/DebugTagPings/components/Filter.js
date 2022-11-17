@@ -8,7 +8,6 @@ import { aggregatePingTypes, filterOnPingType } from '../lib/filter/pingType';
 import { aggregateMetricTypes, filterOnMetricType } from '../lib/filter/metricType';
 import { aggregateMetricIds, filterOnMetricId } from '../lib/filter/metricId';
 import { aggregateEventPropertyValues, filterOnEventProperty } from '../lib/filter/eventProperty';
-import { filterOnEndDate, filterOnStartDate, getDaysInPingLifetime } from '../lib/filter/dates';
 import { searchArrayElementPropertiesForSubstring } from '../../../lib/searchArrayElementPropertiesForSubstring';
 
 const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
@@ -25,8 +24,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
   const [pingType, setPingType] = useState('');
   const [metricType, setMetricType] = useState('');
   const [metricId, setMetricId] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [eventName, setEventName] = useState('');
   const [eventCategory, setEventCategory] = useState('');
 
@@ -46,8 +43,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     setPingType('');
     setMetricType('');
     setMetricId('');
-    setStartDate('');
-    setEndDate('');
     setEventName('');
     setEventCategory('');
   };
@@ -57,14 +52,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
   };
 
   const areAnyFiltersApplied =
-    !!search ||
-    !!pingType ||
-    !!metricType ||
-    !!metricId ||
-    !!startDate ||
-    !!endDate ||
-    !!eventName ||
-    !!eventCategory;
+    !!search || !!pingType || !!metricType || !!metricId || !!eventName || !!eventCategory;
 
   /// lifecycle ///
   useEffect(() => {
@@ -84,8 +72,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     filteredPings = filterOnMetricId(filteredPings, metricId);
     filteredPings = filterOnEventProperty(filteredPings, eventName, 'name');
     filteredPings = filterOnEventProperty(filteredPings, eventCategory, 'category');
-    filteredPings = filterOnStartDate(filteredPings, startDate);
-    filteredPings = filterOnEndDate(filteredPings, endDate);
 
     // Pass new set of filtered pings back to up to the parent component.
     handleFilter(filteredPings);
@@ -100,7 +86,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     // whenever one of our filter options update.
     //
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, pingType, metricType, metricId, startDate, endDate, eventName, eventCategory]);
+  }, [search, pingType, metricType, metricId, eventName, eventCategory]);
 
   /// render ///
   return (
@@ -162,22 +148,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
             state={eventCategory}
             setState={setEventCategory}
             values={aggregateEventPropertyValues(pings, 'category')}
-          />
-          {/* Start Date */}
-          <FilterDropdown
-            name='startDate'
-            defaultValue='Start Date'
-            state={startDate}
-            setState={setStartDate}
-            values={getDaysInPingLifetime()}
-          />
-          {/* End Date */}
-          <FilterDropdown
-            name='endDate'
-            defaultValue='End Date'
-            state={endDate}
-            setState={setEndDate}
-            values={getDaysInPingLifetime()}
           />
           {/* Clear Filters */}
           <div>
