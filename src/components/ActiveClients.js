@@ -118,7 +118,9 @@ const ActiveClients = () => {
               return (
                 <tr key={key}>
                   <td>
-                    <Link to={`/pings/${debugId}`}>{debugId}</Link>
+                    <Link className='text-decoration-none' to={`/pings/${debugId}`}>
+                      {debugId}
+                    </Link>
                   </td>
                   <td>{displayDate}</td>
                   <td>{os}</td>

@@ -84,3 +84,11 @@ td {
   font-size: 1vw;
   vertical-align: top;
 }
+
+.div-icon {
+  cursor: pointer;
+}
+
+.active-ping-line {
+  background-color: '#fff8c5';
+}

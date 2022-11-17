@@ -87,10 +87,13 @@ const ShowRawPing = ({ docId }) => {
             {ping.split('\n').map((line, i) => {
               const lineNumber = i + 1;
               const anchorId = `L${lineNumber}`;
-              const lineStyle = anchorId === activeLine ? { backgroundColor: '#fff8c5' } : {};
+              const isActiveLine = anchorId === activeLine;
 
               return (
-                <div key={`${line}${lineNumber}`} style={lineStyle}>
+                <div
+                  key={`${line}${lineNumber}`}
+                  className={isActiveLine ? 'active-ping-line' : ''}
+                >
                   <a
                     href={'#' + anchorId}
                     id={anchorId}
