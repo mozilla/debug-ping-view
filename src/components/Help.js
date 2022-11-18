@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { PING_LIFETIME } from '../lib/constants';
+
 const Help = () => {
   return (
     <div className='container'>
@@ -14,19 +16,19 @@ const Help = () => {
       <p>
         See{' '}
         <a
-          href='https://github.com/mozilla-mobile/android-components/tree/main/components/service/glean#debugging-products-using-glean'
+          href='https://mozilla.github.io/glean/book/reference/debug/debugViewTag.html'
           target='_blank'
           rel='noopener noreferrer'
         >
-          Glean README
+          Debug View Tags
         </a>{' '}
         for instructions on tagging your pings for debugging.
       </p>
       <p>
-        Tagged pings should be available in under 10 seconds after sending and we'll keep them here
-        for 3 weeks. You'll see an entry corresponding to your debug id and client id on the{' '}
-        <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from your
-        device in real time.
+        Tagged pings should be available in under 10 seconds after sending and they are stored for{' '}
+        {PING_LIFETIME} days. You'll see an entry corresponding to your debug id and client id on
+        the <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from
+        your device in real time.
       </p>
     </div>
   );
