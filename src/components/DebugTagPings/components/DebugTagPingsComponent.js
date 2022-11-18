@@ -204,7 +204,7 @@ const DebugTagPings = ({ debugId }) => {
                 <br />
                 <button
                   className='btn btn-sm btn-outline-secondary'
-                  style={{ fontSize: '1vw' }}
+                  style={{ fontSize: '0.75vw' }}
                   onClick={handleCopyPayload(ping.key, ping.payload)}
                 >
                   {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}

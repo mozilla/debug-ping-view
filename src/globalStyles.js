@@ -48,6 +48,10 @@ export const GlobalStyles = createGlobalStyle`
     filter: invert(${({ theme }) => theme.invert});
   }
 
+  .btn {
+    color: ${({ theme }) => theme.text};
+  }
+
   html {
     background-color: ${({ theme }) => theme.body};
   }
