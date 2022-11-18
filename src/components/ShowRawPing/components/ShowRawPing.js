@@ -75,32 +75,31 @@ const ShowRawPing = ({ docId }) => {
     <div className='container-fluid m-2'>
       <div>
         {renderDaysLeftForPing()}
-        <h4>You can</h4>
+        <p className='mb-2'>
+          <strong>You can</strong>
+        </p>
         <ul className='mzp-u-list-styled'>
           <li>
-            <strong>Share</strong> with others by copying and sending them the URL.
+            <strong>Share</strong> this link with others to directly access this ping.
           </li>
           <li>
-            <strong>Click</strong> on a ping header to see more data.
-          </li>
-          <li>
-            <strong>See, copy, and link</strong> directly to the beautified version of the raw ping.
+            <strong>Click</strong> on a ping header to see the nested ping data.
           </li>
         </ul>
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
       <br />
-      <a href='#rawPing'>
-        <h3 id='rawPing'>Raw ping</h3>
-      </a>
-      <p>
+      <h4>Raw ping</h4>
+      <p className='mb-2'>
         <strong>You can</strong>
       </p>
       <ul className='mzp-u-list-styled'>
-        <li>Copy this JSON (line numbers are ignored).</li>
         <li>
-          Click on a line number and share the URL. That link will open the page, highlight that
-          line, and scroll directly to that line.
+          <strong>Copy</strong> this JSON (line numbers are ignored).
+        </li>
+        <li>
+          <strong>Click on a line number</strong> and share the URL. That link will open the page,
+          highlight that line, and scroll the line into view.
         </li>
       </ul>
       <div className='card'>

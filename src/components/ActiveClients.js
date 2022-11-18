@@ -80,7 +80,9 @@ const ActiveClients = () => {
     <div>
       <div className='container-fluid m-2'>
         <div>
-          <h4>You can</h4>
+          <p className='mb-2'>
+            <strong>You can</strong>
+          </p>
           <ul className='mzp-u-list-styled'>
             <li>
               View all debug tags that have a ping from the last{' '}

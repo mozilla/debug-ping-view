@@ -147,7 +147,9 @@ const DebugTagPings = ({ debugId }) => {
   return (
     <div className='container-fluid m-2'>
       <div>
-        <h4>You can</h4>
+        <p className='mb-2'>
+          <strong>You can</strong>
+        </p>
         <ul className='mzp-u-list-styled'>
           <li>
             <strong>Search</strong> by: Ping Type, and Payload.
