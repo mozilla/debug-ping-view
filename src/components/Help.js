@@ -66,7 +66,7 @@ const Help = () => {
             <a href='https://telemetry.mozilla.org/' target='_blank' rel='noopener noreferrer'>
               telemetry.mozilla.org
             </a>{' '}
-            - Tools and docs for Telemetry data
+            - Resources about the Mozilla data collection
           </li>
         </ul>
       </p>
