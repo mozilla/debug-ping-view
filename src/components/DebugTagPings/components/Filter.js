@@ -7,7 +7,6 @@ import SearchBar from '../../SearchBar';
 import { aggregatePingTypes, filterOnPingType } from '../lib/filter/pingType';
 import { aggregateMetricTypes, filterOnMetricType } from '../lib/filter/metricType';
 import { aggregateMetricIds, filterOnMetricId } from '../lib/filter/metricId';
-import { aggregateEventPropertyValues, filterOnEventProperty } from '../lib/filter/eventProperty';
 import { searchArrayElementPropertiesForSubstring } from '../../../lib/searchArrayElementPropertiesForSubstring';
 
 const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
@@ -24,8 +23,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
   const [pingType, setPingType] = useState('');
   const [metricType, setMetricType] = useState('');
   const [metricId, setMetricId] = useState('');
-  const [eventName, setEventName] = useState('');
-  const [eventCategory, setEventCategory] = useState('');
 
   /// handlers ///
   const hideFilters = () => {
@@ -43,16 +40,13 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     setPingType('');
     setMetricType('');
     setMetricId('');
-    setEventName('');
-    setEventCategory('');
   };
 
   const handleToggleRenderOptions = () => {
     setShowOptions((prev) => !prev);
   };
 
-  const areAnyFiltersApplied =
-    !!search || !!pingType || !!metricType || !!metricId || !!eventName || !!eventCategory;
+  const areAnyFiltersApplied = !!search || !!pingType || !!metricType || !!metricId;
 
   /// lifecycle ///
   useEffect(() => {
@@ -70,8 +64,6 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     filteredPings = filterOnPingType(filteredPings, pingType);
     filteredPings = filterOnMetricType(filteredPings, metricType);
     filteredPings = filterOnMetricId(filteredPings, metricId);
-    filteredPings = filterOnEventProperty(filteredPings, eventName, 'name');
-    filteredPings = filterOnEventProperty(filteredPings, eventCategory, 'category');
 
     // Pass new set of filtered pings back to up to the parent component.
     handleFilter(filteredPings);
@@ -86,9 +78,13 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     // whenever one of our filter options update.
     //
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, pingType, metricType, metricId, eventName, eventCategory]);
+  }, [search, pingType, metricType, metricId]);
 
   /// render ///
+  const pingTypes = aggregatePingTypes(pings);
+  const metricTypes = aggregateMetricTypes(pings);
+  const metricIds = aggregateMetricIds(pings);
+
   return (
     <div style={{ marginBottom: '8px' }}>
       <SearchBar
@@ -110,45 +106,35 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
       {showOptions && (
         <div>
           {/* Ping Type */}
-          <FilterDropdown
-            name='pingType'
-            defaultValue='Ping Type'
-            state={pingType}
-            setState={setPingType}
-            values={aggregatePingTypes(pings)}
-          />
+          {!!pingTypes.length && (
+            <FilterDropdown
+              name='pingType'
+              defaultValue='Ping Type'
+              state={pingType}
+              setState={setPingType}
+              values={pingTypes}
+            />
+          )}
           {/* Metric Type */}
-          <FilterDropdown
-            name='metricType'
-            defaultValue='Metric Type'
-            state={metricType}
-            setState={setMetricType}
-            values={aggregateMetricTypes(pings)}
-          />
+          {!!metricTypes.length && (
+            <FilterDropdown
+              name='metricType'
+              defaultValue='Metric Type'
+              state={metricType}
+              setState={setMetricType}
+              values={metricTypes}
+            />
+          )}
           {/* Metric ID */}
-          <FilterDropdown
-            name='metricId'
-            defaultValue='Metric ID'
-            state={metricId}
-            setState={setMetricId}
-            values={aggregateMetricIds(pings)}
-          />
-          {/* Event Name */}
-          <FilterDropdown
-            name='eventName'
-            defaultValue='Event Name'
-            state={eventName}
-            setState={setEventName}
-            values={aggregateEventPropertyValues(pings, 'name')}
-          />
-          {/* Event Category */}
-          <FilterDropdown
-            name='eventCategory'
-            defaultValue='Event Category'
-            state={eventCategory}
-            setState={setEventCategory}
-            values={aggregateEventPropertyValues(pings, 'category')}
-          />
+          {!!metricIds.length && (
+            <FilterDropdown
+              name='metricId'
+              defaultValue='Metric ID'
+              state={metricId}
+              setState={setMetricId}
+              values={metricIds}
+            />
+          )}
           {/* Clear Filters */}
           <div>
             <button
