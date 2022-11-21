@@ -8,50 +8,57 @@ import ThemeToggle from './Theme/ThemeToggle';
 import BugIcon from './Icons/BugIcon';
 import SignOutIcon from './Icons/SignOut';
 import HelpIcon from './Icons/HelpIcon';
+import Breadcrumbs from './Breadcrumbs';
 
 const NavBar = ({ authenticated, theme, themeToggler }) => {
   return (
-    <nav className='navbar navbar-expand-md' style={{ marginBottom: 10 }}>
-      <Link to='/' className='text-decoration-none'>
-        <h3 className='m-0'>Glean Debug Ping Viewer</h3>
-      </Link>
-      {authenticated && (
-        <>
-          <div id='navbarNavDropdown' className='collapse navbar-collapse justify-content-between'>
-            <div></div>
-            <div className='navbar-nav' role='presentation'>
-              <div className='nav-item nav-link div-icon'>
-                <ThemeToggle theme={theme} toggleTheme={themeToggler} />
-              </div>
-              <div className='nav-item nav-link div-icon'>
-                <a
-                  href='https://github.com/mozilla/debug-ping-view/issues'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  style={{ all: 'unset ' }}
+    <div>
+      <nav className='navbar navbar-expand-md'>
+        <Link to='/' className='text-decoration-none'>
+          <h3 className='m-0'>Glean Debug Ping Viewer</h3>
+        </Link>
+        {authenticated && (
+          <>
+            <div
+              id='navbarNavDropdown'
+              className='collapse navbar-collapse justify-content-between'
+            >
+              <div></div>
+              <div className='navbar-nav' role='presentation'>
+                <div className='nav-item nav-link div-icon'>
+                  <ThemeToggle theme={theme} toggleTheme={themeToggler} />
+                </div>
+                <div className='nav-item nav-link div-icon'>
+                  <a
+                    href='https://github.com/mozilla/debug-ping-view/issues'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    style={{ all: 'unset ' }}
+                  >
+                    <BugIcon />
+                  </a>
+                </div>
+                <div className='nav-item nav-link div-icon'>
+                  <Link to={`/help`} style={{ all: 'unset' }}>
+                    <HelpIcon />
+                  </Link>
+                </div>
+                <div
+                  className='nav-item nav-link div-icon'
+                  type='btn btn-lg '
+                  onClick={() => {
+                    auth.signOut();
+                  }}
                 >
-                  <BugIcon />
-                </a>
-              </div>
-              <div className='nav-item nav-link div-icon'>
-                <Link to={`/help`} style={{ all: 'unset' }}>
-                  <HelpIcon />
-                </Link>
-              </div>
-              <div
-                className='nav-item nav-link div-icon'
-                type='btn btn-lg '
-                onClick={() => {
-                  auth.signOut();
-                }}
-              >
-                <SignOutIcon />
+                  <SignOutIcon />
+                </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
-    </nav>
+          </>
+        )}
+      </nav>
+      {authenticated && <Breadcrumbs />}
+    </div>
   );
 };
 
