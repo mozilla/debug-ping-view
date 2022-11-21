@@ -35,7 +35,7 @@ const DebugTagPings = ({ debugId }) => {
   // Copies the beautified JSON payload to the clipboard.
   const handleCopyPayload = (key, payload) => () => {
     try {
-      const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 4);
+      const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 2);
       navigator.clipboard.writeText(beautifiedJson);
 
       setCopySuccessKey(key);
