@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { PING_LIFETIME } from '../lib/constants';
+
 const Help = () => {
   return (
     <div className='container'>
-      <h1>Usage</h1>
+      <h4>Usage</h4>
       <div className='alert alert-info' role='alert'>
         This is a beta service. While we strive for making it available and reliable, there might be
         downtime periods.
@@ -14,19 +16,59 @@ const Help = () => {
       <p>
         See{' '}
         <a
-          href='https://github.com/mozilla-mobile/android-components/tree/main/components/service/glean#debugging-products-using-glean'
+          href='https://mozilla.github.io/glean/book/reference/debug/debugViewTag.html'
           target='_blank'
           rel='noopener noreferrer'
         >
-          Glean README
+          Debug View Tags
         </a>{' '}
         for instructions on tagging your pings for debugging.
       </p>
       <p>
-        Tagged pings should be available in under 10 seconds after sending and we'll keep them here
-        for 3 weeks. You'll see an entry corresponding to your debug id and client id on the{' '}
-        <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from your
-        device in real time.
+        Tagged pings should be available in under 10 seconds after sending and they are stored for{' '}
+        {PING_LIFETIME} days. You'll see an entry corresponding to your debug id and client id on
+        the <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from
+        your device in real time.
+      </p>
+      <h4>The Glean Ecosystem</h4>
+      <p>
+        For more information on Glean and the rest of the Glean ecosystem, please check out the
+        links below.
+        <ul className='mzp-u-list-styled'>
+          <li>
+            <a
+              href='https://mozilla.github.io/glean/book/index.html'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Glean Book
+            </a>{' '}
+            - Working with Glean
+          </li>
+          <li>
+            <a
+              href='https://dictionary.telemetry.mozilla.org/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Glean Dictionary
+            </a>{' '}
+            - Who is using Glean
+          </li>
+          <li>
+            <a href='https://glam.telemetry.mozilla.org' target='_blank' rel='noopener noreferrer'>
+              GLAM
+            </a>{' '}
+            (<strong>Gl</strong>ean <strong>A</strong>ggregated <strong>M</strong>etrics Explorer) -
+            Visualizing and analyzing data you've collected with Glean
+          </li>
+          <li>
+            <a href='https://telemetry.mozilla.org/' target='_blank' rel='noopener noreferrer'>
+              telemetry.mozilla.org
+            </a>{' '}
+            - Resources about the Mozilla data collection
+          </li>
+        </ul>
       </p>
     </div>
   );

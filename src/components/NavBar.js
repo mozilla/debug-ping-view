@@ -4,42 +4,52 @@ import PropTypes from 'prop-types';
 
 import { auth } from '../Firebase';
 
-const NavBar = ({ authenticated }) => {
+import ThemeToggle from './Theme/ThemeToggle';
+import BugIcon from './Icons/BugIcon';
+import SignOutIcon from './Icons/SignOut';
+import HelpIcon from './Icons/HelpIcon';
+
+const NavBar = ({ authenticated, theme, themeToggler }) => {
   return (
-    <nav className='navbar navbar-light bg-light navbar-expand-md'>
-      <Link className='navbar-brand' to='/'>
-        <h3 style={{ marginBottom: '0px' }}>Glean Debug ping viewer</h3>
+    <nav className='navbar navbar-expand-md' style={{ marginBottom: 30 }}>
+      <Link to='/' className='text-decoration-none'>
+        <h3 className='m-0'>Glean Debug Ping Viewer</h3>
       </Link>
-      {authenticated ? (
+      {authenticated && (
         <>
           <div id='navbarNavDropdown' className='collapse navbar-collapse justify-content-between'>
             <div></div>
             <div className='navbar-nav' role='presentation'>
-              <a
-                className='nav-item nav-link'
-                href='https://github.com/mozilla/debug-ping-view/issues'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                Report a bug
-              </a>
-              <Link to={`/help`} className='nav-item nav-link'>
-                <i className='far fa-question-circle'></i>Help
-              </Link>
-              <button
-                className='btn btn-light nav-item nav-link'
+              <div className='nav-item nav-link div-icon'>
+                <ThemeToggle theme={theme} toggleTheme={themeToggler} />
+              </div>
+              <div className='nav-item nav-link div-icon'>
+                <a
+                  href='https://github.com/mozilla/debug-ping-view/issues'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{ all: 'unset ' }}
+                >
+                  <BugIcon />
+                </a>
+              </div>
+              <div className='nav-item nav-link div-icon'>
+                <Link to={`/help`} style={{ all: 'unset' }}>
+                  <HelpIcon />
+                </Link>
+              </div>
+              <div
+                className='nav-item nav-link div-icon'
                 type='btn btn-lg '
                 onClick={() => {
                   auth.signOut();
                 }}
               >
-                <i className='fa fa-lock'></i>Log Out
-              </button>
+                <SignOutIcon />
+              </div>
             </div>
           </div>
         </>
-      ) : (
-        ''
       )}
     </nav>
   );

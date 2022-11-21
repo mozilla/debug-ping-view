@@ -14,7 +14,7 @@ const FilterDropdown = ({ name, defaultValue, state, setState, values }) => {
   /// render //
   const shouldSelectBeDisabled = !values || values.length === 0;
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
       <select
         // We have no values, so no reason for enabling the select.
         disabled={shouldSelectBeDisabled}
@@ -35,7 +35,7 @@ const FilterDropdown = ({ name, defaultValue, state, setState, values }) => {
       {/* Only show the clear button if they've selected something already. */}
       {!!state && (
         <button className='btn' onClick={handleClearFilter}>
-          X
+          <strong>X</strong>
         </button>
       )}
     </div>

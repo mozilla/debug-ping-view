@@ -20,7 +20,8 @@ import { formatDate } from '../../../lib/date';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
-  const [firstSnapshot, setFirstSnapshot] = useState(true);
+  const [copySuccessKey, setCopySuccessKey] = useState(null);
+  const [isFirstSnapshot, setIsFirstSnapshot] = useState(true);
   const [pings, setPings] = useState([]);
   const [filteredPings, setFilteredPings] = useState([]);
   const [changeQueue, setChangeQueue] = useState([]);
@@ -29,6 +30,21 @@ const DebugTagPings = ({ debugId }) => {
   /// handlers ///
   const jsonToDataURI = (json) => {
     return 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  };
+
+  // Copies the beautified JSON payload to the clipboard.
+  const handleCopyPayload = (key, payload) => () => {
+    try {
+      const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 2);
+      navigator.clipboard.writeText(beautifiedJson);
+
+      setCopySuccessKey(key);
+      setTimeout(() => {
+        setCopySuccessKey(null);
+      }, 2000);
+    } catch (e) {
+      console.error('Unable to copy beautified JSON.');
+    }
   };
 
   const onCollectionUpdate = useCallback(() => {
@@ -75,18 +91,18 @@ const DebugTagPings = ({ debugId }) => {
     });
 
     // Clear changed flag on page load to avoid whole table blinking.
-    if (firstSnapshot) {
+    if (isFirstSnapshot) {
       normalizedPings.forEach((p) => {
         p.changed = false;
       });
     }
 
-    setFirstSnapshot(false);
+    setIsFirstSnapshot(false);
     setPings(normalizedPings);
 
     // Queued changes have been added to local pings; queue can be cleared.
     setChangeQueue([]);
-  }, [pings, changeQueue, firstSnapshot]);
+  }, [pings, changeQueue, isFirstSnapshot]);
 
   /// lifecycle ///
   useEffect(() => {
@@ -130,39 +146,69 @@ const DebugTagPings = ({ debugId }) => {
   const hasError = pings.some((ping) => ping.error);
   return (
     <div className='container-fluid m-2'>
-      <h3>
-        Recent pings for tag: <b>{debugId}</b> ({displayPings.length})
-      </h3>
+      <div>
+        <p className='mb-2'>
+          <strong>You can</strong>
+        </p>
+        <ul className='mzp-u-list-styled'>
+          <li>
+            <strong>Search</strong> by: Ping Type, and Payload.
+          </li>
+          <li>
+            Click on <strong>Add Filters</strong> to see all available filtering options.
+          </li>
+          <li>
+            Click on <strong>Details</strong> to see the ping data in a more structured, beautified
+            format. The link for each ping can also be shared.
+          </li>
+          <li>
+            Click on <strong>Raw JSON</strong> to see the ping data in the Firefox JSON viewer.
+          </li>
+        </ul>
+      </div>
+      <br />
+      <h4>
+        Recent pings for: <b>{debugId}</b> ({displayPings.length})
+      </h4>
       <Filter
         pings={pings}
         handleFilter={(updatedPings) => setFilteredPings(updatedPings)}
         handleFiltersApplied={(isFilterApplied) => setFiltersApplied(isFilterApplied)}
       />
-      <table className='table table-stripe table-hover'>
+      <table className='mzp-u-data-table'>
         <thead>
           <tr>
             <th className='received'>Received</th>
-            <th className='doc-type'>Ping type</th>
+            <th className='doc-type'>Type</th>
             {hasError && <th className='error'>Error</th>}
-            <th className='raw-json-link' />
+            <th className='actions'>Actions</th>
             <th className='payload'>Payload</th>
           </tr>
         </thead>
         <tbody>
           {displayPings.map((ping) => (
             <tr key={ping.key} className={ping.changed ? 'item-highlight' : ''}>
-              <td className='received'>{ping.displayDate}</td>
+              <td className='received'>
+                <strong>{ping.displayDate}</strong>
+              </td>
               <td className='doc-type'>
                 {ping.pingType} <WarningIcon ping={ping} />
               </td>
               {hasError && <ErrorField ping={ping} />}
-              <td className='raw-json-link'>
-                <Link to={`/pings/${debugId}/${ping.key}`}>View</Link>
-                <br />
+              <td className='actions'>
+                <Link to={`/pings/${debugId}/${ping.key}`}>Details</Link>
                 <br />
                 <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)}>
                   Raw JSON
                 </a>
+                <br />
+                <button
+                  className='btn btn-sm btn-outline-secondary'
+                  style={{ fontSize: '0.75vw' }}
+                  onClick={handleCopyPayload(ping.key, ping.payload)}
+                >
+                  {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}
+                </button>
               </td>
               <td className='text-monospace payload'>
                 <PayloadField pingPayload={ping.payload} />
