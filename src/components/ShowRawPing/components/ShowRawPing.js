@@ -20,7 +20,7 @@ const ShowRawPing = ({ docId }) => {
   useEffect(() => {
     getDoc(doc(getFirestore(), 'pings', docId)).then((doc) => {
       if (doc.exists()) {
-        setPing(JSON.stringify(JSON.parse(doc.data().payload), undefined, 4));
+        setPing(JSON.stringify(JSON.parse(doc.data().payload), undefined, 2));
         setPingAddedAt(doc.data().addedAt);
       } else {
         setPing('No such ping!');
