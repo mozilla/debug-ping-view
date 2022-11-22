@@ -1,5 +1,3 @@
-import { getMapKeysInDescendingOrderByValue, insertOrIncrementValueInMapByKey } from './utils';
-
 /**
  * Extract all unique metric types from a list of pings.
  *
@@ -15,10 +13,7 @@ export const aggregateMetricTypes = (pings) => {
   // Create an array of just the ping payloads that we will parse.
   const payloads = pings.map((ping) => ping.payload);
 
-  // Dictionary to store metric types and counts so when we can display the
-  // metrics in descending order of occurrence.
-  let metricTypeCounts = new Map();
-
+  const metricTypes = new Set();
   payloads.forEach((payload) => {
     try {
       const payloadObj = JSON.parse(payload);
@@ -28,7 +23,7 @@ export const aggregateMetricTypes = (pings) => {
         // Iterate over all keys of `metrics`, which are our
         // Glean metric types. These will always have consistent naming.
         Object.keys(metrics).forEach((metricType) => {
-          metricTypeCounts = insertOrIncrementValueInMapByKey(metricTypeCounts, metricType);
+          metricTypes.add(metricType);
         });
       }
     } catch (e) {
@@ -36,7 +31,8 @@ export const aggregateMetricTypes = (pings) => {
     }
   });
 
-  return getMapKeysInDescendingOrderByValue(metricTypeCounts);
+  // Convert the Set to an array and return the values in alphabetical order.
+  return Array.from(metricTypes).sort();
 };
 
 /**

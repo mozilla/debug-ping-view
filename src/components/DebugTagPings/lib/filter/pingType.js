@@ -1,5 +1,3 @@
-import { getMapKeysInDescendingOrderByValue, insertOrIncrementValueInMapByKey } from './utils';
-
 /**
  * Extract all unique `pingType`s from a list of pings.
  *
@@ -12,15 +10,14 @@ export const aggregatePingTypes = (pings) => {
     return [];
   }
 
-  // Dictionary to store ping types and counts so when we can display the
-  // types in descending order of occurrence.
-  let pingTypeCounts = new Map();
+  const pingTypes = new Set();
 
   pings.forEach((ping) => {
-    pingTypeCounts = insertOrIncrementValueInMapByKey(pingTypeCounts, ping.pingType);
+    pingTypes.add(ping.pingType);
   });
 
-  return getMapKeysInDescendingOrderByValue(pingTypeCounts);
+  // Convert the Set to an array and return the values in alphabetical order.
+  return Array.from(pingTypes).sort();
 };
 
 /**

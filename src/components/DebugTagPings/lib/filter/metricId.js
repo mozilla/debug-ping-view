@@ -1,5 +1,3 @@
-import { getMapKeysInDescendingOrderByValue, insertOrIncrementValueInMapByKey } from './utils';
-
 /**
  * Extract all unique metric IDs from a list of pings. Metric IDs are pulled
  * from a ping's `metrics` and `events`.
@@ -16,10 +14,7 @@ export const aggregateMetricIds = (pings) => {
   // Create an array of just the ping payloads that we will parse.
   const payloads = pings.map((ping) => ping.payload);
 
-  // Dictionary to store metric IDs and counts so when we can display the
-  // IDs in descending order of occurrence.
-  let metricIdCounts = new Map();
-
+  const metricIds = new Set();
   payloads.forEach((payload) => {
     try {
       const payloadObj = JSON.parse(payload);
@@ -34,7 +29,7 @@ export const aggregateMetricIds = (pings) => {
           // Iterate over all keys of a metric type. Each child key of
           // the metric type is a metric ID.
           Object.keys(metrics[metricType]).forEach((metricId) => {
-            metricIdCounts = insertOrIncrementValueInMapByKey(metricIdCounts, metricId);
+            metricIds.add(metricId);
           });
         });
       }
@@ -47,7 +42,7 @@ export const aggregateMetricIds = (pings) => {
         // category and the event name.
         events.forEach((event) => {
           const eventMetricId = `${event.category}.${event.name}`;
-          metricIdCounts = insertOrIncrementValueInMapByKey(metricIdCounts, eventMetricId);
+          metricIds.add(eventMetricId);
         });
       }
     } catch (e) {
@@ -55,7 +50,8 @@ export const aggregateMetricIds = (pings) => {
     }
   });
 
-  return getMapKeysInDescendingOrderByValue(metricIdCounts);
+  // Convert the Set to an array and return the values in alphabetical order.
+  return Array.from(metricIds).sort();
 };
 
 /**
