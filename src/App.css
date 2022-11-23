@@ -74,15 +74,65 @@ table {
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
+p {
+  font-size: 1.25vw;
+}
+
+span {
+  font-size: 1.25vw;
+}
+
+li {
+  font-size: 1.25vw;
+}
+
 th {
   font-size: medium;
-  font-size: 1.1vw;
+  font-size: 1.5vw;
 }
 
 td {
   font-size: medium;
-  font-size: 1vw;
+  font-size: 1.25vw;
   vertical-align: top;
+}
+
+pre {
+  font-size: 1.25vw;
+}
+
+.btn-sm {
+  font-size: 0.95vw;
+}
+
+@media screen and (min-width: 1200px) {
+  p {
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 14px;
+  }
+
+  li {
+    font-size: 14px;
+  }
+
+  td {
+    font-size: 14px;
+  }
+
+  th {
+    font-size: 16px;
+  }
+
+  pre {
+    font-size: 14px;
+  }
+
+  .btn-sm {
+    font-size: 12px;
+  }
 }
 
 .div-icon {

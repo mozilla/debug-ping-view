@@ -166,7 +166,6 @@ const DebugTagPings = ({ debugId }) => {
           </li>
         </ul>
       </div>
-      <br />
       <h4>
         Recent pings for: <b>{debugId}</b> ({displayPings.length})
       </h4>
@@ -204,7 +203,6 @@ const DebugTagPings = ({ debugId }) => {
                 <br />
                 <button
                   className='btn btn-sm btn-outline-secondary'
-                  style={{ fontSize: '0.75vw' }}
                   onClick={handleCopyPayload(ping.key, ping.payload)}
                 >
                   {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}

@@ -11,7 +11,7 @@ import HelpIcon from './Icons/HelpIcon';
 
 const NavBar = ({ authenticated, theme, themeToggler }) => {
   return (
-    <nav className='navbar navbar-expand-md' style={{ marginBottom: 30 }}>
+    <nav className='navbar navbar-expand-md' style={{ marginBottom: 10 }}>
       <Link to='/' className='text-decoration-none'>
         <h3 className='m-0'>Glean Debug Ping Viewer</h3>
       </Link>
