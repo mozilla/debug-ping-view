@@ -8,7 +8,7 @@ const Breadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs();
 
   return (
-    <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 25 }}>
+    <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 15 }}>
       {breadcrumbs.map(({ breadcrumb, key, location, match }) => {
         // `/pings` is included in the routes, but there is not a /pings page,
         // so we can hide it from our breadcrumbs.
@@ -45,7 +45,7 @@ const Breadcrumbs = () => {
           <React.Fragment key={key}>
             {currentKey && <span className='m-2'>/</span>}
             <Link key={key} to={breadcrumb.key}>
-              {displayElement}
+              <span className='breadcrumb-font'>{displayElement}</span>
             </Link>
           </React.Fragment>
         );
