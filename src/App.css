@@ -105,6 +105,10 @@ pre {
   font-size: 0.95vw;
 }
 
+.breadcrumb-font {
+  font-size: 1.5vw;
+}
+
 @media screen and (min-width: 1200px) {
   p {
     font-size: 14px;
@@ -132,6 +136,10 @@ pre {
 
   .btn-sm {
     font-size: 12px;
+  }
+
+  .breadcrumb-font {
+    font-size: 16px;
   }
 }
 
