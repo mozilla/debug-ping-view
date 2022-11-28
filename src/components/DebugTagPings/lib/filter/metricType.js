@@ -17,7 +17,9 @@ export const aggregateMetricTypes = (pings) => {
   payloads.forEach((payload) => {
     try {
       const payloadObj = JSON.parse(payload);
-      if (payloadObj && payloadObj.metrics) {
+
+      // Extract all metrics.
+      if (payloadObj.metrics) {
         const metrics = payloadObj.metrics;
 
         // Iterate over all keys of `metrics`, which are our
@@ -25,6 +27,11 @@ export const aggregateMetricTypes = (pings) => {
         Object.keys(metrics).forEach((metricType) => {
           metricTypes.add(metricType);
         });
+      }
+
+      // If a payload contains `events`, then add the `event` metric to our Set.
+      if (payloadObj.events && payloadObj.events.length > 0) {
+        metricTypes.add('event');
       }
     } catch (e) {
       console.error(e);
@@ -52,7 +59,14 @@ export const filterOnMetricType = (pings, metricType) => {
   return pings.filter((ping) => {
     try {
       const payloadObj = JSON.parse(ping.payload);
-      if (payloadObj && payloadObj.metrics) {
+
+      // If the `metricType` is `event` and ping has `events`, then we display it.
+      if (metricType === 'event' && payloadObj.events && payloadObj.events.length > 0) {
+        return true;
+      }
+
+      // Look for pings with a matching `metricType`.
+      if (payloadObj.metrics) {
         const metrics = payloadObj.metrics;
 
         // Iterate over the metrics and see if the ping contains the
