@@ -27,10 +27,18 @@ const PingSection = ({ pingSection, header, isNested }) => {
           <table className='mzp-u-data-table'>
             <tbody>
               {nonNestedKeys.map((key) => {
+                let value = pingSection[key];
+
+                // Have to convert booleans to strings or else nothing
+                // is printed in the table.
+                if (typeof value === 'boolean') {
+                  value = value.toString();
+                }
+
                 return (
                   <tr key={key}>
                     <td>{key}</td>
-                    <td>{pingSection[key] || 'null'}</td>
+                    <td>{value}</td>
                   </tr>
                 );
               })}
