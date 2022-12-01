@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import PropTypes from 'prop-types';
@@ -10,10 +12,30 @@ import { calculateDaysRemainingForPing } from '../../../lib/date';
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
 
+  /// refs ///
+  const loaded = useRef(false);
+
   /// state ///
   const [pingAddedAt, setPingAddedAt] = useState(null);
   const [ping, setPing] = useState(null);
   const [activeLine, setActiveLine] = useState(null);
+
+  /**
+   * Helper function to parse and scroll directly to a line number
+   * in the raw ping.
+   */
+  const scrollToLine = () => {
+    if (hash) {
+      const id = hash.replace('#', '');
+
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView();
+      }
+
+      setActiveLine(id);
+    }
+  };
 
   /// lifecycle ///
   // Load all ping data once `docId` is available.
@@ -25,25 +47,19 @@ const ShowRawPing = ({ docId }) => {
       } else {
         setPing('No such ping!');
       }
+
+      // The ping is now loaded, meaning we can scroll to it. This also
+      // means for the rest of the time spent on this screen, the ping is
+      // there and we can highlight and scroll directly to a line without
+      // any timeout.
+      loaded.current = true;
+      scrollToLine();
     });
   }, [docId]);
 
-  // Parse targeted anchor ID and scroll to it. The `setTimeout` is so
-  // the ping can load and render before we try to scroll.
   useEffect(() => {
-    if (hash) {
-      setTimeout(() => {
-        const id = hash.replace('#', '');
-
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView();
-        }
-
-        setActiveLine(id);
-      }, 500);
-    } else {
-      window.scrollTo(0, 0);
+    if (loaded) {
+      scrollToLine();
     }
   }, [pathname, hash, key]);
 
