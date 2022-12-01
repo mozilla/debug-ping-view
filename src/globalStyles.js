@@ -35,6 +35,10 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.links};
   }
 
+  .line-link {
+    color: ${({ theme }) => theme.links};
+  }
+
   .card {
     background-color: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
