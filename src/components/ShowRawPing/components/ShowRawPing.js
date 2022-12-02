@@ -18,22 +18,32 @@ const ShowRawPing = ({ docId }) => {
   /// state ///
   const [pingAddedAt, setPingAddedAt] = useState(null);
   const [ping, setPing] = useState(null);
-  const [activeLine, setActiveLine] = useState(null);
+  const [activeStartLine, setActiveStartLine] = useState(null);
+  const [activeEndLine, setActiveEndLine] = useState(null);
 
-  /**
-   * Helper function to parse and scroll directly to a line number
-   * in the raw ping.
-   */
+  /// helpers ///
+  // Converts a string like `L25` to just 25 as a number type.
+  const getNumberFromLineNumber = (lineNumber) => {
+    return Number(lineNumber.split('L')[1]);
+  };
+
+  // Helper function to parse and scroll directly to a line number
+  // in the raw ping.
   const scrollToLine = () => {
     if (hash) {
-      const id = hash.replace('#', '');
+      const [startLine, endLine] = hash.replace('#', '').split('-');
+
+      // We always scroll the first line to the top.
+      const id = startLine;
 
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView();
       }
 
-      setActiveLine(id);
+      // If there is no line, these are both set to undefined, which is fine.
+      setActiveStartLine(startLine);
+      setActiveEndLine(endLine);
     }
   };
 
@@ -68,6 +78,7 @@ const ShowRawPing = ({ docId }) => {
     return <Loading />;
   }
 
+  // Prints how many days until the current ping expires.
   const renderDaysLeftForPing = () => {
     const daysRemaining = calculateDaysRemainingForPing(pingAddedAt);
 
@@ -85,6 +96,51 @@ const ShowRawPing = ({ docId }) => {
         <strong>{daysRemaining} day(s)</strong> until this ping is no longer accessible.
       </p>
     );
+  };
+
+  // Called after determining what the user is trying to link to. This
+  // handles both single and multi line selections.
+  const handleLineChange = (startLine, endLine) => {
+    let hash;
+
+    // If both are populated, then we have a multi-select.
+    if (startLine && endLine) {
+      hash = `#${startLine}-${endLine}`;
+    } else {
+      hash = `#${startLine}`;
+    }
+
+    window.location.assign(hash);
+    scrollToLine();
+  };
+
+  const handleLineNumberClick = (lineNumber) => (e) => {
+    lineNumber = `L${lineNumber}`;
+
+    let startLine;
+    let endLine;
+
+    if (activeStartLine && e.shiftKey) {
+      // User already has a start line and is trying to multi-line select.
+      if (lineNumber === activeStartLine) {
+        // Same line again, do nothing.
+        startLine = activeStartLine;
+      } else if (getNumberFromLineNumber(lineNumber) < getNumberFromLineNumber(activeStartLine)) {
+        // Current line selected is our new start line, update both.
+        startLine = lineNumber;
+        endLine = activeStartLine;
+      } else {
+        // The new line is the end line.
+        startLine = activeStartLine;
+        endLine = lineNumber;
+      }
+    } else {
+      // Only one line is being selected, unset the end line.
+      startLine = lineNumber;
+      endLine = null;
+    }
+
+    handleLineChange(startLine, endLine);
   };
 
   return (
@@ -117,6 +173,10 @@ const ShowRawPing = ({ docId }) => {
           <strong>Click on a line number</strong> and share the URL. That link will open the page,
           highlight that line, and scroll the line into view.
         </li>
+        <li>
+          You can <strong>select multiple lines</strong> by clicking a line, then hold <i>SHIFT</i>{' '}
+          while clicking on a second line. This works similar to GitHub's UI.
+        </li>
       </ul>
       <div className='card'>
         <div className='card-body'>
@@ -124,21 +184,31 @@ const ShowRawPing = ({ docId }) => {
             {ping.split('\n').map((line, i) => {
               const lineNumber = i + 1;
               const anchorId = `L${lineNumber}`;
-              const isActiveLine = anchorId === activeLine;
+
+              let isActiveLine;
+              if (activeEndLine) {
+                // Is a multi-select.
+                isActiveLine =
+                  getNumberFromLineNumber(activeStartLine) <= lineNumber &&
+                  lineNumber <= getNumberFromLineNumber(activeEndLine);
+              } else {
+                // Is a single-select.
+                isActiveLine = anchorId === activeStartLine;
+              }
 
               return (
                 <div
                   key={`${line}${lineNumber}`}
                   className={isActiveLine ? 'active-ping-line' : ''}
                 >
-                  <a
-                    href={'#' + anchorId}
+                  <span
                     id={anchorId}
-                    className='no-select'
-                    style={{ paddingRight: '8px' }}
+                    className='no-select div-icon line-link'
+                    style={{ paddingRight: '8px', textDecoration: 'underline' }}
+                    onClick={handleLineNumberClick(lineNumber)}
                   >
                     {lineNumber}
-                  </a>
+                  </span>
                   {line}
                 </div>
               );
