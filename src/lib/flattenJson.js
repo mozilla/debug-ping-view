@@ -1,36 +1,3 @@
-import { visualizationMetrics } from './constants';
-
-/**
- * Filters all keys of an object into two arrays:
- *   1. `nestedKeys` - Keys that have complex objects as their value.
- *   2. `nonNestedKeys` - Keys that have primitive types as their value.
- *
- * The two arrays are returned in a custom object.
- *
- * @param {Object} obj Any javascript object.
- * @returns {{ nestedKeys: string[], nonNestedKeys: string[] }} A custom object
- *          containing arrays for `nested` and `nonNested` keys.
- */
-export const getNestedAndNonNestedKeysFromObject = (obj) => {
-  let nestedKeys = [];
-  let nonNestedKeys = [];
-
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key];
-
-    if (typeof value === 'object') {
-      nestedKeys.push(key);
-    } else {
-      nonNestedKeys.push(key);
-    }
-  });
-
-  return {
-    nestedKeys,
-    nonNestedKeys
-  };
-};
-
 /**
  * Flattens a nested JSON object to a single level. The hierarchical ordering
  * is still maintained via concatenating nested structure to top-level key.
@@ -93,20 +60,4 @@ export const flattenJson = (json) => {
   flatten(json);
 
   return flattenedObj;
-};
-
-/**
- * Check if the current ping metrics object contains metrics that we provide custom
- * visualizations for. The list of supported metrics can be found in the
- * `visualizationMetrics` object.
- *
- * @param {Object} metrics A `metrics` object from a ping.
- * @returns {boolean} If the ping metrics contains any of our supported metrics.
- */
-export const shouldShowVisualizations = (metrics) => {
-  if (!metrics) {
-    return false;
-  }
-
-  return Object.keys(metrics).some((metricType) => visualizationMetrics.includes(metricType));
 };

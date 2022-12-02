@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Plot from 'react-plotly.js';
 
 const BarChart = ({ title, data }) => {
-  /// render ///
   return (
     <Plot
       data={[

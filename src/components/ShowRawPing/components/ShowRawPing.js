@@ -5,12 +5,12 @@ import { useLocation } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 
-import Visualizations from '../../Visualizations';
-import PingSection from './PingSection';
+import Events from '../../Events';
 import Loading from '../../Loading';
+import Metrics from '../../Metrics';
+import PingSection from './PingSection';
 
 import { calculateDaysRemainingForPing } from '../../../lib/date';
-import { shouldShowVisualizations } from '../lib/helpers';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
@@ -146,10 +146,12 @@ const ShowRawPing = ({ docId }) => {
     handleLineChange(startLine, endLine);
   };
 
+  const parsedPing = JSON.parse(ping);
+  const events = parsedPing.events;
+
   // We only want to show the visualizations section if the ping contains
   // metrics that we have custom visualizations for.
-  const metrics = JSON.parse(ping).metrics;
-  const showVisualizations = shouldShowVisualizations(metrics);
+  const metrics = parsedPing.metrics;
   return (
     <div className='container-fluid m-2'>
       <div>
@@ -164,17 +166,17 @@ const ShowRawPing = ({ docId }) => {
           <li>
             <strong>Click</strong> on a ping header to see the nested ping data.
           </li>
-          {showVisualizations && (
-            <li>
-              <strong>Analyze visualizations</strong> for some of the harder to interpret metric
-              types.
-            </li>
-          )}
         </ul>
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
+      {!!events && <Events events={events} />}
+      {!!metrics && (
+        <>
+          <br />
+          <Metrics metrics={metrics} />
+        </>
+      )}
       <br />
-      {showVisualizations && <Visualizations metrics={metrics} />}
       <h4>Raw ping</h4>
       <p className='mb-2'>
         <strong>You can</strong>

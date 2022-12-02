@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { flattenJson, getNestedAndNonNestedKeysFromObject } from '../lib/helpers';
+import { flattenJson } from '../../../lib/flattenJson';
+import { getNestedAndNonNestedKeysFromObject } from '../lib';
 
 const PingSection = ({ pingSection, header, isNested }) => {
   // If the component was called recursively (isNested), then we show a smaller
@@ -25,6 +26,12 @@ const PingSection = ({ pingSection, header, isNested }) => {
       <>
         {!!nonNestedKeys.length && (
           <table className='mzp-u-data-table'>
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
             <tbody>
               {nonNestedKeys.map((key) => {
                 let value = pingSection[key];
@@ -47,16 +54,27 @@ const PingSection = ({ pingSection, header, isNested }) => {
         )}
         {!!nestedKeys.length &&
           nestedKeys.map((key) => {
-            // Flatten all data for nested objects so that instead of multiple
-            // nested tables, all values are in the same table and the keys
-            // maintain correct hierarchical ordering.
-            //
-            // Reference the example in the JSDoc of `flattenJson` for more info.
-            const flattenedPingSection = flattenJson(pingSection[key]);
+            const sectionData = pingSection[key];
 
-            return (
-              <PingSection key={key} pingSection={flattenedPingSection} header={key} isNested />
-            );
+            // This allows us to add a custom render for certain sections.
+            switch (key) {
+              // Return null here since we custom render elsewhere to maintain
+              // the order we want.
+              case 'events':
+              case 'metrics':
+                return null;
+              default:
+                // Flatten all data for nested objects so that instead of multiple
+                // nested tables, all values are in the same table and the keys
+                // maintain correct hierarchical ordering.
+                //
+                // Reference the example in the JSDoc of `flattenJson` for more info.
+                const flattenedPingSection = flattenJson(sectionData);
+
+                return (
+                  <PingSection key={key} pingSection={flattenedPingSection} header={key} isNested />
+                );
+            }
           })}
       </>
     );

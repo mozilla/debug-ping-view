@@ -1,0 +1,20 @@
+.event-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.event-name {
+  width: 30%;
+}
+
+.event-category {
+  width: 10%;
+}
+
+.event-timestamp {
+  width: 10%;
+}
+
+.event-extras {
+  width: 50%;
+}
