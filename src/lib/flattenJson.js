@@ -1,5 +1,3 @@
-import { visualizationMetrics } from './constants';
-
 /**
  * Flattens a nested JSON object to a single level. The hierarchical ordering
  * is still maintained via concatenating nested structure to top-level key.
@@ -62,20 +60,4 @@ export const flattenJson = (json) => {
   flatten(json);
 
   return flattenedObj;
-};
-
-/**
- * Check if the current ping metrics object contains metrics that we provide custom
- * visualizations for. The list of supported metrics can be found in the
- * `visualizationMetrics` object.
- *
- * @param {Object} metrics A `metrics` object from a ping.
- * @returns {boolean} If the ping metrics contains any of our supported metrics.
- */
-export const shouldShowVisualizations = (metrics) => {
-  if (!metrics) {
-    return false;
-  }
-
-  return Object.keys(metrics).some((metricType) => visualizationMetrics.includes(metricType));
 };

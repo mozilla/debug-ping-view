@@ -11,7 +11,6 @@ import Metrics from '../../Metrics';
 import PingSection from './PingSection';
 
 import { calculateDaysRemainingForPing } from '../../../lib/date';
-import { shouldShowVisualizations } from '../lib/helpers';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
@@ -167,12 +166,6 @@ const ShowRawPing = ({ docId }) => {
           <li>
             <strong>Click</strong> on a ping header to see the nested ping data.
           </li>
-          {showVisualizations && (
-            <li>
-              <strong>Analyze visualizations</strong> for some of the harder to interpret metric
-              types.
-            </li>
-          )}
         </ul>
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
