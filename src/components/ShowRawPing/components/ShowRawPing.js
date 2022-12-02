@@ -170,14 +170,9 @@ const ShowRawPing = ({ docId }) => {
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
       {!!events && <Events events={events} />}
-      {!!metrics && (
-        <>
-          <br />
-          <Metrics metrics={metrics} />
-        </>
-      )}
+      {!!metrics && <Metrics metrics={metrics} />}
       <br />
-      <h4>Raw ping</h4>
+      <h3>Raw ping</h3>
       <p className='mb-2'>
         <strong>You can</strong>
       </p>

@@ -170,10 +170,10 @@ const DebugTagPings = ({ debugId }) => {
         </ul>
       </div>
       <br />
-      <h4 className='mb-2'>
+      <h3 className='mb-2'>
         Recent pings for: <b>{debugId}</b> ({displayPings.length})
-      </h4>
-      {!!numberOfErrors && <h6>Number of errors: {numberOfErrors}</h6>}
+      </h3>
+      {!!numberOfErrors && <h5>Number of errors: {numberOfErrors}</h5>}
       <Filter
         pings={pings}
         handleFilter={(updatedPings) => setFilteredPings(updatedPings)}

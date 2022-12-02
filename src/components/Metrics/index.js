@@ -56,7 +56,7 @@ const Metrics = ({ metrics }) => {
   /// render ///
   return (
     <div>
-      <h5>metrics</h5>
+      <h4>metrics</h4>
       {Object.keys(metrics).map(renderMetric)}
     </div>
   );

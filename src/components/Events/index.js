@@ -20,8 +20,8 @@ const Events = ({ events }) => {
           </tr>
         </thead>
         <tbody>
-          {eventCounts.map((eventData) => (
-            <tr key={eventData.key}>
+          {eventCounts.map((eventData, i) => (
+            <tr key={`${eventData.key}${i}`}>
               <td>{eventData.key}</td>
               <td>{eventData.value}</td>
             </tr>
@@ -35,17 +35,17 @@ const Events = ({ events }) => {
     <div>
       <details>
         <summary>
-          <h5>events</h5>
+          <h4>events</h4>
         </summary>
         <p>
-          <strong>Number of events: {events.length}</strong>
+          Number of events: <strong>{events.length}</strong>
         </p>
 
-        <h6>Aggregate Counts</h6>
+        <h5>Aggregate Counts</h5>
         {renderKeyValueCountTable('name')}
         {renderKeyValueCountTable('category')}
 
-        <h6>All events</h6>
+        <h5>All events</h5>
         <p>The events are in chronological order.</p>
         <table className='mzp-u-data-table event-table'>
           <thead>
@@ -57,10 +57,10 @@ const Events = ({ events }) => {
             </tr>
           </thead>
           <tbody>
-            {events.map((event) => {
+            {events.map((event, i) => {
               const { name, category, timestamp, extra } = event;
               return (
-                <tr key={`${category}.${name}`}>
+                <tr key={`${category}.${name}${i}`}>
                   <td className='event-name'>{name}</td>
                   <td className='event-category'>{category}</td>
                   <td className='event-timestamp'>{timestamp}</td>

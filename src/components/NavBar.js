@@ -15,7 +15,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
     <div>
       <nav className='navbar navbar-expand-md'>
         <Link to='/' className='text-decoration-none'>
-          <h3 className='m-0'>Glean Debug Ping Viewer</h3>
+          <h2 className='m-0'>Glean Debug Ping Viewer</h2>
         </Link>
         {authenticated && (
           <>
