@@ -20,8 +20,8 @@ const Events = ({ events }) => {
           </tr>
         </thead>
         <tbody>
-          {eventCounts.map((eventData) => (
-            <tr key={eventData.key}>
+          {eventCounts.map((eventData, i) => (
+            <tr key={`${eventData.key}${i}`}>
               <td>{eventData.key}</td>
               <td>{eventData.value}</td>
             </tr>
