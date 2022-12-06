@@ -10,7 +10,12 @@ export const aggregateCountOfEventProperty = (events, propertyName) => {
   const eventMap = new Map();
 
   events.forEach((event) => {
-    const property = event[propertyName];
+    let property = event[propertyName];
+
+    // Prepend the event category to an event name for context.
+    if (propertyName === 'name') {
+      property = `${event.category}.${property}`;
+    }
 
     if (eventMap.has(property)) {
       const previousValue = eventMap.get(property);
