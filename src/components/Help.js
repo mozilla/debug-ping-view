@@ -6,7 +6,7 @@ import { PING_LIFETIME } from '../lib/constants';
 const Help = () => {
   return (
     <div className='container'>
-      <h4>Usage</h4>
+      <h3>Usage</h3>
       <div className='alert alert-info' role='alert'>
         This is a beta service. While we strive for making it available and reliable, there might be
         downtime periods.
@@ -30,7 +30,7 @@ const Help = () => {
         the <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from
         your device in real time.
       </p>
-      <h4>The Glean Ecosystem</h4>
+      <h3>The Glean Ecosystem</h3>
       <p>
         For more information on Glean and the rest of the Glean ecosystem, please check out the
         links below.

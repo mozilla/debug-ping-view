@@ -143,7 +143,10 @@ const DebugTagPings = ({ debugId }) => {
     }
   }, [pings, filteredPings, filtersApplied]);
 
-  const hasError = pings.some((ping) => ping.error);
+  const numberOfErrors = useMemo(() => {
+    return displayPings.filter((ping) => ping.error).length;
+  }, [displayPings]);
+
   return (
     <div className='container-fluid m-2'>
       <div>
@@ -166,9 +169,11 @@ const DebugTagPings = ({ debugId }) => {
           </li>
         </ul>
       </div>
-      <h4>
+      <br />
+      <h3 className='mb-2'>
         Recent pings for: <b>{debugId}</b> ({displayPings.length})
-      </h4>
+      </h3>
+      {!!numberOfErrors && <h5>Number of errors: {numberOfErrors}</h5>}
       <Filter
         pings={pings}
         handleFilter={(updatedPings) => setFilteredPings(updatedPings)}
@@ -179,7 +184,7 @@ const DebugTagPings = ({ debugId }) => {
           <tr>
             <th className='received'>Received</th>
             <th className='doc-type'>Type</th>
-            {hasError && <th className='error'>Error</th>}
+            {!!numberOfErrors && <th className='error'>Error</th>}
             <th className='actions'>Actions</th>
             <th className='payload'>Payload</th>
           </tr>
@@ -193,7 +198,7 @@ const DebugTagPings = ({ debugId }) => {
               <td className='doc-type'>
                 {ping.pingType} <WarningIcon ping={ping} />
               </td>
-              {hasError && <ErrorField ping={ping} />}
+              {!!numberOfErrors && <ErrorField ping={ping} />}
               <td className='actions'>
                 <Link to={`/pings/${debugId}/${ping.key}`}>Details</Link>
                 <br />

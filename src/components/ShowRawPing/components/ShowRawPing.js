@@ -5,8 +5,11 @@ import { useLocation } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 
-import PingSection from './PingSection';
+import Events from '../../Events';
 import Loading from '../../Loading';
+import Metrics from '../../Metrics';
+import PingSection from './PingSection';
+
 import { calculateDaysRemainingForPing } from '../../../lib/date';
 
 const ShowRawPing = ({ docId }) => {
@@ -143,6 +146,12 @@ const ShowRawPing = ({ docId }) => {
     handleLineChange(startLine, endLine);
   };
 
+  const parsedPing = JSON.parse(ping);
+  const events = parsedPing.events;
+
+  // We only want to show the visualizations section if the ping contains
+  // metrics that we have custom visualizations for.
+  const metrics = parsedPing.metrics;
   return (
     <div className='container-fluid m-2'>
       <div>
@@ -160,8 +169,10 @@ const ShowRawPing = ({ docId }) => {
         </ul>
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
+      {!!events && <Events events={events} />}
+      {!!metrics && <Metrics metrics={metrics} />}
       <br />
-      <h4>Raw ping</h4>
+      <h3>Raw ping</h3>
       <p className='mb-2'>
         <strong>You can</strong>
       </p>

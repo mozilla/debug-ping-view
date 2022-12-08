@@ -96,7 +96,7 @@ const ActiveClients = () => {
             </li>
           </ul>
         </div>
-        <h4>Active Debug Tags ({displayDebugTags().length})</h4>
+        <h3>Active Debug Tags ({displayDebugTags().length})</h3>
         <SearchBar
           onInput={(input) => setSearch(input)}
           placeholder='Search'
