@@ -16,10 +16,9 @@ const BarChart = ({ title, data }) => {
         title
       }}
       style={{
-        width: '49%',
         display: 'inline-block',
-        marginLeft: '5px',
-        marginRight: '5px'
+        marginLeft: 5,
+        marginRight: 5
       }}
     />
   );
