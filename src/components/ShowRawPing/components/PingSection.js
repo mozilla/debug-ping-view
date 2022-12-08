@@ -58,8 +58,8 @@ const PingSection = ({ pingSection, header, isNested }) => {
 
             // This allows us to add a custom render for certain sections.
             switch (key) {
-              // Return null here since we custom render elsewhere to maintain
-              // the order we want.
+              // `events` and `metrics` have their own components that are rendered
+              // in the `ShowRawPing` component, so we can ignore them here.
               case 'events':
               case 'metrics':
                 return null;
