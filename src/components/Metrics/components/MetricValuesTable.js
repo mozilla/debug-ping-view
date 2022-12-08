@@ -6,7 +6,7 @@ import { flattenJson } from '../../../lib/flattenJson';
 const MetricValuesTable = ({ metricData }) => {
   /// helpers ///
   const hasNestedValues = (obj) => {
-    return Object.keys(obj).some((key) => typeof obj[key] === 'object');
+    return Object.values(obj).some((value) => typeof value === 'object');
   };
 
   const renderKvpTable = (data) => {
