@@ -11,10 +11,10 @@ const Histogram = ({ title, data }) => {
   // Create an array of all the keys respective to their counts.
   //
   // { 1: 1, 2: 1, 3: 2 } becomes [1, 2, 3, 3]
-  const valuesInHistogram = [];
+  const samples = [];
   Object.keys(data.values).forEach((key) => {
     for (let i = 0; i < data.values[key]; i++) {
-      valuesInHistogram.push(Number(key));
+      samples.push(Number(key));
     }
   });
 
@@ -23,7 +23,7 @@ const Histogram = ({ title, data }) => {
     <Plot
       data={[
         {
-          x: valuesInHistogram,
+          x: samples,
           type: 'histogram'
         }
       ]}
