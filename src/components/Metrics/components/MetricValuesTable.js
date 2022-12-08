@@ -9,7 +9,7 @@ const MetricValuesTable = ({ metricData }) => {
     return Object.values(obj).some((value) => typeof value === 'object');
   };
 
-  const renderKvpTable = (data) => {
+  const renderMetricTable = (data) => {
     return (
       <table className='mzp-u-data-table' key={JSON.stringify(data)}>
         <thead>
@@ -42,7 +42,7 @@ const MetricValuesTable = ({ metricData }) => {
 
   /// render ///
   if (!hasNestedValues(metricData)) {
-    return renderKvpTable(metricData);
+    return renderMetricTable(metricData);
   }
 
   return (
@@ -53,7 +53,7 @@ const MetricValuesTable = ({ metricData }) => {
         return (
           <React.Fragment key={objKey}>
             <p>{objKey}</p>
-            {renderKvpTable(data)}
+            {renderMetricTable(data)}
           </React.Fragment>
         );
       })}

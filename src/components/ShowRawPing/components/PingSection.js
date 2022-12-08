@@ -13,7 +13,7 @@ const PingSection = ({ pingSection, header, isNested }) => {
 
   // If the `pingSection` contains nested data, we recursively render this
   // component. If the `pingSection` does not contain nested data, then we
-  // render all the KVPs in an html table. We flatten the nested objects
+  // render all the metric data in an html table. We flatten the nested objects
   // before they are displayed.
   const renderTable = () => {
     const { nestedKeys, nonNestedKeys } = getNestedAndNonNestedKeysFromObject(pingSection);
