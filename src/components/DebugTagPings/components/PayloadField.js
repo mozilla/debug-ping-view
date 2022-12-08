@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ReadMore from './ReadMore';
+import ReadMore from '../../ReadMore';
 
 const PayloadField = ({ pingPayload }) => {
   // hack to force overflow of compacted json strings

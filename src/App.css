@@ -150,3 +150,8 @@ pre {
 .active-ping-line {
   background-color: '#fff8c5';
 }
+
+/* Hack to hide event marks in the rc-slider package. */
+.rc-slider-mark-text {
+  display: none;
+}

@@ -1,13 +1,59 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import ReadMore from '../DebugTagPings/components/ReadMore';
+import ReadMore from '../ReadMore';
+import Timeline from './components/Timeline';
 
 import { aggregateCountOfEventProperty } from './lib';
 
 import './styles.css';
 
 const Events = ({ events }) => {
+  // Gets the max timestamp from our events array.
+  const minValue = useMemo(() => {
+    let min = Number.MAX_VALUE;
+
+    events.forEach((event) => {
+      if (event.timestamp < min) {
+        min = event.timestamp;
+      }
+    });
+
+    return min;
+  }, [events]);
+
+  const maxValue = useMemo(() => {
+    let max = Number.MIN_VALUE;
+
+    events.forEach((event) => {
+      if (event.timestamp > max) {
+        max = event.timestamp;
+      }
+    });
+
+    return max;
+  }, [events]);
+
+  /// state ///
+  const [minSliderValue, setMinSliderValue] = useState(minValue);
+  const [maxSliderValue, setMaxSliderValue] = useState(maxValue);
+
+  /// helpers ///
+  const isEventInCurrentRange = (event) => {
+    return minSliderValue <= Number(event.timestamp) && Number(event.timestamp) <= maxSliderValue;
+  };
+
+  const getCountOfEventsInCurrentRange = () => {
+    return events.filter(isEventInCurrentRange).length;
+  };
+
+  /// handlers ///
+  const resetSlider = () => {
+    setMinSliderValue(minValue);
+    setMaxSliderValue(maxValue);
+  };
+
+  /// render ///
   const renderKeyValueCountTable = (property) => {
     const eventCounts = aggregateCountOfEventProperty(events, property);
 
@@ -45,8 +91,48 @@ const Events = ({ events }) => {
         {renderKeyValueCountTable('name')}
         {renderKeyValueCountTable('category')}
 
-        <h5>All events</h5>
-        <p>The events are in chronological order.</p>
+        <h5>Timeline</h5>
+        <p>
+          The timeline below displays all events in chronological order. As you move the sliders on
+          the timeline, the table will display the events that occurred during the timeframe.
+        </p>
+        <p className='mb-2'>
+          <strong>You can</strong>
+        </p>
+        <ul className='mzp-u-list-styled'>
+          <li>
+            <strong>Grab and drag</strong> the sliders on each end of the timeline to update the
+            timeframe.
+          </li>
+          <li>
+            <strong>Click a spot on the timeline</strong> and the sliders will automatically adjust.
+          </li>
+        </ul>
+        <p style={{ textAlign: 'center' }}>
+          Selected Range: <strong>{minSliderValue}</strong> - <strong>{maxSliderValue}</strong>
+          <br />
+          Events in current range: <strong>{getCountOfEventsInCurrentRange()}</strong>
+          <br />
+          <button type='button' onClick={resetSlider} className='btn btn-sm btn-outline-secondary'>
+            Reset
+          </button>
+        </p>
+        {!!events.length && (
+          <Timeline
+            events={events}
+            onSliderPositionChange={(values) => {
+              if (values) {
+                const { min, max } = values;
+                setMinSliderValue(min);
+                setMaxSliderValue(max);
+              }
+            }}
+            maxSliderValue={maxSliderValue}
+            minSliderValue={minSliderValue}
+            minValue={minValue}
+            maxValue={maxValue}
+          />
+        )}
         <table className='mzp-u-data-table event-table'>
           <thead>
             <tr>
@@ -59,12 +145,19 @@ const Events = ({ events }) => {
           <tbody>
             {events.map((event, i) => {
               const { name, category, timestamp, extra } = event;
+
+              // If the event is outside of the timeframe, we don't want to display it.
+              if (!isEventInCurrentRange(event)) {
+                return null;
+              }
+
+              // Event is in our current range, so we render a row in the table.
               return (
                 <tr key={`${category}.${name}${i}`}>
-                  <td className='event-name'>{name}</td>
-                  <td className='event-category'>{category}</td>
-                  <td className='event-timestamp'>{timestamp}</td>
-                  <td className='event-extras'>
+                  <td className='event-name align-middle'>{name}</td>
+                  <td className='event-category align-middle'>{category}</td>
+                  <td className='event-timestamp align-middle'>{timestamp}</td>
+                  <td className='event-extras align-middle'>
                     <ReadMore lines={3}>
                       <p className='cell-overflow'>{JSON.stringify(extra)}</p>
                     </ReadMore>
