@@ -7,7 +7,7 @@
     "firebase": "^9.12.1",
     "moment": "^2.29.4",
     "plotly.js": "^2.16.3",
-    "rc-slider": "git+https://github.com/rosahbruno/rc-slider.git#renderStepHoverContent",
+    "rc-slider": "git+https://github.com/rosahbruno/rc-slider.git",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-firebaseui": "^6.0.0",
