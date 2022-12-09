@@ -9,7 +9,6 @@ import { aggregateCountOfEventProperty } from './lib';
 import './styles.css';
 
 const Events = ({ events }) => {
-  // Gets the max timestamp from our events array.
   const minValue = useMemo(() => {
     let min = Number.MAX_VALUE;
 
