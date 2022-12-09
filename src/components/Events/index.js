@@ -9,28 +9,25 @@ import { aggregateCountOfEventProperty } from './lib';
 import './styles.css';
 
 const Events = ({ events }) => {
-  const minValue = useMemo(() => {
+  // Calculate min and max timestamps from our events array ONLY
+  // when the events array changes.
+  const [minValue, maxValue] = useMemo(() => {
     let min = Number.MAX_VALUE;
-
-    events.forEach((event) => {
-      if (event.timestamp < min) {
-        min = event.timestamp;
-      }
-    });
-
-    return min;
-  }, [events]);
-
-  const maxValue = useMemo(() => {
     let max = Number.MIN_VALUE;
 
     events.forEach((event) => {
-      if (event.timestamp > max) {
+      const timestamp = Number(event.timestamp);
+
+      if (timestamp < min) {
+        min = timestamp;
+      }
+
+      if (timestamp > max) {
         max = event.timestamp;
       }
     });
 
-    return max;
+    return [min, max];
   }, [events]);
 
   /// state ///
