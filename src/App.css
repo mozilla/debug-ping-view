@@ -151,7 +151,16 @@ pre {
   background-color: '#fff8c5';
 }
 
-/* Hack to hide event marks in the rc-slider package. */
+/* Hide event marks in the rc-slider package. */
 .rc-slider-mark-text {
+  display: none;
+}
+
+/*
+ * Hides the arrow portion of the tooltip. When we concatenate events together
+ * in a single tooltip, they can get long enough that they force incorrect
+ * positioning which puts the arrow somewhere else on the timeline.
+ */
+.rc-tooltip-arrow {
   display: none;
 }
