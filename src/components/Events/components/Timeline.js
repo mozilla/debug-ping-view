@@ -146,13 +146,13 @@ const Timeline = ({
         // If we already have a mark with that timestamp
         const existingMark = marksObj[timestamp];
         marksObj[normalizedTimestamp] = {
-          label: timestamp,
+          label: `${timestamp}`,
           hoverContent: `${existingMark.hoverContent}, ${label}`
         };
       } else {
         // There is no existing mark for the timestamp, create a new one.
         marksObj[normalizedTimestamp] = {
-          label: timestamp,
+          label: `${timestamp}`,
           hoverContent: label
         };
       }
