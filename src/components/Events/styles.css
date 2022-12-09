@@ -18,3 +18,7 @@
 .event-extras {
   width: 50%;
 }
+
+.align-middle {
+  vertical-align: middle;
+}
