@@ -40,7 +40,8 @@ const Events = ({ events }) => {
 
   /// helpers ///
   const isEventInCurrentRange = (event) => {
-    return minSliderValue <= Number(event.timestamp) && Number(event.timestamp) <= maxSliderValue;
+    const timestamp = Number(event.timestamp);
+    return minSliderValue <= timestamp && timestamp <= maxSliderValue;
   };
 
   const getCountOfEventsInCurrentRange = () => {
@@ -66,8 +67,8 @@ const Events = ({ events }) => {
           </tr>
         </thead>
         <tbody>
-          {eventCounts.map((eventData, i) => (
-            <tr key={`${eventData.key}${i}`}>
+          {eventCounts.map((eventData) => (
+            <tr key={eventData.key}>
               <td>{eventData.key}</td>
               <td>{eventData.value}</td>
             </tr>
