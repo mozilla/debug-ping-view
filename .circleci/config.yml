@@ -29,9 +29,21 @@ jobs:
           name: Test Cloud Functions in offline mode
           command: cd functions && npm test
 
+  test-app:
+    executor: node_executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run app tests
+          command: npm test
+
 workflows:
   version: 2
   build:
     jobs:
       - build
       - test-functions
+      - test-app

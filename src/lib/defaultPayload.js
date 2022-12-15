@@ -1,99 +1,151 @@
 export const defaultPayload = `{
-  "$schema": "moz://mozilla.org/schemas/glean/ping/2",
-  "ping_info": {
-    "ping_type": "full",
-    "app_build": "59f330e5",
-    "app_display_version": "1.0.0",
-    "telemetry_sdk_build": "abcdabcd",
-    "client_id": "{{CLIENT_ID}}",
-    "seq": 1,
-    "start_time": "2018-10-23 11:23:15-04:00",
-    "end_time": "2018-10-23 11:23:15-04:25"
-  },
   "metrics": {
-    "boolean": {
-      "examples.boolean_example": true
-    },
-    "string": {
-      "examples.string_example": "\u82f1\u6f22\u5b57\u5178"
-    },
-    "number": {
-      "examples.number_example": 5
-    },
-    "string_list": {
-      "examples.string_list_example": [
-        "A",
-        "B",
-        "C"
-      ]
-    },
-    "enumeration": {
-      "examples.enumeration_example": "value1"
-    },
-    "counter": {
-      "examples.counter_example": 42
-    },
-    "timespan": {
-      "examples.timespan_example": {
-        "value": 2,
-        "time_unit": "second"
-      }
-    },
+    "boolean": { "for_testing.boolean": false },
+    "labeled_boolean": { "for_testing.labeled_boolean": { "a_label": true } },
+    "counter": { "for_testing.counter": 10 },
+    "labeled_counter": { "for_testing.labeled_counter": { "a_label": 1 } },
+    "datetime": { "for_testing.datetime": "2022-12-13T15:00:00.117-05:00" },
+    "labeled_string": { "for_testing.labeled_string": { "a_label": "ho" } },
+    "string": { "for_testing.string": "let's go" },
+    "quantity": { "for_testing.quantity": 42 },
+    "string_list": { "for_testing.string_list": ["let's go"] },
+    "text": { "for_testing.text": "let's gooooooooo" },
+    "timespan": { "for_testing.timespan": { "time_unit": "millisecond", "value": 10 } },
+    "uuid": { "for_testing.uuid": "835c99cf-cbc1-4d46-a5a8-02af10f87645" },
+    "url": { "for_testing.url": "glean://test" },
+    "rate": { "for_testing.rate": { "numerator": 1, "denominator": 2 } },
     "timing_distribution": {
-      "examples.timespan_distribution_example": {
-        "range": [
-          1,
-          100000
-        ],
-        "bucket_count": 50,
-        "histogram_type": "exponential",
-        "values": {
-          "13": 0,
-          "16": 2,
-          "31": 3,
-          "76": 1,
-          "95": 5,
-          "149": 1,
-          "186": 1,
-          "233": 2,
-          "1122": 1,
-          "1757": 1,
-          "2753": 1,
-          "3446": 1,
-          "13255": 1,
-          "1000005": 1
-        },
-        "underflow": 52,
-        "overflow": 3,
-        "time_unit": "second"
-      }
+      "for_testing.timing_distribution": { "values": { "30048": 1 }, "sum": 31500 }
     },
-    "datetime": {
-      "examples.datetime_example": "2018-09-13T19:08:00Z"
+    "memory_distribution": {
+      "for_testing.memory_distribution": { "values": { "96785": 1 }, "sum": 100000 }
     },
-    "use_counter": {
-      "examples.use_counter_example": {
-        "values": {
-          "assert": 2,
-          "clear": 4,
-          "table": 5
-        },
-        "denominator": {
-          "name": "session_length",
-          "value": 100
-        }
-      }
-    },
-    "usage": {
-      "examples.usage_example": true
-    },
-    "rate": {
-      "examples.rate_example": 23
+    "custom_distribution": {
+      "for_testing.custom_distribution_exp": { "sum": 1, "values": { "1": 1 } },
+      "for_testing.custom_distribution_linear": { "sum": 1, "values": { "1": 1 } }
     }
   },
   "events": [
-    [123456789, "examples", "event_example", "button", "42", {"metadata1": "extra", "metadata2": "more_extra"}]
-  ]
+    {
+      "category": "for_testing",
+      "name": "event",
+      "timestamp": 0,
+      "extra": { "sample_string": "hey", "sample_boolean": "false", "sample_quantity": "42" }
+    }
+  ],
+  "ping_info": {
+    "seq": 0,
+    "start_time": "2022-12-13T14:59-05:00",
+    "end_time": "2022-12-13T15:00-05:00"
+  },
+  "client_info": {
+    "telemetry_sdk_build": "1.3.0",
+    "client_id": "e53f7aa3-c413-4b7a-a1bf-7deba7f334b9",
+    "first_run_date": "2022-12-13-05:00",
+    "os": "Unknown",
+    "os_version": "Unknown",
+    "architecture": "Unknown",
+    "locale": "Unknown",
+    "app_build": "Unknown",
+    "app_display_version": "Unknown"
+  }
+}
+
+`;
+
+export const defaultPayloadOnlyMetrics = `{
+  "metrics": {
+    "boolean": { "for_testing.boolean": false },
+    "labeled_boolean": { "for_testing.labeled_boolean": { "a_label": true } },
+    "counter": { "for_testing.counter": 10 },
+    "labeled_counter": { "for_testing.labeled_counter": { "a_label": 1 } },
+    "datetime": { "for_testing.datetime": "2022-12-13T15:00:00.117-05:00" },
+    "labeled_string": { "for_testing.labeled_string": { "a_label": "ho" } },
+    "string": { "for_testing.string": "let's go" },
+    "quantity": { "for_testing.quantity": 42 },
+    "string_list": { "for_testing.string_list": ["let's go"] },
+    "text": { "for_testing.text": "let's gooooooooo" },
+    "timespan": { "for_testing.timespan": { "time_unit": "millisecond", "value": 10 } },
+    "uuid": { "for_testing.uuid": "835c99cf-cbc1-4d46-a5a8-02af10f87645" },
+    "url": { "for_testing.url": "glean://test" },
+    "rate": { "for_testing.rate": { "numerator": 1, "denominator": 2 } },
+    "timing_distribution": {
+      "for_testing.timing_distribution": { "values": { "30048": 1 }, "sum": 31500 }
+    },
+    "memory_distribution": {
+      "for_testing.memory_distribution": { "values": { "96785": 1 }, "sum": 100000 }
+    },
+    "custom_distribution": {
+      "for_testing.custom_distribution_exp": { "sum": 1, "values": { "1": 1 } },
+      "for_testing.custom_distribution_linear": { "sum": 1, "values": { "1": 1 } }
+    }
+  },
+  "ping_info": {
+    "seq": 0,
+    "start_time": "2022-12-13T14:59-05:00",
+    "end_time": "2022-12-13T15:00-05:00"
+  },
+  "client_info": {
+    "telemetry_sdk_build": "1.3.0",
+    "client_id": "e53f7aa3-c413-4b7a-a1bf-7deba7f334b9",
+    "first_run_date": "2022-12-13-05:00",
+    "os": "Unknown",
+    "os_version": "Unknown",
+    "architecture": "Unknown",
+    "locale": "Unknown",
+    "app_build": "Unknown",
+    "app_display_version": "Unknown"
+  }
+}
+
+`;
+
+export const defaultPayloadOnlyEvents = `{
+  "events": [
+    {
+      "category": "for_testing",
+      "name": "event",
+      "timestamp": 0,
+      "extra": { "sample_string": "hey", "sample_boolean": "false", "sample_quantity": "42" }
+    }
+  ],
+  "ping_info": {
+    "seq": 0,
+    "start_time": "2022-12-13T14:59-05:00",
+    "end_time": "2022-12-13T15:00-05:00"
+  },
+  "client_info": {
+    "telemetry_sdk_build": "1.3.0",
+    "client_id": "e53f7aa3-c413-4b7a-a1bf-7deba7f334b9",
+    "first_run_date": "2022-12-13-05:00",
+    "os": "Unknown",
+    "os_version": "Unknown",
+    "architecture": "Unknown",
+    "locale": "Unknown",
+    "app_build": "Unknown",
+    "app_display_version": "Unknown"
+  }
+}
+
+`;
+
+export const defaultPayloadNoEventsOrMetrics = `{
+  "ping_info": {
+    "seq": 0,
+    "start_time": "2022-12-13T14:59-05:00",
+    "end_time": "2022-12-13T15:00-05:00"
+  },
+  "client_info": {
+    "telemetry_sdk_build": "1.3.0",
+    "client_id": "e53f7aa3-c413-4b7a-a1bf-7deba7f334b9",
+    "first_run_date": "2022-12-13-05:00",
+    "os": "Unknown",
+    "os_version": "Unknown",
+    "architecture": "Unknown",
+    "locale": "Unknown",
+    "app_build": "Unknown",
+    "app_display_version": "Unknown"
+  }
 }
 
 `;

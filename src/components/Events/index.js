@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ReadMore from '../ReadMore';
 import Timeline from './components/Timeline';
 
-import { aggregateCountOfEventProperty } from './lib';
+import { aggregateCountOfEventProperty, getEventTimestampRange } from './lib';
 
 import './styles.css';
 
@@ -12,22 +12,7 @@ const Events = ({ events }) => {
   // Calculate min and max timestamps from our events array ONLY
   // when the events array changes.
   const [minValue, maxValue] = useMemo(() => {
-    let min = Number.MAX_VALUE;
-    let max = Number.MIN_VALUE;
-
-    events.forEach((event) => {
-      const timestamp = Number(event.timestamp);
-
-      if (timestamp < min) {
-        min = timestamp;
-      }
-
-      if (timestamp > max) {
-        max = event.timestamp;
-      }
-    });
-
-    return [min, max];
+    return getEventTimestampRange(events);
   }, [events]);
 
   /// state ///

@@ -6,7 +6,7 @@
  *
  * @param {Object[]} arr The array to search.
  * @param {string} query The query string that we are looking for.
- * @param {string[]} keys Every property that should be checked for the query.
+ * @param {string[]} properties Every property that should be checked for the query.
  * @returns {Object[]} Array elements with a property that includes the query.
  */
 export const searchArrayElementPropertiesForSubstring = (arr, query, properties) => {
