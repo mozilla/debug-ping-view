@@ -59,20 +59,9 @@ const Events = ({ events }) => {
     );
   };
 
-  return (
-    <div>
-      <details>
-        <summary>
-          <h4>events</h4>
-        </summary>
-        <p>
-          Number of events: <strong>{events.length}</strong>
-        </p>
-
-        <h5>Aggregate Counts</h5>
-        {renderKeyValueCountTable('name')}
-        {renderKeyValueCountTable('category')}
-
+  const renderTimeline = () => {
+    return (
+      <div>
         <h5>Timeline</h5>
         <p>
           The timeline below displays all events in chronological order. As you move the sliders on
@@ -99,22 +88,20 @@ const Events = ({ events }) => {
             Reset
           </button>
         </p>
-        {!!events.length && (
-          <Timeline
-            events={events}
-            onSliderPositionChange={(values) => {
-              if (values) {
-                const { min, max } = values;
-                setMinSliderValue(min);
-                setMaxSliderValue(max);
-              }
-            }}
-            maxSliderValue={maxSliderValue}
-            minSliderValue={minSliderValue}
-            minValue={minValue}
-            maxValue={maxValue}
-          />
-        )}
+        <Timeline
+          events={events}
+          onSliderPositionChange={(values) => {
+            if (values) {
+              const { min, max } = values;
+              setMinSliderValue(min);
+              setMaxSliderValue(max);
+            }
+          }}
+          maxSliderValue={maxSliderValue}
+          minSliderValue={minSliderValue}
+          minValue={minValue}
+          maxValue={maxValue}
+        />
         <table className='mzp-u-data-table event-table'>
           <thead>
             <tr>
@@ -149,6 +136,24 @@ const Events = ({ events }) => {
             })}
           </tbody>
         </table>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      <details>
+        <summary>
+          <h4>events</h4>
+        </summary>
+        <p>
+          Number of events: <strong>{events.length}</strong>
+        </p>
+
+        <h5>Aggregate Counts</h5>
+        {renderKeyValueCountTable('name')}
+        {renderKeyValueCountTable('category')}
+        {!!events && !!events.length && events.length > 1 && renderTimeline()}
       </details>
     </div>
   );
