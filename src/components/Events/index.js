@@ -102,6 +102,14 @@ const Events = ({ events }) => {
           minValue={minValue}
           maxValue={maxValue}
         />
+      </div>
+    );
+  };
+
+  const renderEventTable = () => {
+    return (
+      <div>
+        <h5>Events</h5>
         <table className='mzp-u-data-table event-table'>
           <thead>
             <tr>
@@ -140,6 +148,8 @@ const Events = ({ events }) => {
     );
   };
 
+  const showTimeline = !!events.length && events.length > 1;
+  const showTable = !!events.length;
   return (
     <div>
       <details>
@@ -153,7 +163,8 @@ const Events = ({ events }) => {
         <h5>Aggregate Counts</h5>
         {renderKeyValueCountTable('name')}
         {renderKeyValueCountTable('category')}
-        {!!events && !!events.length && events.length > 1 && renderTimeline()}
+        {showTimeline && renderTimeline()}
+        {showTable && renderEventTable()}
       </details>
     </div>
   );
