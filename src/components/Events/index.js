@@ -59,20 +59,9 @@ const Events = ({ events }) => {
     );
   };
 
-  return (
-    <div>
-      <details>
-        <summary>
-          <h4>events</h4>
-        </summary>
-        <p>
-          Number of events: <strong>{events.length}</strong>
-        </p>
-
-        <h5>Aggregate Counts</h5>
-        {renderKeyValueCountTable('name')}
-        {renderKeyValueCountTable('category')}
-
+  const renderTimeline = () => {
+    return (
+      <div>
         <h5>Timeline</h5>
         <p>
           The timeline below displays all events in chronological order. As you move the sliders on
@@ -91,7 +80,8 @@ const Events = ({ events }) => {
           </li>
         </ul>
         <p style={{ textAlign: 'center' }}>
-          Selected Range: <strong>{minSliderValue}</strong> - <strong>{maxSliderValue}</strong>
+          Selected Range (in milliseconds): <strong>{minSliderValue}</strong> -{' '}
+          <strong>{maxSliderValue}</strong>
           <br />
           Events in current range: <strong>{getCountOfEventsInCurrentRange()}</strong>
           <br />
@@ -99,22 +89,28 @@ const Events = ({ events }) => {
             Reset
           </button>
         </p>
-        {!!events.length && (
-          <Timeline
-            events={events}
-            onSliderPositionChange={(values) => {
-              if (values) {
-                const { min, max } = values;
-                setMinSliderValue(min);
-                setMaxSliderValue(max);
-              }
-            }}
-            maxSliderValue={maxSliderValue}
-            minSliderValue={minSliderValue}
-            minValue={minValue}
-            maxValue={maxValue}
-          />
-        )}
+        <Timeline
+          events={events}
+          onSliderPositionChange={(values) => {
+            if (values) {
+              const { min, max } = values;
+              setMinSliderValue(min);
+              setMaxSliderValue(max);
+            }
+          }}
+          maxSliderValue={maxSliderValue}
+          minSliderValue={minSliderValue}
+          minValue={minValue}
+          maxValue={maxValue}
+        />
+      </div>
+    );
+  };
+
+  const renderEventTable = () => {
+    return (
+      <div>
+        <h5>Events</h5>
         <table className='mzp-u-data-table event-table'>
           <thead>
             <tr>
@@ -149,6 +145,27 @@ const Events = ({ events }) => {
             })}
           </tbody>
         </table>
+      </div>
+    );
+  };
+
+  const showTimeline = !!events.length && events.length > 1;
+  const showTable = !!events.length;
+  return (
+    <div>
+      <details>
+        <summary>
+          <h4>events</h4>
+        </summary>
+        <p>
+          Number of events: <strong>{events.length}</strong>
+        </p>
+
+        <h5>Aggregate Counts</h5>
+        {renderKeyValueCountTable('name')}
+        {renderKeyValueCountTable('category')}
+        {showTimeline && renderTimeline()}
+        {showTable && renderEventTable()}
       </details>
     </div>
   );
