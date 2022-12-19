@@ -80,7 +80,8 @@ const Events = ({ events }) => {
           </li>
         </ul>
         <p style={{ textAlign: 'center' }}>
-          Selected Range: <strong>{minSliderValue}</strong> - <strong>{maxSliderValue}</strong>
+          Selected Range (in milliseconds): <strong>{minSliderValue}</strong> -{' '}
+          <strong>{maxSliderValue}</strong>
           <br />
           Events in current range: <strong>{getCountOfEventsInCurrentRange()}</strong>
           <br />
