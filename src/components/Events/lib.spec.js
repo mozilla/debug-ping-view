@@ -1,4 +1,4 @@
-import { aggregateCountOfEventProperty, getEventTimestampRange, preprocessEvents } from './lib';
+import { aggregateCountOfEventProperty } from './lib';
 
 const mockEvents = [
   {
@@ -94,88 +94,6 @@ test('aggregateCountOfEventProperty - events property is empty', () => {
   const inputArr = mockEvents;
   const inputProperty = '';
   const actual = aggregateCountOfEventProperty(inputArr, inputProperty);
-
-  const expected = [];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-/// getEventTimestampRange ///
-test('getEventTimestampRange - get values for events array', () => {
-  const input = mockEvents;
-  const actual = getEventTimestampRange(input);
-
-  const expected = [0, 82500];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-test('getEventTimestampRange - single event, min and max are the same', () => {
-  const input = [
-    {
-      category: 'category1',
-      name: 'start',
-      timestamp: 0
-    }
-  ];
-  const actual = getEventTimestampRange(input);
-
-  const expected = [0, 0];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-test('getEventTimestampRange - empty events array', () => {
-  const input = [];
-  const actual = getEventTimestampRange(input);
-
-  const expected = [];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-/// preprocessEvents ///
-test('preprocessEvents - process events', () => {
-  const inputArr = mockEvents;
-  const inputMax = 82500;
-  const actual = preprocessEvents(inputArr, inputMax);
-
-  const expected = [
-    {
-      label: 'category1.start,category1.end,category2.start',
-      timestamp: '0-150'
-    },
-    {
-      label: 'category1.start',
-      timestamp: '70000'
-    },
-    {
-      label: 'category2.end',
-      timestamp: '82000'
-    },
-    {
-      label: 'category1.end',
-      timestamp: '82500'
-    }
-  ];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-test('preprocessEvents - no events', () => {
-  const inputArr = [];
-  const inputMax = 0;
-  const actual = preprocessEvents(inputArr, inputMax);
-
-  const expected = [];
-
-  expect(actual).toStrictEqual(expected);
-});
-
-test('preprocessEvents - no max value', () => {
-  const inputArr = mockEvents;
-  const inputMax = undefined;
-  const actual = preprocessEvents(inputArr, inputMax);
 
   const expected = [];
 

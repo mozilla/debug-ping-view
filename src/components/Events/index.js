@@ -1,43 +1,26 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import ReadMore from '../ReadMore';
 import Timeline from './components/Timeline';
 
-import { aggregateCountOfEventProperty, getEventTimestampRange } from './lib';
+import { aggregateCountOfEventProperty } from './lib';
 
 import './styles.css';
 
 const Events = ({ events }) => {
-  // Calculate min and max timestamps from our events array ONLY
-  // when the events array changes.
-  const [minValue, maxValue] = useMemo(() => {
-    return getEventTimestampRange(events);
+  const trimmedEvents = useMemo(() => {
+    // Event limit is 500, anything more than that will be truncated.
+    if (events && events.length && events.length > 500) {
+      return events.slice(0, 500);
+    } else {
+      return events;
+    }
   }, [events]);
-
-  /// state ///
-  const [minSliderValue, setMinSliderValue] = useState(minValue);
-  const [maxSliderValue, setMaxSliderValue] = useState(maxValue);
-
-  /// helpers ///
-  const isEventInCurrentRange = (event) => {
-    const timestamp = Number(event.timestamp);
-    return minSliderValue <= timestamp && timestamp <= maxSliderValue;
-  };
-
-  const getCountOfEventsInCurrentRange = () => {
-    return events.filter(isEventInCurrentRange).length;
-  };
-
-  /// handlers ///
-  const resetSlider = () => {
-    setMinSliderValue(minValue);
-    setMaxSliderValue(maxValue);
-  };
 
   /// render ///
   const renderKeyValueCountTable = (property) => {
-    const eventCounts = aggregateCountOfEventProperty(events, property);
+    const eventCounts = aggregateCountOfEventProperty(trimmedEvents, property);
 
     return (
       <table className='mzp-u-data-table'>
@@ -63,46 +46,7 @@ const Events = ({ events }) => {
     return (
       <div>
         <h5>Timeline</h5>
-        <p>
-          The timeline below displays all events in chronological order. As you move the sliders on
-          the timeline, the table will display the events that occurred during the timeframe.
-        </p>
-        <p className='mb-2'>
-          <strong>You can</strong>
-        </p>
-        <ul className='mzp-u-list-styled'>
-          <li>
-            <strong>Grab and drag</strong> the sliders on each end of the timeline to update the
-            timeframe.
-          </li>
-          <li>
-            <strong>Click a spot on the timeline</strong> and the sliders will automatically adjust.
-          </li>
-        </ul>
-        <p style={{ textAlign: 'center' }}>
-          Selected Range (in milliseconds): <strong>{minSliderValue}</strong> -{' '}
-          <strong>{maxSliderValue}</strong>
-          <br />
-          Events in current range: <strong>{getCountOfEventsInCurrentRange()}</strong>
-          <br />
-          <button type='button' onClick={resetSlider} className='btn btn-sm btn-outline-secondary'>
-            Reset
-          </button>
-        </p>
-        <Timeline
-          events={events}
-          onSliderPositionChange={(values) => {
-            if (values) {
-              const { min, max } = values;
-              setMinSliderValue(min);
-              setMaxSliderValue(max);
-            }
-          }}
-          maxSliderValue={maxSliderValue}
-          minSliderValue={minSliderValue}
-          minValue={minValue}
-          maxValue={maxValue}
-        />
+        <Timeline events={trimmedEvents} />
       </div>
     );
   };
@@ -115,25 +59,18 @@ const Events = ({ events }) => {
           <thead>
             <tr>
               <th className='event-name'>Name</th>
-              <th className='event-category'>Category</th>
               <th className='event-timestamp'>Timestamp</th>
               <th className='event-extras'>Extras</th>
             </tr>
           </thead>
           <tbody>
-            {events.map((event, i) => {
+            {trimmedEvents.map((event, i) => {
               const { name, category, timestamp, extra } = event;
-
-              // If the event is outside of the timeframe, we don't want to display it.
-              if (!isEventInCurrentRange(event)) {
-                return null;
-              }
-
-              // Event is in our current range, so we render a row in the table.
               return (
                 <tr key={`${category}.${name}${i}`}>
-                  <td className='event-name align-middle'>{name}</td>
-                  <td className='event-category align-middle'>{category}</td>
+                  <td className='event-name align-middle'>
+                    {category}.{name}
+                  </td>
                   <td className='event-timestamp align-middle'>{timestamp}</td>
                   <td className='event-extras align-middle'>
                     <ReadMore lines={3}>
@@ -149,16 +86,21 @@ const Events = ({ events }) => {
     );
   };
 
-  const showTimeline = !!events.length && events.length > 1;
-  const showTable = !!events.length;
+  const showTimeline = !!trimmedEvents.length && trimmedEvents.length > 1;
+  const showTable = !!trimmedEvents.length;
   return (
     <div>
       <details>
         <summary>
           <h4>events</h4>
         </summary>
+        {events.length > 500 && (
+          <p>
+            <strong>Only the first 500 events are displayed.</strong>
+          </p>
+        )}
         <p>
-          Number of events: <strong>{events.length}</strong>
+          Number of events: <strong>{trimmedEvents.length}</strong>
         </p>
 
         <h5>Aggregate Counts</h5>
