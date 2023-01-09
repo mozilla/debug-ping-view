@@ -46,6 +46,13 @@ const Events = ({ events }) => {
     return (
       <div>
         <h5>Timeline</h5>
+        <p>
+          Each timestamp is how long after{' '}
+          <strong>
+            <i>ping_info.start_time</i>
+          </strong>{' '}
+          that the event occurred. All timestamps are recorded in <strong>milliseconds</strong>.
+        </p>
         <Timeline events={trimmedEvents} />
       </div>
     );
@@ -59,7 +66,7 @@ const Events = ({ events }) => {
           <thead>
             <tr>
               <th className='event-name'>Name</th>
-              <th className='event-timestamp'>Timestamp</th>
+              <th className='event-timestamp'>Timestamp (ms)</th>
               <th className='event-extras'>Extras</th>
             </tr>
           </thead>

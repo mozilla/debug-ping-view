@@ -4,15 +4,11 @@
 }
 
 .event-name {
-  width: 30%;
-}
-
-.event-category {
-  width: 10%;
+  width: 35%;
 }
 
 .event-timestamp {
-  width: 10%;
+  width: 15%;
 }
 
 .event-extras {

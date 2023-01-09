@@ -15,6 +15,7 @@ const Timeline = ({ events }) => {
           {
             x: events.map((event) => event.timestamp),
             y: events.map((event) => `${event.category}.${event.name}`),
+            hovertemplate: '%{y}, %{x} (ms)<extra></extra>',
             type: 'scatter',
             mode: 'markers',
             marker: {
@@ -30,7 +31,7 @@ const Timeline = ({ events }) => {
           width: width - 50,
           title: 'Events',
           xaxis: {
-            title: 'Timestamp',
+            title: 'Timestamp (ms)',
             showgrid: false,
             showline: true,
             autotick: true,
