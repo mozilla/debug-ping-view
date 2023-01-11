@@ -1,4 +1,7 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { GoogleAuthProvider } from 'firebase/auth';
 
@@ -12,13 +15,30 @@ const uiConfig = {
   signInOptions: [GoogleAuthProvider.PROVIDER_ID]
 };
 
-const SignInScreen = () => {
+const SignInScreen = ({ authenticated }) => {
+  // If we are already signed in, we want to redirect to the home page
+  // so we don't get into the bad loop where you signed in and `/login`
+  // won't redirect you.
   return (
-    <div>
-      <p className='text-center'>Please sign-in:</p>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
-    </div>
+    <>
+      {authenticated ? (
+        <Navigate
+          to={{
+            pathname: '/'
+          }}
+        />
+      ) : (
+        <div>
+          <p className='text-center'>Please sign-in:</p>
+          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+        </div>
+      )}
+    </>
   );
+};
+
+SignInScreen.propTypes = {
+  authenticated: PropTypes.bool.isRequired
 };
 
 export default SignInScreen;
