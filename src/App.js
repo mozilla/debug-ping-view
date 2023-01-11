@@ -73,7 +73,7 @@ const App = () => {
             path='/help'
             element={<SecuredRoute component={Help} authenticated={authenticated} />}
           />
-          <Route path='/login' element={<SignInScreen />} />
+          <Route path='/login' element={<SignInScreen authenticated={authenticated} />} />
         </Routes>
       </div>
     </ThemeProvider>
