@@ -8,11 +8,7 @@ const PayloadField = ({ pingPayload }) => {
   pingPayload = pingPayload.replace(/":"/g, '": "');
   pingPayload = pingPayload.replace(/","/g, '", "');
 
-  return (
-    <ReadMore lines={3}>
-      <p className='cell-overflow'>{pingPayload}</p>
-    </ReadMore>
-  );
+  return <ReadMore numberOfLines={3} text={pingPayload} />;
 };
 
 PayloadField.propTypes = {

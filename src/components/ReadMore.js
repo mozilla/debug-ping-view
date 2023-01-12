@@ -1,33 +1,31 @@
-import React from 'react';
-import ShowMoreText from 'react-show-more-text';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const ReadMore = ({ lines, less, more, children }) => {
+const ReadMore = ({ numberOfLines = 3, text }) => {
+  const [show, setShow] = useState(false);
   return (
     <div>
-      <ShowMoreText
-        lines={lines}
-        more={more}
-        less={less}
-        truncatedEndingComponent={'…'}
-        anchorClass='btn btn-sm btn-outline-secondary'
+      <button onClick={() => setShow((prev) => !prev)} className='btn btn-sm btn-outline-secondary'>
+        {show ? 'collapse' : 'expand'}
+      </button>
+      <div
+        style={{
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          WebkitLineClamp: show ? 'unset' : numberOfLines,
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical'
+        }}
       >
-        {children}
-      </ShowMoreText>
+        {text}
+      </div>
     </div>
   );
 };
 
-ReadMore.defaultProps = {
-  lines: 3,
-  more: 'expand',
-  less: 'collapse'
-};
-
 ReadMore.propTypes = {
-  lines: PropTypes.number.isRequired,
-  less: PropTypes.string,
-  more: PropTypes.string
+  numberOfLines: PropTypes.number.isRequired,
+  text: PropTypes.string.isRequired
 };
 
 export default ReadMore;
