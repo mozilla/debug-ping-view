@@ -80,9 +80,7 @@ const Events = ({ events }) => {
                   </td>
                   <td className='event-timestamp align-middle'>{timestamp}</td>
                   <td className='event-extras align-middle'>
-                    <ReadMore lines={3}>
-                      <p className='cell-overflow'>{JSON.stringify(extra)}</p>
-                    </ReadMore>
+                    <ReadMore numberOfLines={3} text={JSON.stringify(extra)} />
                   </td>
                 </tr>
               );
