@@ -67,7 +67,9 @@ const Events = ({ events }) => {
             <tr>
               <th className='event-name'>Name</th>
               <th className='event-timestamp'>Timestamp (ms)</th>
-              <th className='event-extras'>Extras</th>
+              <th className='event-extras'>
+                Extras <span className='font-weight-normal'>(click to expand)</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -80,7 +82,7 @@ const Events = ({ events }) => {
                   </td>
                   <td className='event-timestamp align-middle'>{timestamp}</td>
                   <td className='event-extras align-middle'>
-                    <ReadMore numberOfLines={3} text={JSON.stringify(extra)} />
+                    {!!extra && <ReadMore numberOfLines={1} text={JSON.stringify(extra)} />}
                   </td>
                 </tr>
               );

@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 import Filter from './Filter';
 import ErrorField from './ErrorField';
-import PayloadField from './PayloadField';
+import ReadMore from '../../ReadMore';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
@@ -169,7 +169,6 @@ const DebugTagPings = ({ debugId }) => {
           </li>
         </ul>
       </div>
-      <br />
       <h3 className='mb-2'>
         Recent pings for: <b>{debugId}</b> ({displayPings.length})
       </h3>
@@ -184,9 +183,15 @@ const DebugTagPings = ({ debugId }) => {
           <tr>
             <th className='received'>Received</th>
             <th className='doc-type'>Type</th>
-            {!!numberOfErrors && <th className='error'>Error</th>}
+            {!!numberOfErrors && (
+              <th className='error'>
+                Error <span className='font-weight-normal'>(click to expand)</span>
+              </th>
+            )}
             <th className='actions'>Actions</th>
-            <th className='payload'>Payload</th>
+            <th className='payload'>
+              Payload <span className='font-weight-normal'>(click to expand)</span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -214,7 +219,7 @@ const DebugTagPings = ({ debugId }) => {
                 </button>
               </td>
               <td className='text-monospace payload'>
-                <PayloadField pingPayload={ping.payload} />
+                <ReadMore key={ping.key} text={ping.payload} numberOfLines={3} />
               </td>
             </tr>
           ))}

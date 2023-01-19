@@ -25,10 +25,10 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
             >
               <div></div>
               <div className='navbar-nav' role='presentation'>
-                <div className='nav-item nav-link div-icon'>
+                <div className='nav-item nav-link cursor-pointer'>
                   <ThemeToggle theme={theme} toggleTheme={themeToggler} />
                 </div>
-                <div className='nav-item nav-link div-icon'>
+                <div className='nav-item nav-link cursor-pointer'>
                   <a
                     href='https://github.com/mozilla/debug-ping-view/issues'
                     target='_blank'
@@ -38,13 +38,13 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                     <BugIcon />
                   </a>
                 </div>
-                <div className='nav-item nav-link div-icon'>
+                <div className='nav-item nav-link cursor-pointer'>
                   <Link to={`/help`} style={{ all: 'unset' }}>
                     <HelpIcon />
                   </Link>
                 </div>
                 <div
-                  className='nav-item nav-link div-icon'
+                  className='nav-item nav-link cursor-pointer'
                   type='btn btn-lg '
                   onClick={() => {
                     auth.signOut();

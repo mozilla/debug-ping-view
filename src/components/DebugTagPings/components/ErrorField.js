@@ -15,36 +15,31 @@ const ErrorField = ({ ping }) => {
   const matchingCommonError = commonErrors.find((e) => {
     return ping.errorMessage.startsWith(e[0]);
   });
+
   if (matchingCommonError) {
     errorText = matchingCommonError[1] + ': ' + errorText;
     errorTooltip = matchingCommonError[2];
   }
+
   const matchingCommonErrorType = commonErrorTypes.find((et) => {
     return ping.errorType === et[0];
   });
+
   if (matchingCommonErrorType) {
     errorTooltip = matchingCommonErrorType[1] + '\n\n' + ping.errorMessage;
   }
 
-  // hack to force overflow of compacted json strings
-  errorText = errorText.replace(/":"/g, '": "');
-  errorText = errorText.replace(/","/g, '", "');
-
-  const infoIcon = errorTooltip ? (
-    <i
-      className='fa fa-info-circle'
-      data-toggle='tooltip'
-      data-placement='top'
-      title={errorTooltip}
-    />
-  ) : (
-    ''
-  );
-
   return (
     <td className='text-danger text-monospace error'>
       <ReadMore numberOfLines={3} text={errorText} />
-      {infoIcon}
+      {errorTooltip && (
+        <i
+          className='fa fa-info-circle'
+          data-toggle='tooltip'
+          data-placement='top'
+          title={errorTooltip}
+        />
+      )}
     </td>
   );
 };
