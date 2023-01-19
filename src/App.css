@@ -143,10 +143,14 @@ pre {
   }
 }
 
-.div-icon {
-  cursor: pointer;
-}
-
 .active-ping-line {
   background-color: '#fff8c5';
+}
+
+.font-weight-normal {
+  font-weight: normal;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

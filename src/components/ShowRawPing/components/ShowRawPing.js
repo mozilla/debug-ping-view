@@ -214,7 +214,7 @@ const ShowRawPing = ({ docId }) => {
                 >
                   <span
                     id={anchorId}
-                    className='no-select div-icon line-link'
+                    className='no-select cursor-pointer line-link'
                     style={{ paddingRight: '8px', textDecoration: 'underline' }}
                     onClick={handleLineNumberClick(lineNumber)}
                   >
