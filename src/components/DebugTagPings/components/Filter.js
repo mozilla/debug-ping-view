@@ -78,7 +78,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     // whenever one of our filter options update.
     //
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, pingType, metricType, metricId]);
+  }, [pings, search, pingType, metricType, metricId]);
 
   /// render ///
   const pingTypes = aggregatePingTypes(pings);
