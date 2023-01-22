@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
+import ReturnToTop from './ReturnToTop';
 import SearchBar from './SearchBar';
 
 import { PING_LIFETIME } from '../lib/constants';
@@ -78,6 +79,7 @@ const ActiveClients = () => {
 
   return (
     <div>
+      <ReturnToTop />
       <div className='container-fluid m-2'>
         <div>
           <p className='mb-2'>

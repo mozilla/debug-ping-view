@@ -154,3 +154,11 @@ pre {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.return-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  padding: 8px;
+}

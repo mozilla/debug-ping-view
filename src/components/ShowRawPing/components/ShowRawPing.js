@@ -9,6 +9,7 @@ import Events from '../../Events';
 import Loading from '../../Loading';
 import Metrics from '../../Metrics';
 import PingSection from './PingSection';
+import ReturnToTop from '../../ReturnToTop';
 
 import { calculateDaysRemainingForPing } from '../../../lib/date';
 
@@ -154,6 +155,7 @@ const ShowRawPing = ({ docId }) => {
   const metrics = parsedPing.metrics;
   return (
     <div className='container-fluid m-2'>
+      <ReturnToTop />
       <div>
         {renderDaysLeftForPing()}
         <p className='mb-2'>
