@@ -59,4 +59,8 @@ export const GlobalStyles = createGlobalStyle`
   html {
     background-color: ${({ theme }) => theme.body};
   }
+
+  .return-to-top {
+    background-color: ${({ theme }) => theme.body};
+  }
   `;

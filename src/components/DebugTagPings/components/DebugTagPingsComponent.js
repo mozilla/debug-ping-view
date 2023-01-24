@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import Filter from './Filter';
 import ErrorField from './ErrorField';
 import ReadMore from '../../ReadMore';
+import ReturnToTop from '../../ReturnToTop';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
@@ -149,6 +150,7 @@ const DebugTagPings = ({ debugId }) => {
 
   return (
     <div className='container-fluid m-2'>
+      <ReturnToTop />
       <div>
         <p className='mb-2'>
           <strong>You can</strong>
