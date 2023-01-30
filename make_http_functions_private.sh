@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 #set -o xtrace
 
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 # Firebase CLI deploys all HTTP functions with public access
 # This script makes them private
 # TODO: these functions can be deployed via gcloud with ingress set to internal-only
