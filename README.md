@@ -6,6 +6,9 @@ Web application for viewing Glean debug pings in real-time.
 Since this repository is private, CircleCI is not able to build from forks. As a workaround PRs should be submitted from branches pushed to origin.
 
 ## Development
+
+**Required node version**: 14.20.1
+
 ### Clean checkout
 If you just cloned this repository, first you should install dependencies:
  ```
