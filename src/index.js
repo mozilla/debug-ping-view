@@ -11,7 +11,9 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Glean from '@mozilla/glean/web';
 
+Glean.initialize("debug-ping-view", true, { maxEvents: 1 });
 
 ReactDOM.render(
     <Router>
