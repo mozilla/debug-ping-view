@@ -12,7 +12,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-
+// Render the application
 ReactDOM.render(
     <Router>
         <App />
