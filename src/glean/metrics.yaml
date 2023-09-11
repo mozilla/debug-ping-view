@@ -16,18 +16,21 @@
 ---
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
-usage:
-  page_loaded:
+page:
+  load:
     type: event
-    lifetime: ping
     description: |
-      Recorded when app is loaded/re-loaded.
+      An event triggered when a page is loaded.
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440
     data_reviews:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440 #ToDo: to be changed later
     data_sensitivity:
-      - technical
+      - interaction
     notification_emails:
       - glean-team@mozilla.com
     expires: never
+    extra_keys:
+      page:
+        description: The page that was loaded, e.g. "Home", "Pings", "Ping", "Help".
+        type: string
