@@ -22,6 +22,7 @@ import Loading from './components/Loading';
 import { useTheme } from './lib/useTheme';
 import { GlobalStyles } from './globalStyles';
 import { lightTheme, darkTheme } from './themes';
+import { pageLoaded } from './glean/generated/usage';
 
 // Global styles
 import './App.css';
@@ -46,6 +47,12 @@ const App = () => {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    // record page load event
+    pageLoaded.record()
+  }, []);
+
 
   /// render ///
   if (loading) {
