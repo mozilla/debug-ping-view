@@ -13,7 +13,12 @@ Since this repository is private, CircleCI is not able to build from forks. As a
 If you just cloned this repository, first you should install dependencies:
  ```
  npm install
- cd functions && npm install
+ cd functions && npm install && cd ..
+ ```
+
+Run the following command to generate required Glean files (needs re-ran anytime Glean `.yaml` files are updated):
+ ```
+ npm run build:glean
  ```
 
 ### Local hosting

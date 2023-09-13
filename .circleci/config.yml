@@ -1,25 +1,29 @@
 version: 2.1
 
 executors:
-  node_executor:
+  node_with_python_executor:
     docker:
       - image: cimg/node:14.20.1 # Cloud Functions Node.js 14 runtime is based on Node.js version 14.20.1
+      - image: cimg/python:3.9.6 # Glean requirement: https://mozilla.github.io/glean/book/user/adding-glean-to-your-project/javascript.html#requirements
     # working_directory: /app
 
 jobs:
   build:
-    executor: node_executor
+    executor: node_with_python_executor
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: npm install
       - run:
+          name: Install python virtualenv
+          command: sudo apt-get update && sudo apt-get install python3-venv
+      - run:
           name: Build webapp
           command: npm run build
 
   test-functions:
-    executor: node_executor
+    executor: node_with_python_executor
     steps:
       - checkout
       - run:
@@ -30,7 +34,7 @@ jobs:
           command: cd functions && npm test
 
   test-app:
-    executor: node_executor
+    executor: node_with_python_executor
     steps:
       - checkout
       - run:
