@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import { click } from '../glean/generated/page'
 
 const ReturnToTop = () => {
   const [visible, setVisible] = useState(false);
@@ -23,6 +24,8 @@ const ReturnToTop = () => {
       className='return-to-top btn btn-sm btn-outline-secondary'
       style={{ display: visible ? 'block' : 'none' }}
       onClick={() => {
+        // record this click event
+        click.record({button: "Back to top"})
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }}

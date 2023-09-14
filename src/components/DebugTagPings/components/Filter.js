@@ -14,6 +14,7 @@ import { aggregatePingTypes, filterOnPingType } from '../lib/filter/pingType';
 import { aggregateMetricTypes, filterOnMetricType } from '../lib/filter/metricType';
 import { aggregateMetricIds, filterOnMetricId } from '../lib/filter/metricId';
 import { searchArrayElementPropertiesForSubstring } from '../../../lib/searchArrayElementPropertiesForSubstring';
+import { click } from '../../../glean/generated/page';
 
 const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
   // This ref is used to invoke a function exposed from a child component.
@@ -31,6 +32,11 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
   const [metricId, setMetricId] = useState('');
 
   /// handlers ///
+  // Records the click event
+  const recordClick = (buttonLabel) => {
+    click.record({button: buttonLabel});
+  };
+
   const hideFilters = () => {
     setShowOptions(false);
   };
@@ -48,7 +54,8 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
     setMetricId('');
   };
 
-  const handleToggleRenderOptions = () => {
+  const handleToggleRenderOptions = (buttonLabel) => {
+    recordClick(buttonLabel)
     setShowOptions((prev) => !prev);
   };
 
@@ -103,7 +110,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
       {!showOptions && (
         <button
           type='button'
-          onClick={handleToggleRenderOptions}
+          onClick={() => {handleToggleRenderOptions("Add Filters")}}
           className='btn btn-sm btn-outline-secondary'
         >
           Add Filters
