@@ -24,6 +24,7 @@ import ReturnToTop from '../../ReturnToTop';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
+import { load } from '../../../glean/generated/page'
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
@@ -112,6 +113,11 @@ const DebugTagPings = ({ debugId }) => {
   }, [pings, changeQueue, isFirstSnapshot]);
 
   /// lifecycle ///
+  useEffect(() => {
+    // record page load event
+    load.record({page: "Pings"})
+  }, []);
+
   useEffect(() => {
     const pingsQuery = query(
       collection(getFirestore(), 'pings'),

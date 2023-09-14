@@ -11,7 +11,11 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Glean from '@mozilla/glean/web';
 
+// Initialize Glean. ToDo: Replace uploadEnabled: false with a user preference
+const APP_NAME = "debug-ping-view"
+Glean.initialize(APP_NAME, false, { maxEvents: 1 });
 
 ReactDOM.render(
     <Router>
