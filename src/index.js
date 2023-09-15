@@ -11,9 +11,9 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { initTelemetry } from './lib/telemetry';
+import { initTelemetryClient } from './lib/telemetry';
 
-initTelemetry();
+initTelemetryClient();
 
 ReactDOM.render(
     <Router>
