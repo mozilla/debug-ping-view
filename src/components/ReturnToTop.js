@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { click } from '../glean/generated/page'
+import { recordClick } from '../lib/telemetry';
 
 const ReturnToTop = () => {
   const [visible, setVisible] = useState(false);
@@ -25,7 +25,7 @@ const ReturnToTop = () => {
       style={{ display: visible ? 'block' : 'none' }}
       onClick={() => {
         // record this click event
-        click.record({button: "Back to top"})
+        recordClick('Back to top');
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }}

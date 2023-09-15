@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import BarChart from './components/BarChart';
 import Histogram from './components/Histogram';
 import MetricValuesTable from './components/MetricValuesTable';
+import { recordClick } from '../../lib/telemetry';
 
 const Metrics = ({ metrics }) => {
   /// helpers ///
@@ -48,7 +49,7 @@ const Metrics = ({ metrics }) => {
     }
 
     return (
-      <details key={metricKey}>
+      <details key={metricKey} onClick={() => {recordClick('PingData.metrics')}}>
         <summary>
           <p>
             <strong>{metricKey}</strong>

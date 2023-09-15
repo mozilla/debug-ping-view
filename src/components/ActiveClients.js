@@ -15,7 +15,7 @@ import { PING_LIFETIME } from '../lib/constants';
 import { formatDate } from '../lib/date';
 import { usePrevious } from '../lib/usePrevious';
 import { searchArrayElementPropertiesForSubstring } from '../lib/searchArrayElementPropertiesForSubstring';
-import { load, click } from '../glean/generated/page';
+import { recordLoad, recordClick } from '../lib/telemetry';
 
 const q = query(collection(getFirestore(), 'clients'), orderBy('lastActive', 'desc'));
 
@@ -60,11 +60,6 @@ const ActiveClients = () => {
     }
   }, [debugTags, search]);
 
-  // record the click event
-  const recordClick = (buttonLabel) => () => {
-    click.record({button: buttonLabel});
-  };
-
   /// lifecycle ///
   useEffect(() => {
     const unsubscribe = onSnapshot(q, onCollectionUpdate);
@@ -82,7 +77,7 @@ const ActiveClients = () => {
 
   useEffect(() => {
     // record page load event
-    load.record({page: "Home"})
+    recordLoad('Home');
   }, []);
 
   /// render ///
@@ -138,7 +133,7 @@ const ActiveClients = () => {
               return (
                 <tr key={key}>
                   <td>
-                    <Link className='text-decoration-none' to={`/pings/${debugId}`} onClick={recordClick("Debug tag")}>
+                    <Link className='text-decoration-none' to={`/pings/${debugId}`} onClick={recordClick('Debug ID')}>
                       {debugId}
                     </Link>
                   </td>

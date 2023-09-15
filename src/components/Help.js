@@ -8,13 +8,13 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PING_LIFETIME } from '../lib/constants';
-import { load } from '../glean/generated/page'
+import { recordLoad } from '../lib/telemetry';
 
 const Help = () => {
   /// lifecycle ///
   useEffect(() => {
     // record page load event
-    load.record({page: "Help"})
+    recordLoad('Help');
   }, []);
 
   return (

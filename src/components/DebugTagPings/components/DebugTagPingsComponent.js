@@ -24,7 +24,7 @@ import ReturnToTop from '../../ReturnToTop';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
-import { load, click } from '../../../glean/generated/page'
+import { recordLoad, recordClick } from '../../../lib/telemetry';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
@@ -40,14 +40,9 @@ const DebugTagPings = ({ debugId }) => {
     return 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
   };
 
-  // Records the click event
-  const recordClick = (buttonLabel) => {
-    click.record({button: buttonLabel});
-  };
-
   // Copies the beautified JSON payload to the clipboard.
   const handleCopyPayload = (key, payload, buttonLabel) => () => {
-    recordClick(buttonLabel)
+    recordClick(buttonLabel);
 
     try {
       const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 2);
@@ -122,7 +117,7 @@ const DebugTagPings = ({ debugId }) => {
   /// lifecycle ///
   useEffect(() => {
     // record page load event
-    load.record({page: "Pings"})
+    recordLoad('Pings');
   }, []);
 
   useEffect(() => {
@@ -226,15 +221,15 @@ const DebugTagPings = ({ debugId }) => {
               </td>
               {!!numberOfErrors && <ErrorField ping={ping} />}
               <td className='actions'>
-                <Link to={`/pings/${debugId}/${ping.key}`} onClick={() => {recordClick("Details")}}>Details</Link>
+                <Link to={`/pings/${debugId}/${ping.key}`} onClick={() => {recordClick('Details')}}>Details</Link>
                 <br />
-                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)} onClick={() => {recordClick("Raw JSON")}}>
+                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)} onClick={() => {recordClick('Raw JSON')}}>
                   Raw JSON
                 </a>
                 <br />
                 <button
                   className='btn btn-sm btn-outline-secondary'
-                  onClick={handleCopyPayload(ping.key, ping.payload, "Copy Payload")}
+                  onClick={handleCopyPayload(ping.key, ping.payload, 'Copy Payload')}
                 >
                   {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}
                 </button>

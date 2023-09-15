@@ -5,6 +5,7 @@
  */
 
 import Glean from '@mozilla/glean/web';
+import { load, click } from '../glean/generated/page';
 
 const APP_NAME = 'debug-ping-view';
 
@@ -31,4 +32,22 @@ export function initTelemetryClient() {
  */
 export function updateTelemetryClientUploadStatus() {
   Glean.setUploadEnabled(isTelemetryEnabled());
+}
+
+/**
+ * Record a click event via telemetry client.
+ *
+ * @param {string} buttonLabel Label of the button that was clicked.
+ */
+export function recordClick(buttonLabel) {
+  click.record({ button: buttonLabel });
+}
+
+/**
+ * Record a page load event via telemetry client.
+ *
+ * @param {string} pageName Name of the page that was loaded.
+ */
+export function recordLoad(pageName) {
+  load.record({ page: pageName });
 }
