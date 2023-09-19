@@ -133,7 +133,7 @@ const ActiveClients = () => {
               return (
                 <tr key={key}>
                   <td>
-                    <Link className='text-decoration-none' to={`/pings/${debugId}`} onClick={recordClick('Debug ID')}>
+                    <Link className='text-decoration-none' to={`/pings/${debugId}`} onClick={() => {recordClick('Debug ID')}}>
                       {debugId}
                     </Link>
                   </td>
