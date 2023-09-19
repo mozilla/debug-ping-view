@@ -24,7 +24,7 @@ page:
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440
     data_reviews:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440 #ToDo: to be changed later
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851456#c5
     data_sensitivity:
       - interaction
     notification_emails:
@@ -42,7 +42,7 @@ page:
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440
     data_reviews:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440 #ToDo: to be changed later
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851456#c5
     data_sensitivity:
       - interaction
     notification_emails:
