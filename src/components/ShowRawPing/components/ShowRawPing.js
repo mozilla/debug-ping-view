@@ -18,7 +18,7 @@ import PingSection from './PingSection';
 import ReturnToTop from '../../ReturnToTop';
 
 import { calculateDaysRemainingForPing } from '../../../lib/date';
-import { load } from '../../../glean/generated/page'
+import { recordLoad } from '../../../lib/telemetry';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
@@ -61,7 +61,7 @@ const ShowRawPing = ({ docId }) => {
   /// lifecycle ///
   useEffect(() => {
     // record page load event
-    load.record({page: "Ping"})
+    recordLoad('Ping');
   }, []);
 
   // Load all ping data once `docId` is available.

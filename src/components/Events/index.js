@@ -13,6 +13,7 @@ import Timeline from './components/Timeline';
 import { aggregateCountOfEventProperty } from './lib';
 
 import './styles.css';
+import { recordClick } from '../../lib/telemetry';
 
 const Events = ({ events }) => {
   const trimmedEvents = useMemo(() => {
@@ -104,7 +105,7 @@ const Events = ({ events }) => {
   return (
     <div>
       <details>
-        <summary>
+        <summary onClick={() => {recordClick('PingData.events')}}>
           <h4>events</h4>
         </summary>
         {events.length > 500 && (

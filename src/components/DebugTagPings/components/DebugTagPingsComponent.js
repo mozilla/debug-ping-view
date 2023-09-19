@@ -24,7 +24,7 @@ import ReturnToTop from '../../ReturnToTop';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
-import { load } from '../../../glean/generated/page'
+import { recordLoad, recordClick } from '../../../lib/telemetry';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
@@ -41,7 +41,9 @@ const DebugTagPings = ({ debugId }) => {
   };
 
   // Copies the beautified JSON payload to the clipboard.
-  const handleCopyPayload = (key, payload) => () => {
+  const handleCopyPayload = (key, payload, buttonLabel) => () => {
+    recordClick(buttonLabel);
+
     try {
       const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 2);
       navigator.clipboard.writeText(beautifiedJson);
@@ -115,7 +117,7 @@ const DebugTagPings = ({ debugId }) => {
   /// lifecycle ///
   useEffect(() => {
     // record page load event
-    load.record({page: "Pings"})
+    recordLoad('Pings');
   }, []);
 
   useEffect(() => {
@@ -219,15 +221,15 @@ const DebugTagPings = ({ debugId }) => {
               </td>
               {!!numberOfErrors && <ErrorField ping={ping} />}
               <td className='actions'>
-                <Link to={`/pings/${debugId}/${ping.key}`}>Details</Link>
+                <Link to={`/pings/${debugId}/${ping.key}`} onClick={() => {recordClick('Details')}}>Details</Link>
                 <br />
-                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)}>
+                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)} onClick={() => {recordClick('Raw JSON')}}>
                   Raw JSON
                 </a>
                 <br />
                 <button
                   className='btn btn-sm btn-outline-secondary'
-                  onClick={handleCopyPayload(ping.key, ping.payload)}
+                  onClick={handleCopyPayload(ping.key, ping.payload, 'Copy Payload')}
                 >
                   {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}
                 </button>
