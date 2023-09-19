@@ -7,9 +7,11 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { updateTelemetryClientUploadStatus } from '../lib/telemetry';
 
 const SecuredRoute = ({ component: Component, authenticated }) => {
   const params = useParams();
+  updateTelemetryClientUploadStatus();
 
   return authenticated ? (
     <Component {...params} />
