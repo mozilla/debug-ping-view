@@ -18,7 +18,7 @@ import PingSection from './PingSection';
 import ReturnToTop from '../../ReturnToTop';
 
 import { calculateDaysRemainingForPing } from '../../../lib/date';
-import { recordLoad } from '../../../lib/telemetry';
+import { recordClick, recordLoad } from '../../../lib/telemetry';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
@@ -131,6 +131,7 @@ const ShowRawPing = ({ docId }) => {
   };
 
   const handleLineNumberClick = (lineNumber) => (e) => {
+    recordClick('Line number click');
     lineNumber = `L${lineNumber}`;
 
     let startLine;

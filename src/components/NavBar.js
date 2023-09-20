@@ -15,6 +15,7 @@ import BugIcon from './Icons/BugIcon';
 import SignOutIcon from './Icons/SignOut';
 import HelpIcon from './Icons/HelpIcon';
 import Breadcrumbs from './Breadcrumbs';
+import { recordClick } from '../lib/telemetry';
 
 const NavBar = ({ authenticated, theme, themeToggler }) => {
   return (
@@ -31,7 +32,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
             >
               <div></div>
               <div className='navbar-nav' role='presentation'>
-                <div className='nav-item nav-link cursor-pointer'>
+                <div className='nav-item nav-link cursor-pointer' onClick={() => {recordClick('Theme toggler')}}>
                   <ThemeToggle theme={theme} toggleTheme={themeToggler} />
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
@@ -40,12 +41,13 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                     target='_blank'
                     rel='noopener noreferrer'
                     style={{ all: 'unset ' }}
+                    onClick={() => {recordClick('Bug')}}
                   >
                     <BugIcon />
                   </a>
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
-                  <Link to={`/help`} style={{ all: 'unset' }}>
+                  <Link to={`/help`} style={{ all: 'unset' }} onClick={() => {recordClick('Help')}}>
                     <HelpIcon />
                   </Link>
                 </div>
@@ -53,6 +55,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                   className='nav-item nav-link cursor-pointer'
                   type='btn btn-lg '
                   onClick={() => {
+                    recordClick('Sign out');
                     auth.signOut();
                   }}
                 >
