@@ -178,9 +178,6 @@ const ShowRawPing = ({ docId }) => {
           <li>
             <strong>Share</strong> this link with others to directly access this ping.
           </li>
-          <li>
-            <strong>Click</strong> on a ping header to see the nested ping data.
-          </li>
         </ul>
       </div>
       <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
