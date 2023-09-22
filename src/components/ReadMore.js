@@ -25,7 +25,7 @@ const ReadMore = ({ numberOfLines = 3, text }) => {
   return (
     <div className='cursor-pointer' onClick={
       () => {
-        recordClick('Payload expand on Pings page');
+        recordClick('Expand payload');
         setShow((prev) => !prev)}}
     >
       <span

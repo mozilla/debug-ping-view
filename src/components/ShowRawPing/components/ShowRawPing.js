@@ -131,7 +131,7 @@ const ShowRawPing = ({ docId }) => {
   };
 
   const handleLineNumberClick = (lineNumber) => (e) => {
-    recordClick('Line number click');
+    recordClick('Line number');
     lineNumber = `L${lineNumber}`;
 
     let startLine;

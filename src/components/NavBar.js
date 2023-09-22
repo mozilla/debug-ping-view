@@ -32,7 +32,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
             >
               <div></div>
               <div className='navbar-nav' role='presentation'>
-                <div className='nav-item nav-link cursor-pointer' onClick={() => {recordClick('Theme toggler')}}>
+                <div className='nav-item nav-link cursor-pointer' onClick={() => {recordClick('Theme')}}>
                   <ThemeToggle theme={theme} toggleTheme={themeToggler} />
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
