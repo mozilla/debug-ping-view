@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import { flattenJson } from '../../../lib/flattenJson';
 import { getNestedAndNonNestedKeysFromObject } from '../lib';
+import { recordClick } from '../../../lib/telemetry';
 
 const PingSection = ({ pingSection, header, isNested }) => {
   // If the component was called recursively (isNested), then we show a smaller
@@ -90,7 +91,7 @@ const PingSection = ({ pingSection, header, isNested }) => {
     <>
       {isNested ? (
         <details>
-          <summary>{renderTitle()}</summary>
+          <summary onClick={() => {recordClick('PingData.summary')}}>{renderTitle()}</summary>
           {renderTable()}
         </details>
       ) : (

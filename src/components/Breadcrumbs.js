@@ -9,12 +9,13 @@ import { Link } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
 import { isUuid } from '../lib/isUuid';
+import { recordClick } from '../lib/telemetry';
 
 const Breadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs();
 
   return (
-    <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 15 }}>
+    <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 15 }} onClick={() => {recordClick('Breadcrumbs')}}>
       {breadcrumbs.map(({ breadcrumb, key, location, match }) => {
         // `/pings` is included in the routes, but there is not a /pings page,
         // so we can hide it from our breadcrumbs.

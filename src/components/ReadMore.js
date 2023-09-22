@@ -6,6 +6,7 @@
 
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { recordClick } from '../lib/telemetry';
 
 const ReadMore = ({ numberOfLines = 3, text }) => {
   const [show, setShow] = useState(false);
@@ -22,7 +23,11 @@ const ReadMore = ({ numberOfLines = 3, text }) => {
   }, [text]);
 
   return (
-    <div className='cursor-pointer' onClick={() => setShow((prev) => !prev)}>
+    <div className='cursor-pointer' onClick={
+      () => {
+        recordClick('Expand payload');
+        setShow((prev) => !prev)}}
+    >
       <span
         style={{
           textOverflow: 'ellipsis',
