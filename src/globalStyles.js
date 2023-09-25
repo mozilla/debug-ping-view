@@ -54,10 +54,6 @@ export const GlobalStyles = createGlobalStyle`
     background-color: ${({ theme }) => theme.rawPingActiveLineBackground};
   }
 
-  summary::before {
-    filter: invert(${({ theme }) => theme.invert});
-  }
-
   .btn {
     color: ${({ theme }) => theme.text};
   }

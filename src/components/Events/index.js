@@ -13,7 +13,6 @@ import Timeline from './components/Timeline';
 import { aggregateCountOfEventProperty } from './lib';
 
 import './styles.css';
-import { recordClick } from '../../lib/telemetry';
 
 const Events = ({ events }) => {
   const trimmedEvents = useMemo(() => {
@@ -104,25 +103,21 @@ const Events = ({ events }) => {
   const showTable = !!trimmedEvents.length;
   return (
     <div>
-      <details>
-        <summary onClick={() => {recordClick('PingData.events')}}>
-          <h4>events</h4>
-        </summary>
-        {events.length > 500 && (
-          <p>
-            <strong>Only the first 500 events are displayed.</strong>
-          </p>
-        )}
+      <h4>events</h4>
+      {events.length > 500 && (
         <p>
-          Number of events: <strong>{trimmedEvents.length}</strong>
+          <strong>Only the first 500 events are displayed.</strong>
         </p>
+      )}
+      <p>
+        Number of events: <strong>{trimmedEvents.length}</strong>
+      </p>
 
-        <h5>Aggregate Counts</h5>
-        {renderKeyValueCountTable('name')}
-        {renderKeyValueCountTable('category')}
-        {showTimeline && renderTimeline()}
-        {showTable && renderEventTable()}
-      </details>
+      <h5>Aggregate Counts</h5>
+      {renderKeyValueCountTable('name')}
+      {renderKeyValueCountTable('category')}
+      {showTimeline && renderTimeline()}
+      {showTable && renderEventTable()}
     </div>
   );
 };
