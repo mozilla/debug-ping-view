@@ -73,3 +73,6 @@ Views are leveraging Firestore's realtime query updates.
 
 #### Authentication
 Simple Google Signin-based authentication is inplace. It allows to log in with any Google account, although only those under `mozilla.com` domain are [allowed](firestore.rules) to fetch data from Firestore.
+
+#### Data Collection
+This project uses [Glean.js SDK](https://github.com/mozilla/glean.js) for data collection. If you want to disable data collection, please [turn on browser's Do Not Track](https://support.mozilla.org/en-US/kb/how-do-i-turn-do-not-track-feature) feature.

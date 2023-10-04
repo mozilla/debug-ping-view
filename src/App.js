@@ -18,6 +18,7 @@ import Help from './components/Help';
 import SignInScreen from './components/SignInScreen';
 import SecuredRoute from './components/SecuredRoute';
 import Loading from './components/Loading';
+import Footer from './components/Footer';
 
 import { useTheme } from './lib/useTheme';
 import { GlobalStyles } from './globalStyles';
@@ -81,6 +82,7 @@ const App = () => {
           />
           <Route path='/login' element={<SignInScreen authenticated={authenticated} />} />
         </Routes>
+        <Footer />
       </div>
     </ThemeProvider>
   );
