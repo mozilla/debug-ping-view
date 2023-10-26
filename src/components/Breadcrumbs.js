@@ -19,7 +19,7 @@ const Breadcrumbs = () => {
       {breadcrumbs.map(({ breadcrumb, key, location, match }) => {
         // `/pings` is included in the routes, but there is not a /pings page,
         // so we can hide it from our breadcrumbs.
-        if (breadcrumb.key === '/pings') {
+        if (breadcrumb.key === '/pings' || breadcrumb.key === '/stream') {
           return null;
         }
 
