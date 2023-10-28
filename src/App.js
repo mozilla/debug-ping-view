@@ -82,6 +82,8 @@ const App = () => {
           />
           <Route path='/login' element={<SignInScreen authenticated={authenticated} />} />
         </Routes>
+      </div>
+      <div>
         <Footer />
       </div>
     </ThemeProvider>

@@ -65,4 +65,11 @@ export const GlobalStyles = createGlobalStyle`
   .return-to-top {
     background-color: ${({ theme }) => theme.body};
   }
+
+  .privacy-footer {
+    background-color: ${({ theme }) => theme.body};
+    border-top-color: ${({ theme }) => theme.toggleBorder};
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
   `;
