@@ -34,3 +34,26 @@ export const getNestedAndNonNestedKeysFromObject = (obj) => {
     nonNestedKeys
   };
 };
+
+/**
+ * Pad a string to a specified length with a specified character.
+ * 
+ * @param {string} s The original string.
+ * @param {number} desiredStringLength How long the string should be after padding.
+ * @param {string} padChar The character to pad the string with.
+ * @returns The original string padded with the specified character.
+ */
+export const padStringLeft = (s, desiredStringLength, padChar) => {
+  const sLength = s.length;
+
+  if (sLength === desiredStringLength) {
+    return s;
+  }
+
+  let outputStr = s;
+  while (outputStr.length < desiredStringLength) {
+    outputStr = padChar + outputStr;
+  }
+
+  return outputStr;
+}
