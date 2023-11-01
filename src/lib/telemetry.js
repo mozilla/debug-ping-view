@@ -16,6 +16,11 @@ const APP_NAME = 'debug-ping-view';
  * @returns {boolean} true if telemetry can be collected, else false.
  */
 function isTelemetryEnabled() {
+  // If the app is in development mode, we don't want to initialize Glean.
+  if (process.env.NODE_ENV === 'development') {
+    return false;
+  }
+
   return navigator.doNotTrack !== '1';
 }
 
