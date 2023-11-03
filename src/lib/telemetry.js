@@ -17,7 +17,7 @@ const APP_NAME = 'debug-ping-view';
  */
 function isTelemetryEnabled() {
   // If the app is in development mode, we don't want to initialize Glean.
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.REACT_APP_ENV !== 'prod') {
     return false;
   }
 
