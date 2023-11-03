@@ -141,7 +141,7 @@ const EventStream = ({ debugId }) => {
       {!!events && !!events.length && (
         <Events events={events} header={`Event Steam for ${debugId}`} isEventStream />
       )}
-      {!isFirstSnapshot && !events.length && <h3>No events recorded for this debug Id.</h3>}
+      {!isFirstSnapshot && !events.length && <h3>No events recorded for this Debug Id.</h3>}
     </div>
   );
 };
