@@ -4,25 +4,127 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ReadMore from '../ReadMore';
 import Timeline from './components/Timeline';
+import Dropdown from '../Dropdown';
 
 import { aggregateCountOfEventProperty } from './lib';
 
 import './styles.css';
 
-const Events = ({ events }) => {
+const filterValues = [
+  "Last 15 minutes",
+  "Last 30 minutes",
+  "Last 1 hour",
+  "Last 3 hours",
+  "Last 6 hours",
+  "Last 12 hours",
+  "Last 1 day",
+  "Last 7 days",
+  "Last 21 days"
+];
+
+const Events = ({ events, header, isEventStream }) => {
+  const listRefs = useRef([]);
+
+  /// state ///
+  const [filterValue, setFilterValue] = useState("");
+  const [lastFilterHadNoEvents, setLastFilterHadNoEvents] = useState(undefined);
+  const [scrollingKey, setScrollingKey] = useState("");
+
+  /// helpers ///
+  const filterEvents = (eventsToFilter, filterDate) => {
+    return eventsToFilter.filter((event) => event.timestamp > filterDate.getTime()) || [];
+  };
+
   const trimmedEvents = useMemo(() => {
+    let normalizedEvents;
+
     // Event limit is 500, anything more than that will be truncated.
     if (events && events.length && events.length > 500) {
-      return events.slice(0, 500);
+      normalizedEvents = events.slice(0, 500);
     } else {
-      return events;
+      normalizedEvents = events;
     }
-  }, [events]);
+
+    // Filter out events based on timeline filter.
+    if (!!filterValue) {
+      const filterDate = new Date();
+
+      switch (filterValue) {
+        case "Last 15 minutes":
+          filterDate.setMinutes(filterDate.getMinutes() - 15);
+          break;
+        case "Last 30 minutes":
+          filterDate.setMinutes(filterDate.getMinutes() - 30);
+          break;
+        case "Last 1 hour":
+          filterDate.setHours(filterDate.getHours() - 1);
+          break;
+        case "Last 3 hours":
+          filterDate.setHours(filterDate.getHours() - 3);
+          break;
+        case "Last 6 hours":
+          filterDate.setHours(filterDate.getHours() - 6);
+          break;
+        case "Last 12 hours":
+          filterDate.setHours(filterDate.getHours() - 12);
+          break;
+        case "Last 1 day":
+          filterDate.setDate(filterDate.getDate() - 1);
+          break;
+        case "Last 7 days":
+          filterDate.setDate(filterDate.getDate() - 7);
+          break;
+        case "Last 21 days":
+          filterDate.setDate(filterDate.getDate() - 21);
+          break;
+        default:
+          break;
+      }
+
+      const filteredEvents = filterEvents(normalizedEvents, filterDate);
+      if (filteredEvents.length === 0) {
+        // No events for the filter, show an error message and continue to show
+        // all events.
+        setLastFilterHadNoEvents(true);
+      } else {
+        // The filter has events, so we show those events.
+        normalizedEvents = filteredEvents;
+        setLastFilterHadNoEvents(false);
+      }
+    }
+
+    return normalizedEvents;
+  }, [events, filterValue]);
+
+  useEffect(() => {
+    listRefs.current = listRefs.current.slice(0, trimmedEvents.length);
+ }, [trimmedEvents]);
+
+  const plotClickHandler = (eventName, timestamp) => {
+    const eventIndex = trimmedEvents.findIndex((event) => {
+      return `${event.category}.${event.name}` === eventName && event.timestamp === timestamp;
+    });
+
+    listRefs.current[eventIndex].scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+
+    // Triggers highlighting the event row that was just selected.
+    setScrollingKey(`${eventName}.${timestamp}`);
+
+    // After 1 second, we want to unset the key. The animation timing is
+    // handled from the CSS, so this is just to make sure that later when
+    // an event is clicked that a previous key isn't already set.
+    setTimeout(() => {
+      setScrollingKey("");
+    }, 1000);
+  };
 
   /// render ///
   const renderKeyValueCountTable = (property) => {
@@ -52,15 +154,29 @@ const Events = ({ events }) => {
     return (
       <div>
         <h5>Timeline</h5>
-        <p>
+        {!isEventStream && <p>
           Each timestamp is how long after{' '}
           <strong>
             <i>ping_info.start_time</i>
           </strong>{' '}
           that the event occurred. All timestamps are recorded in <strong>milliseconds</strong>.
-        </p>
-        <Timeline events={trimmedEvents} />
+        </p>}
+        {isEventStream && renderTimelineFilter()}
+        {lastFilterHadNoEvents && !!filterValue && <p>Your current selection has no events, showing all events.</p>}
+        <Timeline events={trimmedEvents} plotClickHandler={plotClickHandler} />
       </div>
+    );
+  };
+
+  const renderTimelineFilter = () => {
+    return (
+      <Dropdown
+        name='timeRange'
+        defaultValue='Time range'
+        state={filterValue}
+        setState={setFilterValue}
+        values={filterValues}
+      />
     );
   };
 
@@ -82,7 +198,10 @@ const Events = ({ events }) => {
             {trimmedEvents.map((event, i) => {
               const { name, category, timestamp, extra } = event;
               return (
-                <tr key={`${category}.${name}${i}`}>
+                <tr
+                  key={`${category}.${name}${i}`}
+                  ref={el => listRefs.current[i] = el}
+                  className={scrollingKey === `${category}.${name}.${timestamp}` ? 'item-highlight': ''}>
                   <td className='event-name align-middle'>
                     {category}.{name}
                   </td>
@@ -103,7 +222,7 @@ const Events = ({ events }) => {
   const showTable = !!trimmedEvents.length;
   return (
     <div>
-      <h4>events</h4>
+      <h4>{header || "events"}</h4>
       {events.length > 500 && (
         <p>
           <strong>Only the first 500 events are displayed.</strong>
@@ -112,11 +231,10 @@ const Events = ({ events }) => {
       <p>
         Number of events: <strong>{trimmedEvents.length}</strong>
       </p>
-
+      {showTimeline && renderTimeline()}
       <h5>Aggregate Counts</h5>
       {renderKeyValueCountTable('name')}
       {renderKeyValueCountTable('category')}
-      {showTimeline && renderTimeline()}
       {showTable && renderEventTable()}
     </div>
   );

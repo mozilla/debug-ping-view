@@ -7,7 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import FilterDropdown from './FilterDropdown';
+import Dropdown from '../../Dropdown';
 import SearchBar from '../../SearchBar';
 
 import { aggregatePingTypes, filterOnPingType } from '../lib/filter/pingType';
@@ -115,7 +115,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
         <div>
           {/* Ping Type */}
           {!!pingTypes.length && (
-            <FilterDropdown
+            <Dropdown
               name='pingType'
               defaultValue='Ping Type'
               state={pingType}
@@ -125,7 +125,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
           )}
           {/* Metric Type */}
           {!!metricTypes.length && (
-            <FilterDropdown
+            <Dropdown
               name='metricType'
               defaultValue='Metric Type'
               state={metricType}
@@ -135,7 +135,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
           )}
           {/* Metric ID */}
           {!!metricIds.length && (
-            <FilterDropdown
+            <Dropdown
               name='metricId'
               defaultValue='Metric ID'
               state={metricId}

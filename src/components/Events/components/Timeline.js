@@ -10,8 +10,20 @@ import PropTypes from 'prop-types';
 import Plot from 'react-plotly.js';
 import useWindowDimensions from '../../../lib/useWindowDimensions';
 
-const Timeline = ({ events }) => {
+const Timeline = ({ events, plotClickHandler }) => {
   const { width } = useWindowDimensions();
+
+  const onClickHandler = (clickEvent) => {
+    let eventName;
+    let timestamp;
+
+    for (var i = 0; i < clickEvent.points.length; i++) {
+      eventName = clickEvent.points[i].y;
+      timestamp = clickEvent.points[i].x;
+    }
+
+    plotClickHandler(eventName, timestamp);
+  };
 
   /// render ///
   return (
@@ -49,6 +61,7 @@ const Timeline = ({ events }) => {
             autorange: 'reversed'
           }
         }}
+        onClick={onClickHandler}
       />
     </>
   );
