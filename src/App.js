@@ -87,6 +87,8 @@ const App = () => {
             element={<SecuredRoute component={EventStream} authenticated={authenticated} />}
           />
         </Routes>
+      </div>
+      <div>
         <Footer />
       </div>
     </ThemeProvider>
