@@ -105,8 +105,13 @@ const ActiveClients = () => {
             <li>
               <strong>Search</strong> by: Debug id, OS, Application, and Geo.
             </li>
-            <li>Click on <strong>Pings</strong> to see (up to) the last 100 pings for a Debug Tag.</li>
-            <li>Click on <strong>Event Stream</strong> to see an aggregated timeline for all events in all pings for a Debug Tag.</li>
+            <li>
+              Click on <strong>Pings</strong> to see (up to) the last 100 pings for a Debug Tag.
+            </li>
+            <li>
+              Click on <strong>Event Stream</strong> to see an aggregated timeline for all events in the 
+              last 100 pings for a Debug Tag.
+            </li>
           </ul>
         </div>
         <h3>Active Debug Tags ({displayDebugTags().length})</h3>
