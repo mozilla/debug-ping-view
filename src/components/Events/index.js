@@ -171,6 +171,7 @@ const Events = ({ events, header, isEventStream }) => {
   const renderTimelineFilter = () => {
     return (
       <Dropdown
+        name='timeRange'
         defaultValue='Time range'
         state={filterValue}
         setState={setFilterValue}
@@ -200,7 +201,7 @@ const Events = ({ events, header, isEventStream }) => {
                 <tr
                   key={`${category}.${name}${i}`}
                   ref={el => listRefs.current[i] = el}
-                  className={scrollingKey === `${category}.${name}.${timestamp}` && 'item-highlight'}>
+                  className={scrollingKey === `${category}.${name}.${timestamp}` ? 'item-highlight': ''}>
                   <td className='event-name align-middle'>
                     {category}.{name}
                   </td>
