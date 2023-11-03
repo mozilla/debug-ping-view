@@ -19,6 +19,7 @@ import SignInScreen from './components/SignInScreen';
 import SecuredRoute from './components/SecuredRoute';
 import Loading from './components/Loading';
 import Footer from './components/Footer';
+import EventStream from './components/EventStream';
 
 import { useTheme } from './lib/useTheme';
 import { GlobalStyles } from './globalStyles';
@@ -81,6 +82,10 @@ const App = () => {
             element={<SecuredRoute component={Help} authenticated={authenticated} />}
           />
           <Route path='/login' element={<SignInScreen authenticated={authenticated} />} />
+          <Route
+            path='/stream/:debugId'
+            element={<SecuredRoute component={EventStream} authenticated={authenticated} />}
+          />
         </Routes>
       </div>
       <div>

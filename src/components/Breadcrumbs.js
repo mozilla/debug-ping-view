@@ -17,9 +17,9 @@ const Breadcrumbs = () => {
   return (
     <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 15 }} onClick={() => {recordClick('Breadcrumbs')}}>
       {breadcrumbs.map(({ breadcrumb, key, location, match }) => {
-        // `/pings` is included in the routes, but there is not a /pings page,
-        // so we can hide it from our breadcrumbs.
-        if (breadcrumb.key === '/pings') {
+        // `/pings` & `/stream` are included in the routes, but they don't have
+        // their own pages, so we can hide it from our breadcrumbs.
+        if (breadcrumb.key === '/pings' || breadcrumb.key === '/stream') {
           return null;
         }
 
