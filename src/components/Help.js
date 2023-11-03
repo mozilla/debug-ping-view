@@ -39,8 +39,8 @@ const Help = () => {
       </p>
       <p>
         Tagged pings should be available in under 10 seconds after sending and they are stored for{' '}
-        {PING_LIFETIME} days. You'll see an entry corresponding to your debug id and client id on
-        the <Link to='/'>main page</Link>. Click on your debug id there to see pings submitted from
+        {PING_LIFETIME} days. You'll see an entry corresponding to your Debug id and client id on
+        the <Link to='/'>main page</Link>. Click on your Debug id there to see pings submitted from
         your device in real time.
       </p>
       <h3>The Glean Ecosystem</h3>

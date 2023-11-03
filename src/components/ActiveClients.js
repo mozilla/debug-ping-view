@@ -106,7 +106,11 @@ const ActiveClients = () => {
               <strong>Search</strong> by: Debug id, OS, Application, and Geo.
             </li>
             <li>
-              Click on a debug tag to see (up to) the last <strong>100 pings</strong>.
+              Click on <strong>Pings</strong> to see (up to) the last 100 pings for a Debug Tag.
+            </li>
+            <li>
+              Click on <strong>Event Stream</strong> to see an aggregated timeline for all events in the 
+              last 100 pings for a Debug Tag.
             </li>
           </ul>
         </div>
@@ -121,6 +125,7 @@ const ActiveClients = () => {
           <thead>
             <tr>
               <th>Debug id</th>
+              <th>Views</th>
               <th>Last active</th>
               <th>OS</th>
               <th>Application</th>
@@ -132,9 +137,22 @@ const ActiveClients = () => {
               const { key, debugId, displayDate, os, appName, geo } = debugTag;
               return (
                 <tr key={key}>
+                  <td>{debugId}</td>
                   <td>
-                    <Link className='text-decoration-none' to={`/pings/${debugId}`} onClick={() => {recordClick('Debug ID')}}>
-                      {debugId}
+                    <Link
+                      className='text-decoration-none'
+                      to={`/pings/${debugId}`}
+                      onClick={() => {
+                        recordClick("Debug ID Pings");
+                      }}
+                    >
+                      Pings
+                    </Link>
+                    <br />
+                    <Link className='text-decoration-none' to={`/stream/${debugId}`} onClick={() => {
+                      recordClick("Debug ID Event Stream")
+                    }}>
+                      Event Stream
                     </Link>
                   </td>
                   <td>{displayDate}</td>
