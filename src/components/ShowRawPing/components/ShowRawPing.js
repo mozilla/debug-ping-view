@@ -17,6 +17,7 @@ import Metrics from '../../Metrics';
 import PingSection from './PingSection';
 import ReturnToTop from '../../ReturnToTop';
 
+import { padStringLeft } from '../lib';
 import { calculateDaysRemainingForPing } from '../../../lib/date';
 import { recordClick, recordLoad } from '../../../lib/telemetry';
 
@@ -166,6 +167,10 @@ const ShowRawPing = ({ docId }) => {
   // We only want to show the visualizations section if the ping contains
   // metrics that we have custom visualizations for.
   const metrics = parsedPing.metrics;
+
+  // To properly pad the line number strings, we need to get the number
+  // of digits from the last line number.
+  const maxNumberOfDigits = ping.split('\n').length.toString().length;
   return (
     <div className='container-fluid m-2'>
       <ReturnToTop />
@@ -227,10 +232,10 @@ const ShowRawPing = ({ docId }) => {
                   <span
                     id={anchorId}
                     className='no-select cursor-pointer line-link'
-                    style={{ paddingRight: '8px', textDecoration: 'underline' }}
+                    style={{ paddingRight: '8px' }}
                     onClick={handleLineNumberClick(lineNumber)}
                   >
-                    {lineNumber}
+                    {padStringLeft(lineNumber.toString(), maxNumberOfDigits, " ")}
                   </span>
                   {line}
                 </div>
