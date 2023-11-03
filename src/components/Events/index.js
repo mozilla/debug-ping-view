@@ -118,7 +118,9 @@ const Events = ({ events, header, isEventStream }) => {
     // Triggers highlighting the event row that was just selected.
     setScrollingKey(`${eventName}.${timestamp}`);
 
-    // After 1 second, we want to unset the key, which will remove the highlight.
+    // After 1 second, we want to unset the key. The animation timing is
+    // handled from the CSS, so this is just to make sure that later when
+    // an event is clicked that a previous key isn't already set.
     setTimeout(() => {
       setScrollingKey("");
     }, 1000);
