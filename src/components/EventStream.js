@@ -114,20 +114,24 @@ const EventStream = ({ debugId }) => {
     let allEvents = [];
     pings.forEach((ping) => {
       if (ping.payload) {
-        const parsedPing = JSON.parse(ping.payload);
-        const pingEvents = parsedPing.events;
-
-        if (pingEvents) {
-          pingEvents.forEach((pingEvent) => {
-            const startTime = parsedPing.ping_info.start_time;
-            const newDate = new Date(startTime);
-            const dateAsMs = newDate.getTime();
-            const adjustedTimeAsMs = dateAsMs + pingEvent.timestamp;
-            allEvents.push({
-              ...pingEvent,
-              timestamp: adjustedTimeAsMs
+        try {
+          const parsedPing = JSON.parse(ping.payload);
+          const pingEvents = parsedPing.events;
+  
+          if (pingEvents) {
+            pingEvents.forEach((pingEvent) => {
+              const startTime = parsedPing.ping_info.start_time;
+              const newDate = new Date(startTime);
+              const dateAsMs = newDate.getTime();
+              const adjustedTimeAsMs = dateAsMs + pingEvent.timestamp;
+              allEvents.push({
+                ...pingEvent,
+                timestamp: adjustedTimeAsMs
+              });
             });
-          });
+          }
+        } catch (e) {
+          console.log(e);
         }
       }
     });
