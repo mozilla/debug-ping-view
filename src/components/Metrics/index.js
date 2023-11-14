@@ -33,12 +33,12 @@ const Metrics = ({ metrics }) => {
       case 'timing_distribution':
       case 'memory_distribution':
       case 'custom_distribution':
-        content = Object.keys(metricData).map((key, i) => (
+        content = Object.keys(metricData).sort().map((key, i) => (
           <Histogram key={`${key}${i}`} title={key} data={metricData[key]} />
         ));
         break;
       case 'labeled_counter':
-        content = Object.keys(metricData).map((key, i) => (
+        content = Object.keys(metricData).sort().map((key, i) => (
           <BarChart key={`${key}${i}`} title={key} data={metricData[key]} />
         ));
         break;
@@ -61,7 +61,7 @@ const Metrics = ({ metrics }) => {
   return (
     <div>
       <h4>metrics</h4>
-      {Object.keys(metrics).map(renderMetric)}
+      {Object.keys(metrics).sort().map(renderMetric)}
     </div>
   );
 };

@@ -25,7 +25,7 @@ const MetricValuesTable = ({ metricData }) => {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(data).map((key) => {
+          {Object.keys(data).sort().map((key) => {
             let value = data[key];
 
             // Have to convert booleans to strings or else nothing
@@ -53,7 +53,7 @@ const MetricValuesTable = ({ metricData }) => {
 
   return (
     <>
-      {Object.keys(metricData).map((objKey) => {
+      {Object.keys(metricData).sort().map((objKey) => {
         // Flatten object so we can print everything.
         const data = flattenJson(metricData[objKey]);
         return (
