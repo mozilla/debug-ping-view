@@ -33,6 +33,9 @@ const ShowRawPing = ({ docId }) => {
   const [activeStartLine, setActiveStartLine] = useState(null);
   const [activeEndLine, setActiveEndLine] = useState(null);
 
+  // Store the raw ping data in case of JSON parsing error.
+  const [rawPing, setRawPing] = useState(null);
+
   /// helpers ///
   // Converts a string like `L25` to just 25 as a number type.
   const getNumberFromLineNumber = (lineNumber) => {
@@ -69,7 +72,19 @@ const ShowRawPing = ({ docId }) => {
   useEffect(() => {
     getDoc(doc(getFirestore(), 'pings', docId)).then((doc) => {
       if (doc.exists()) {
-        setPing(JSON.stringify(JSON.parse(doc.data().payload), undefined, 2));
+        let json;
+        try {
+          json = JSON.stringify(JSON.parse(doc.data().payload), undefined, 2);
+        } catch (e) {
+          console.log(e);
+
+          // If we have an error parsing the JSON, we set this so the UI knows
+          // that we aren't going to render the ping data sections.
+          json = {};
+        }
+
+        setPing(json);
+        setRawPing(doc.data().payload);
         setPingAddedAt(doc.data().addedAt);
       } else {
         setPing('No such ping!');
@@ -93,6 +108,20 @@ const ShowRawPing = ({ docId }) => {
   /// render ///
   if (!ping) {
     return <Loading />;
+  }
+
+  // Check if our ping is empty because of an error. If so,
+  // short-circuit and show an error message since we can't
+  // display the ping.
+  if (Object.entries(ping).length === 0) {
+    return (
+      <div className='container-fluid m-2'>
+        <div>Unable to display ping data because of an error parsing the JSON.</div>
+        <br />
+        <h4>Raw Ping</h4>
+        <code>{rawPing}</code>
+      </div>
+    );
   }
 
   // Prints how many days until the current ping expires.
@@ -161,12 +190,21 @@ const ShowRawPing = ({ docId }) => {
     handleLineChange(startLine, endLine);
   };
 
-  const parsedPing = JSON.parse(ping);
-  const events = parsedPing.events;
+  let parsedPing;
+  let events;
+  let metrics;
+  try {
+    parsedPing = JSON.parse(ping);
+    events = parsedPing.events;
 
-  // We only want to show the visualizations section if the ping contains
-  // metrics that we have custom visualizations for.
-  const metrics = parsedPing.metrics;
+    // We only want to show the visualizations section if the ping contains
+    // metrics that we have custom visualizations for.
+    metrics = parsedPing.metrics;
+  } catch (e) {
+    console.log(e);
+
+    parsedPing = {};
+  }
 
   // To properly pad the line number strings, we need to get the number
   // of digits from the last line number.
@@ -185,7 +223,7 @@ const ShowRawPing = ({ docId }) => {
           </li>
         </ul>
       </div>
-      <PingSection pingSection={JSON.parse(ping)} header={'Ping Data'} />
+      <PingSection pingSection={parsedPing} header={'Ping Data'} />
       {!!events && <Events events={events} />}
       {!!metrics && <Metrics metrics={metrics} />}
       <br />
