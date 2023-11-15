@@ -5,7 +5,7 @@
   "dependencies": {
     "@mozilla-protocol/core": "^16.0.1",
     "@mozilla/glean": "^3.0.0-pre.0",
-    "firebase": "^9.12.1",
+    "firebase": "^9.23.0",
     "moment": "^2.29.4",
     "plotly.js": "^2.16.3",
     "react": "^17.0.0",
