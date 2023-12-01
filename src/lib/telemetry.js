@@ -5,6 +5,7 @@
  */
 
 import Glean from '@mozilla/glean/web';
+import { BrowserSendBeaconUploader } from "@mozilla/glean/web";
 import { load, click } from '../glean/generated/page';
 
 const APP_NAME = 'debug-ping-view';
@@ -29,10 +30,11 @@ function isTelemetryEnabled() {
  * Initialize telemetry client, setting it's upload status based on the current
  * telemetry preference.
  */
-export function initTelemetryClient() {
+export function initTelemetryClient(useSendBeacon=false) {
   Glean.initialize(APP_NAME, isTelemetryEnabled(), {
     maxEvents: 1,
     channel: process.env.REACT_APP_ENV,
+    httpClient: useSendBeacon ? BrowserSendBeaconUploader : undefined,
   });
 }
 
