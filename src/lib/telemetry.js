@@ -19,7 +19,7 @@ const APP_NAME = 'debug-ping-view';
 function isTelemetryEnabled() {
   // If the app environment is not defined (likely because of local development),
   // then don't collect any data.
-  if (typeof(process.env.REACT_APP_ENV) !== "undefined") {
+  if (typeof(process.env.REACT_APP_ENV) === "undefined") {
     return false;
   }
 
