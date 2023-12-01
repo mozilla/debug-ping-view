@@ -10,9 +10,9 @@ In order to prepare production build, run:
 ```
 REACT_APP_ENV=prod npm run build
 ```
-For development build we can omit `APP_ENV` parameter:
+For development build:
 ```
-npm run build
+REACT_APP_ENV=dev npm run build
 ```
 
 ## Deploying
