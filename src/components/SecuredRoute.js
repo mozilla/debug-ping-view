@@ -4,12 +4,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { updateTelemetryClientUploadStatus } from '../lib/telemetry';
 
-const SecuredRoute = ({ component: Component, authenticated }) => {
+const SecuredRoute = ({ component: Component, authenticated, title }) => {
+  // Update the page title for page load telemetry.
+  useEffect(() => {
+    document.title = `Debug Ping Viewer | ${title}`;
+  }, [title]);
+
   const params = useParams();
   updateTelemetryClientUploadStatus();
 
@@ -27,7 +32,8 @@ const SecuredRoute = ({ component: Component, authenticated }) => {
 SecuredRoute.propTypes = {
   // This handles both functional and class components.
   component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-  authenticated: PropTypes.bool.isRequired
+  authenticated: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default SecuredRoute;
