@@ -24,7 +24,7 @@ import ReturnToTop from '../../ReturnToTop';
 import WarningIcon from './WarningIcon';
 
 import { formatDate } from '../../../lib/date';
-import { recordClick } from '../../../lib/telemetry';
+import { recordLoad, recordClick } from '../../../lib/telemetry';
 
 const DebugTagPings = ({ debugId }) => {
   /// state ///
@@ -115,6 +115,11 @@ const DebugTagPings = ({ debugId }) => {
   }, [pings, changeQueue, isFirstSnapshot]);
 
   /// lifecycle ///
+  useEffect(() => {
+    // record page load event
+    recordLoad('Pings');
+  }, []);
+
   useEffect(() => {
     const pingsQuery = query(
       collection(getFirestore(), 'pings'),

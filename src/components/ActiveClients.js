@@ -15,7 +15,7 @@ import { PING_LIFETIME } from '../lib/constants';
 import { formatDate } from '../lib/date';
 import { usePrevious } from '../lib/usePrevious';
 import { searchArrayElementPropertiesForSubstring } from '../lib/searchArrayElementPropertiesForSubstring';
-import { recordClick } from '../lib/telemetry';
+import { recordLoad, recordClick } from '../lib/telemetry';
 
 const q = query(collection(getFirestore(), 'clients'), orderBy('lastActive', 'desc'));
 
@@ -74,6 +74,11 @@ const ActiveClients = () => {
       handleSearchUpdate();
     }
   }, [search, prevSearch, handleSearchUpdate]);
+
+  useEffect(() => {
+    // record page load event
+    recordLoad('Home');
+  }, []);
 
   /// render ///
   const displayDebugTags = () => {

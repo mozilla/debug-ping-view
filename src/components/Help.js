@@ -4,12 +4,19 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PING_LIFETIME } from '../lib/constants';
+import { recordLoad } from '../lib/telemetry';
 
 const Help = () => {
+  /// lifecycle ///
+  useEffect(() => {
+    // record page load event
+    recordLoad('Help');
+  }, []);
+
   return (
     <div className='container'>
       <h3>Usage</h3>

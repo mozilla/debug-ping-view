@@ -6,7 +6,7 @@
 
 import Glean from '@mozilla/glean/web';
 import { BrowserSendBeaconUploader } from "@mozilla/glean/web";
-import { click } from '../glean/generated/page';
+import { load, click } from '../glean/generated/page';
 
 const APP_NAME = 'debug-ping-view';
 
@@ -52,4 +52,13 @@ export function updateTelemetryClientUploadStatus() {
  */
 export function recordClick(buttonLabel) {
   click.record({ button: buttonLabel });
+}
+
+/**
+ * Record a page load event via telemetry client.
+ *
+ * @param {string} pageName Name of the page that was loaded.
+ */
+export function recordLoad(pageName) {
+  load.record({ page: pageName });
 }

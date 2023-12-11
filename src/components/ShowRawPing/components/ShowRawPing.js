@@ -19,7 +19,7 @@ import ReturnToTop from '../../ReturnToTop';
 
 import { padStringLeft } from '../lib';
 import { calculateDaysRemainingForPing } from '../../../lib/date';
-import { recordClick } from '../../../lib/telemetry';
+import { recordClick, recordLoad } from '../../../lib/telemetry';
 
 const ShowRawPing = ({ docId }) => {
   const { hash, key, pathname } = useLocation();
@@ -63,6 +63,11 @@ const ShowRawPing = ({ docId }) => {
   };
 
   /// lifecycle ///
+  useEffect(() => {
+    // record page load event
+    recordLoad('Ping');
+  }, []);
+
   // Load all ping data once `docId` is available.
   useEffect(() => {
     getDoc(doc(getFirestore(), 'pings', docId)).then((doc) => {
