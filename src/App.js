@@ -5,9 +5,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { auth } from './Firebase';
 import { ThemeProvider } from 'styled-components';
+import GleanMetrics from '@mozilla/glean/metrics';
 
 import NavBar from './components/NavBar';
 import ActiveClients from './components/ActiveClients';
@@ -30,6 +31,10 @@ import './App.css';
 import '@mozilla-protocol/core';
 
 const App = () => {
+  // Get the current app route. We use this for determining when the route has
+  // changed and we should record an app page load event.
+  const location = useLocation();
+
   const [theme, themeToggler] = useTheme();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
 
@@ -49,6 +54,11 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Record a page load event on each route change.
+    GleanMetrics.pageLoad();
+  }, [location]);
+
   /// render ///
   if (loading) {
     return <Loading />;
@@ -63,7 +73,9 @@ const App = () => {
           <Route
             exact
             path='/'
-            element={<SecuredRoute component={ActiveClients} authenticated={authenticated} />}
+            element={
+              <SecuredRoute component={ActiveClients} authenticated={authenticated} title='Home' />
+            }
           />
           <Route
             path='/create'
@@ -71,20 +83,30 @@ const App = () => {
           />
           <Route
             path='/pings/:debugId'
-            element={<SecuredRoute component={DebugTagPings} authenticated={authenticated} />}
+            element={
+              <SecuredRoute component={DebugTagPings} authenticated={authenticated} title='Pings' />
+            }
           />
           <Route
             path='/pings/:debugId/:docId'
-            element={<SecuredRoute component={ShowRawPing} authenticated={authenticated} />}
+            element={
+              <SecuredRoute component={ShowRawPing} authenticated={authenticated} title='Ping' />
+            }
           />
           <Route
             path='/help'
-            element={<SecuredRoute component={Help} authenticated={authenticated} />}
+            element={<SecuredRoute component={Help} authenticated={authenticated} title='Help' />}
           />
           <Route path='/login' element={<SignInScreen authenticated={authenticated} />} />
           <Route
             path='/stream/:debugId'
-            element={<SecuredRoute component={EventStream} authenticated={authenticated} />}
+            element={
+              <SecuredRoute
+                component={EventStream}
+                authenticated={authenticated}
+                title='Event Stream'
+              />
+            }
           />
         </Routes>
       </div>
