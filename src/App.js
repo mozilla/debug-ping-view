@@ -79,7 +79,7 @@ const App = () => {
           />
           <Route
             path='/create'
-            element={<SecuredRoute component={Create} authenticated={authenticated} />}
+            element={<SecuredRoute component={Create} authenticated={authenticated} title='Create' />}
           />
           <Route
             path='/pings/:debugId'
