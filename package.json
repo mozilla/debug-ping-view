@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@mozilla-protocol/core": "^16.0.1",
-    "@mozilla/glean": "^4.0.0-pre.3",
+    "@mozilla/glean": "^4.0.0",
     "firebase": "^9.12.1",
     "moment": "^2.29.4",
     "plotly.js": "^2.27.1",
