@@ -13,7 +13,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { initTelemetryClient } from './lib/telemetry';
 
-initTelemetryClient();
+// Exclusively enable sendbeacon on dev for now, we want to
+// test it out a bit more before making it more widely available.
+const useSendBeacon = process.env.REACT_APP_ENV === "dev";
+initTelemetryClient(useSendBeacon);
 
 ReactDOM.render(
     <Router>
