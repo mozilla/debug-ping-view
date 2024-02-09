@@ -22,6 +22,10 @@ const uiConfig = {
 };
 
 const SignInScreen = ({ authenticated }) => {
+  if (!authenticated) {
+    document.title = 'Debug Ping Viewer | Sign In';
+  }
+
   // If we are already signed in, we want to redirect to the home page
   // so we don't get into the bad loop where you signed in and `/login`
   // won't redirect you.

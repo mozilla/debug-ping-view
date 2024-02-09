@@ -5,6 +5,7 @@
  */
 
 import Glean from '@mozilla/glean/web';
+import { BrowserSendBeaconUploader } from "@mozilla/glean/web";
 import { load, click } from '../glean/generated/page';
 
 const APP_NAME = 'debug-ping-view';
@@ -16,8 +17,9 @@ const APP_NAME = 'debug-ping-view';
  * @returns {boolean} true if telemetry can be collected, else false.
  */
 function isTelemetryEnabled() {
-  // If the app is in development mode, we don't want to initialize Glean.
-  if (process.env.REACT_APP_ENV !== 'prod') {
+  // If the app environment is not defined (likely because of local development),
+  // then don't collect any data.
+  if (typeof(process.env.REACT_APP_ENV) === "undefined") {
     return false;
   }
 
@@ -28,8 +30,12 @@ function isTelemetryEnabled() {
  * Initialize telemetry client, setting it's upload status based on the current
  * telemetry preference.
  */
-export function initTelemetryClient() {
-  Glean.initialize(APP_NAME, isTelemetryEnabled(), { maxEvents: 1 });
+export function initTelemetryClient(useSendBeacon=false) {
+  Glean.initialize(APP_NAME, isTelemetryEnabled(), {
+    maxEvents: 1,
+    channel: process.env.REACT_APP_ENV,
+    httpClient: useSendBeacon ? BrowserSendBeaconUploader : undefined,
+  });
 }
 
 /**

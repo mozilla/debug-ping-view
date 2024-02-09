@@ -4,17 +4,17 @@
   "private": true,
   "dependencies": {
     "@mozilla-protocol/core": "^16.0.1",
-    "@mozilla/glean": "^3.0.0-pre.0",
+    "@mozilla/glean": "^4.0.0",
     "firebase": "^9.12.1",
     "moment": "^2.29.4",
-    "plotly.js": "^2.16.3",
+    "plotly.js": "^2.27.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-firebaseui": "^6.0.0",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
-    "styled-components": "^5.3.6",
+    "styled-components": "^6.1.1",
     "use-react-router-breadcrumbs": "^4.0.1"
   },
   "scripts": {
