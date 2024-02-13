@@ -36,7 +36,7 @@ async function getJsonValidator() {
   const gleanSchema = schema;
 
   const Ajv = require('ajv');
-  const ajv = new Ajv({unknownFormats: ["datetime"]});
+  const ajv = new Ajv({unknownFormats: ["datetime", "json"]});
   ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
   return {
     validator: ajv.compile(JSON.parse(gleanSchema.toString())),
