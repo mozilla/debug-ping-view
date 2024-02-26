@@ -6,6 +6,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import GleanMetrics from '@mozilla/glean/metrics';
 
 import Dropdown from '../../Dropdown';
 import SearchBar from '../../SearchBar';
@@ -51,6 +52,7 @@ const Filter = ({ pings, handleFilter, handleFiltersApplied }) => {
 
   const handleToggleRenderOptions = (buttonLabel) => {
     recordClick(buttonLabel);
+    GleanMetrics.recordElementClick({'label': buttonLabel});
     setShowOptions((prev) => !prev);
   };
 

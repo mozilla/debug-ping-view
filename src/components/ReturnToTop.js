@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import GleanMetrics from '@mozilla/glean/metrics';
 import { recordClick } from '../lib/telemetry';
 
 const ReturnToTop = () => {
@@ -26,6 +27,7 @@ const ReturnToTop = () => {
       onClick={() => {
         // record this click event
         recordClick('Back to top');
+        GleanMetrics.recordElementClick({'label': 'Back to top'});
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }}

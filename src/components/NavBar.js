@@ -7,6 +7,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import GleanMetrics from '@mozilla/glean/metrics';
 
 import { auth } from '../Firebase';
 
@@ -32,7 +33,10 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
             >
               <div></div>
               <div className='navbar-nav' role='presentation'>
-                <div className='nav-item nav-link cursor-pointer' onClick={() => {recordClick('Theme')}}>
+                <div className='nav-item nav-link cursor-pointer' onClick={() => {
+                    recordClick('Theme');
+                    GleanMetrics.recordElementClick({'label': 'Theme'});
+                  }}>
                   <ThemeToggle theme={theme} toggleTheme={themeToggler} />
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
@@ -41,13 +45,19 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                     target='_blank'
                     rel='noopener noreferrer'
                     style={{ all: 'unset ' }}
-                    onClick={() => {recordClick('Bug')}}
+                    onClick={() => {
+                      recordClick('Bug');
+                      GleanMetrics.recordElementClick({'label': 'Bug'});
+                    }}
                   >
                     <BugIcon />
                   </a>
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
-                  <Link to={`/help`} style={{ all: 'unset' }} onClick={() => {recordClick('Help')}}>
+                  <Link to={`/help`} style={{ all: 'unset' }} onClick={() => {
+                    recordClick('Help');
+                    GleanMetrics.recordElementClick({'label': 'Help'});
+                  }}>
                     <HelpIcon />
                   </Link>
                 </div>
@@ -56,6 +66,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                   type='btn btn-lg '
                   onClick={() => {
                     recordClick('Sign out');
+                    GleanMetrics.recordElementClick({'label': 'Sign out'});
                     auth.signOut();
                   }}
                 >
