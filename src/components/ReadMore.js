@@ -6,7 +6,7 @@
 
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import GleanMetrics from '@mozilla/glean/metrics';
+//import GleanMetrics from '@mozilla/glean/metrics';
 import { recordClick } from '../lib/telemetry';
 
 const ReadMore = ({ numberOfLines = 3, text }) => {
@@ -24,10 +24,10 @@ const ReadMore = ({ numberOfLines = 3, text }) => {
   }, [text]);
 
   return (
-    <div className='cursor-pointer' onClick={
+    <div className='cursor-pointer' data-glean-label='Expand payload' onClick={
       () => {
         recordClick('Expand payload');
-        GleanMetrics.recordElementClick({'label': 'Expand payload'});
+        //GleanMetrics.recordElementClick({'label': 'Expand payload'});
         setShow((prev) => !prev)}}
     >
       <span

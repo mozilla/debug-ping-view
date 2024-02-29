@@ -10,7 +10,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import PropTypes from 'prop-types';
-import GleanMetrics from '@mozilla/glean/metrics';
 
 import Events from '../../Events';
 import Loading from '../../Loading';
@@ -163,7 +162,6 @@ const ShowRawPing = ({ docId }) => {
 
   const handleLineNumberClick = (lineNumber) => (e) => {
     recordClick('Line number');
-    GleanMetrics.recordElementClick({'label': 'Line number'});
     lineNumber = `L${lineNumber}`;
 
     let startLine;
@@ -273,6 +271,7 @@ const ShowRawPing = ({ docId }) => {
                     id={anchorId}
                     className='no-select cursor-pointer line-link'
                     style={{ paddingRight: '8px' }}
+                    data-glean-label='Line number'
                     onClick={handleLineNumberClick(lineNumber)}
                   >
                     {padStringLeft(lineNumber.toString(), maxNumberOfDigits, " ")}

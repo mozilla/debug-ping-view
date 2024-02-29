@@ -7,7 +7,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
-import GleanMetrics from '@mozilla/glean/metrics';
 
 import ReturnToTop from './ReturnToTop';
 import SearchBar from './SearchBar';
@@ -143,17 +142,16 @@ const ActiveClients = () => {
                     <Link
                       className='text-decoration-none'
                       to={`/pings/${debugId}`}
+                      data-glean-label='Debug ID Pings'
                       onClick={() => {
                         recordClick("Debug ID Pings");
-                        GleanMetrics.recordElementClick({'label': 'Debug ID Pings'});
                       }}
                     >
                       Pings
                     </Link>
                     <br />
-                    <Link className='text-decoration-none' to={`/stream/${debugId}`} onClick={() => {
+                    <Link className='text-decoration-none' to={`/stream/${debugId}`} data-glean-label='Debug ID Event Stream' onClick={() => {
                       recordClick("Debug ID Event Stream")
-                      GleanMetrics.recordElementClick({'label': 'Debug ID Event Stream'});
                     }}>
                       Event Stream
                     </Link>

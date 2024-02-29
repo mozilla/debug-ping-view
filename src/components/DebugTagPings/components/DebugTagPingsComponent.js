@@ -16,7 +16,6 @@ import {
   where
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
-import GleanMetrics from '@mozilla/glean/metrics';
 
 import Filter from './Filter';
 import ErrorField from './ErrorField';
@@ -44,7 +43,6 @@ const DebugTagPings = ({ debugId }) => {
   // Copies the beautified JSON payload to the clipboard.
   const handleCopyPayload = (key, payload, buttonLabel) => () => {
     recordClick(buttonLabel);
-    GleanMetrics.recordElementClick({'label': buttonLabel});
 
     try {
       const beautifiedJson = JSON.stringify(JSON.parse(payload), undefined, 2);
@@ -223,20 +221,19 @@ const DebugTagPings = ({ debugId }) => {
               </td>
               {!!numberOfErrors && <ErrorField ping={ping} />}
               <td className='actions'>
-                <Link to={`/pings/${debugId}/${ping.key}`} onClick={() => {
+                <Link to={`/pings/${debugId}/${ping.key}`} data-glean-label='Details' onClick={() => {
                   recordClick('Details');
-                  GleanMetrics.recordElementClick({'label': 'Details'});
                 }}>Details</Link>
                 <br />
-                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)} onClick={() => {
+                <a target='_blank' rel='noopener noreferrer' href={jsonToDataURI(ping.payload)} data-glean-label='Raw JSON' onClick={() => {
                   recordClick('Raw JSON');
-                  GleanMetrics.recordElementClick({'label': 'Raw JSON'});
                   }}>
                   Raw JSON
                 </a>
                 <br />
                 <button
                   className='btn btn-sm btn-outline-secondary'
+                  data-glean-label='Copy Payload'
                   onClick={handleCopyPayload(ping.key, ping.payload, 'Copy Payload')}
                 >
                   {!!copySuccessKey && copySuccessKey === ping.key ? 'Copied!' : 'Copy Payload'}
