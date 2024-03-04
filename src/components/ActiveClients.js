@@ -142,6 +142,7 @@ const ActiveClients = () => {
                     <Link
                       className='text-decoration-none'
                       to={`/pings/${debugId}`}
+                      data-glean-label='Debug ID Pings'
                       onClick={() => {
                         recordClick("Debug ID Pings");
                       }}
@@ -149,7 +150,7 @@ const ActiveClients = () => {
                       Pings
                     </Link>
                     <br />
-                    <Link className='text-decoration-none' to={`/stream/${debugId}`} onClick={() => {
+                    <Link className='text-decoration-none' to={`/stream/${debugId}`} data-glean-label='Debug ID Event Stream' onClick={() => {
                       recordClick("Debug ID Event Stream")
                     }}>
                       Event Stream

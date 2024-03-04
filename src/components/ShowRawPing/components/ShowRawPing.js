@@ -271,6 +271,7 @@ const ShowRawPing = ({ docId }) => {
                     id={anchorId}
                     className='no-select cursor-pointer line-link'
                     style={{ paddingRight: '8px' }}
+                    data-glean-label='Line number'
                     onClick={handleLineNumberClick(lineNumber)}
                   >
                     {padStringLeft(lineNumber.toString(), maxNumberOfDigits, " ")}
