@@ -7,7 +7,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
-import GleanMetrics from '@mozilla/glean/metrics';
 
 import { isUuid } from '../lib/isUuid';
 import { recordClick } from '../lib/telemetry';
@@ -18,7 +17,6 @@ const Breadcrumbs = () => {
   return (
     <div style={{ marginLeft: '0.5rem', paddingLeft: 16, marginBottom: 15 }} onClick={() => {
       recordClick('Breadcrumbs');
-      GleanMetrics.recordElementClick({'label': 'Breadcrumbs'});
       }}>
       {breadcrumbs.map(({ breadcrumb, key, location, match }) => {
         // `/pings` & `/stream` are included in the routes, but they don't have
@@ -56,7 +54,7 @@ const Breadcrumbs = () => {
           <React.Fragment key={key}>
             {currentKey && <span className='m-2'>/</span>}
             <Link key={key} to={breadcrumb.key}>
-              <span className='breadcrumb-font'>{displayElement}</span>
+              <span className='breadcrumb-font' data-glean-label='Breadcrumbs'>{displayElement}</span>
             </Link>
           </React.Fragment>
         );
