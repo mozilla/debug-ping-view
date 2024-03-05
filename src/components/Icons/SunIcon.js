@@ -24,6 +24,7 @@ const SunIcon = () => {
           r='1.71143'
           transform='rotate(-60 3.08982 6.85502)'
           fill='currentColor'
+          data-glean-label='Sun Theme'
         />
         <circle
           cx='3.0903'
@@ -31,14 +32,16 @@ const SunIcon = () => {
           r='1.71143'
           transform='rotate(-120 3.0903 17.1436)'
           fill='currentColor'
+          data-glean-label='Sun Theme'
         />
-        <circle cx='12' cy='22.2881' r='1.71143' fill='currentColor' />
+        <circle cx='12' cy='22.2881' r='1.71143' fill='currentColor' data-glean-label='Sun Theme'/>
         <circle
           cx='20.9101'
           cy='17.1436'
           r='1.71143'
           transform='rotate(-60 20.9101 17.1436)'
           fill='currentColor'
+          data-glean-label='Sun Theme'
         />
         <circle
           cx='20.9101'
@@ -46,8 +49,9 @@ const SunIcon = () => {
           r='1.71143'
           transform='rotate(-120 20.9101 6.8555)'
           fill='currentColor'
+          data-glean-label='Sun Theme'
         />
-        <circle cx='12' cy='1.71143' r='1.71143' fill='currentColor' />
+        <circle cx='12' cy='1.71143' r='1.71143' fill='currentColor' data-glean-label='Sun Theme'/>
       </g>
     </svg>
   );
