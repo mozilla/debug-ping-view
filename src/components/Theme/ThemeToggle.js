@@ -14,7 +14,7 @@ const ThemeToggle = ({ theme, toggleTheme }) => {
   const isDarkMode = theme === 'dark';
 
   return (
-    <button style={{ all: 'unset', cursor: 'pointer' }} data-glean-label='theme toggle' onClick={toggleTheme}>
+    <button style={{ all: 'unset', cursor: 'pointer' }} onClick={toggleTheme}>
       {isDarkMode ? <SunIcon /> : <MoonIcon />}
     </button>
   );
