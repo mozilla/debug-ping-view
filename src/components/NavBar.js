@@ -43,6 +43,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                     target='_blank'
                     rel='noopener noreferrer'
                     style={{ all: 'unset ' }}
+                    data-glean-label='Bug'
                     onClick={() => {
                       recordClick('Bug');
                     }}
@@ -51,7 +52,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                   </a>
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
-                  <Link to={`/help`} style={{ all: 'unset' }} onClick={() => {
+                  <Link to={`/help`} style={{ all: 'unset' }} data-glean-label='Help' onClick={() => {
                     recordClick('Help');
                   }}>
                     <HelpIcon />
@@ -60,6 +61,7 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                 <div
                   className='nav-item nav-link cursor-pointer'
                   type='btn btn-lg '
+                  data-glean-label='Sign out'
                   onClick={() => {
                     recordClick('Sign out');
                     auth.signOut();

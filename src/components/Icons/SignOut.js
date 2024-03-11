@@ -15,6 +15,7 @@ const SignOutIcon = () => {
       fill='currentColor'
       className='bi bi-box-arrow-right'
       viewBox='0 0 16 16'
+      pointerEvents='none'
     >
       <path
         fillRule='evenodd'
