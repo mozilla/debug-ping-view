@@ -14,9 +14,8 @@ const SunIcon = () => {
       viewBox='0 0 24 24'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
-      data-glean-label='Sun Theme'
     >
-      <circle cx='11.9998' cy='11.9998' r='5.75375' fill='currentColor' data-glean-label='Sun Theme'/>
+      <circle cx='11.9998' cy='11.9998' r='5.75375' fill='currentColor' />
       <g>
         <circle
           cx='3.08982'
