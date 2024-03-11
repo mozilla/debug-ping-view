@@ -7,7 +7,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import GleanMetrics from '@mozilla/glean/metrics';
 
 import { auth } from '../Firebase';
 
@@ -35,7 +34,6 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
               <div className='navbar-nav' role='presentation'>
                 <div className='nav-item nav-link cursor-pointer' onClick={() => {
                     recordClick('Theme');
-                    GleanMetrics.recordElementClick({'label': 'Theme'});
                   }}>
                   <ThemeToggle theme={theme} toggleTheme={themeToggler} />
                 </div>
@@ -45,18 +43,17 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                     target='_blank'
                     rel='noopener noreferrer'
                     style={{ all: 'unset ' }}
+                    data-glean-label='Bug'
                     onClick={() => {
                       recordClick('Bug');
-                      GleanMetrics.recordElementClick({'label': 'Bug'});
                     }}
                   >
                     <BugIcon />
                   </a>
                 </div>
                 <div className='nav-item nav-link cursor-pointer'>
-                  <Link to={`/help`} style={{ all: 'unset' }} onClick={() => {
+                  <Link to={`/help`} style={{ all: 'unset' }} data-glean-label='Help' onClick={() => {
                     recordClick('Help');
-                    GleanMetrics.recordElementClick({'label': 'Help'});
                   }}>
                     <HelpIcon />
                   </Link>
@@ -64,9 +61,9 @@ const NavBar = ({ authenticated, theme, themeToggler }) => {
                 <div
                   className='nav-item nav-link cursor-pointer'
                   type='btn btn-lg '
+                  data-glean-label='Sign out'
                   onClick={() => {
                     recordClick('Sign out');
-                    GleanMetrics.recordElementClick({'label': 'Sign out'});
                     auth.signOut();
                   }}
                 >
