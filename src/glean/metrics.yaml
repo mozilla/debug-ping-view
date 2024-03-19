@@ -17,24 +17,6 @@
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
 page:
-  load:
-    type: event
-    description: |
-      An event triggered when a page is loaded.
-    bugs:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851440
-    data_reviews:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=1851456#c5
-    data_sensitivity:
-      - interaction
-    notification_emails:
-      - glean-team@mozilla.com
-    expires: never
-    extra_keys:
-      page:
-        description: The page that was loaded, e.g. "Home", "Pings", "Ping", "Help".
-        type: string
-
   click:
     type: event
     description: |
