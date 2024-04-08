@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mozilla-protocol/core": "^16.0.1",
+    "@mozilla-protocol/core": "^19.1.0",
     "@mozilla/glean": "^5.0.0",
     "firebase": "^9.23.0",
     "moment": "^2.30.1",
