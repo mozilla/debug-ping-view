@@ -107,6 +107,10 @@ const ActiveClients = () => {
               Click on <strong>Event Stream</strong> to see an aggregated timeline for all events in the 
               last 100 pings for a Debug Tag.
             </li>
+            <li>
+              If pings passed validation, browse this data in <strong>stable</strong> and <strong>live</strong> tables in BigQuery,
+              by filtering for your debug tag value in <strong>metadata.header.x_debug_id</strong> field.
+            </li>
           </ul>
         </div>
         <h3>Active Debug Tags ({displayDebugTags().length})</h3>
