@@ -126,18 +126,34 @@ const ShowRawPing = ({ docId }) => {
     // Change message if today is the final day.
     if (daysRemaining === 0) {
       return (
-        <p>
+        <span>
           <strong>Today is the last day you will be able to access this ping.</strong>
-        </p>
+        </span>
       );
     }
 
     return (
-      <p>
+      <span>
         <strong>{daysRemaining} day(s)</strong> until this ping is no longer accessible.
-      </p>
+      </span>
     );
   };
+
+  // Prints the ping type in a more obvious place than `metadata.document_type`.
+  const renderPingType = () => {
+    if (!parsedPing || !parsedPing.metadata || !parsedPing.metadata['document_type']) {
+      return null;
+    }
+
+    return (
+      <>
+        <span>
+          <strong>Ping Type: </strong>{parsedPing.metadata['document_type']}
+        </span>
+        <br />
+      </>
+    )
+  }
 
   // Called after determining what the user is trying to link to. This
   // handles both single and multi line selections.
@@ -208,7 +224,10 @@ const ShowRawPing = ({ docId }) => {
     <div className='container-fluid m-2'>
       <ReturnToTop />
       <div>
-        {renderDaysLeftForPing()}
+        <p className='mb-2'>
+          {renderPingType()}
+          {renderDaysLeftForPing()}
+        </p>
         <p className='mb-2'>
           <strong>You can</strong>
         </p>
