@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import ReadMore from '../ReadMore';
 import Timeline from './components/Timeline';
 import Dropdown from '../Dropdown';
+import KeyValueTable from './components/KeyValueTable';
 
 import { aggregateCountOfEventProperty } from './lib';
 
@@ -34,12 +35,9 @@ const Events = ({ events, header, isEventStream }) => {
   const [filterValue, setFilterValue] = useState("");
   const [lastFilterHadNoEvents, setLastFilterHadNoEvents] = useState(undefined);
   const [scrollingKey, setScrollingKey] = useState("");
+  const [eventNamesToFilter, setEventNamesToFilter] = useState({});
 
   /// helpers ///
-  const filterEvents = (eventsToFilter, filterDate) => {
-    return eventsToFilter.filter((event) => event.timestamp > filterDate.getTime()) || [];
-  };
-
   const trimmedEvents = useMemo(() => {
     let normalizedEvents;
 
@@ -86,7 +84,10 @@ const Events = ({ events, header, isEventStream }) => {
           break;
       }
 
-      const filteredEvents = filterEvents(normalizedEvents, filterDate);
+      const filteredEvents = normalizedEvents.filter(
+        (event) => event.timestamp > filterDate.getTime()
+      )|| [];
+
       if (filteredEvents.length === 0) {
         // No events for the filter, show an error message and continue to show
         // all events.
@@ -103,7 +104,7 @@ const Events = ({ events, header, isEventStream }) => {
 
   useEffect(() => {
     listRefs.current = listRefs.current.slice(0, trimmedEvents.length);
- }, [trimmedEvents]);
+  }, [trimmedEvents]);
 
   const plotClickHandler = (eventName, timestamp) => {
     const eventIndex = trimmedEvents.findIndex((event) => {
@@ -126,34 +127,37 @@ const Events = ({ events, header, isEventStream }) => {
     }, 1000);
   };
 
-  /// render ///
-  const renderKeyValueCountTable = (property) => {
-    const eventCounts = aggregateCountOfEventProperty(trimmedEvents, property);
-
-    return (
-      <table className='mzp-u-data-table'>
-        <thead>
-          <tr>
-            <th>Event {property}</th>
-            <th>Total number of events</th>
-          </tr>
-        </thead>
-        <tbody>
-          {eventCounts.map((eventData) => (
-            <tr key={eventData.key}>
-              <td>{eventData.key}</td>
-              <td>{eventData.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
+  const eventNameClickHandler = (eventName) => {
+    let newEventNamesToFilter = eventNamesToFilter;
+    if (newEventNamesToFilter[eventName]) {
+      delete newEventNamesToFilter[eventName];
+    } else {
+      newEventNamesToFilter[eventName] = true;
+    };
+    setEventNamesToFilter({ ...newEventNamesToFilter } || {});
   };
 
+  /// render ///
   const renderTimeline = () => {
+    let timelineEvents = [...trimmedEvents];
+
+    // Filter out events based on event name checkboxes.
+    if (Object.keys(eventNamesToFilter).length > 0) {
+      timelineEvents = timelineEvents.filter(
+        (event) => eventNamesToFilter[`${event.category}.${event.name}`] === undefined
+      );
+    }
+
+    if (timelineEvents.length === 0) {
+      return <p><strong>No events to show.</strong></p>
+    }
+
     return (
       <div>
         <h5>Timeline</h5>
+        <p>
+          Number of events: <strong>{timelineEvents.length}</strong>
+        </p>
         {!isEventStream && <p>
           Each timestamp is how long after{' '}
           <strong>
@@ -163,7 +167,7 @@ const Events = ({ events, header, isEventStream }) => {
         </p>}
         {isEventStream && renderTimelineFilter()}
         {lastFilterHadNoEvents && !!filterValue && <p>Your current selection has no events, showing all events.</p>}
-        <Timeline events={trimmedEvents} plotClickHandler={plotClickHandler} />
+        <Timeline events={[...timelineEvents]} plotClickHandler={plotClickHandler} />
       </div>
     );
   };
@@ -197,11 +201,16 @@ const Events = ({ events, header, isEventStream }) => {
           <tbody>
             {trimmedEvents.map((event, i) => {
               const { name, category, timestamp, extra } = event;
+
+              const fullEventName = `${category}.${name}`;
+              const disabled = eventNamesToFilter[fullEventName];
               return (
                 <tr
-                  key={`${category}.${name}${i}`}
+                  key={`${fullEventName}${i}`}
                   ref={el => listRefs.current[i] = el}
-                  className={scrollingKey === `${category}.${name}.${timestamp}` ? 'item-highlight': ''}>
+                  className={scrollingKey === `${category}.${name}.${timestamp}` ? 'item-highlight': ''}
+                  style={disabled ? { opacity: 0.5 } : {}}
+                >
                   <td className='event-name align-middle'>
                     {category}.{name}
                   </td>
@@ -218,8 +227,6 @@ const Events = ({ events, header, isEventStream }) => {
     );
   };
 
-  const showTimeline = !!trimmedEvents.length && trimmedEvents.length > 1;
-  const showTable = !!trimmedEvents.length;
   return (
     <div>
       <h4>{header || "events"}</h4>
@@ -228,14 +235,31 @@ const Events = ({ events, header, isEventStream }) => {
           <strong>Only the first 500 events are displayed.</strong>
         </p>
       )}
-      <p>
-        Number of events: <strong>{trimmedEvents.length}</strong>
-      </p>
-      {showTimeline && renderTimeline()}
+      {!!trimmedEvents.length && trimmedEvents.length > 1 && renderTimeline()}
       <h5>Aggregate Counts</h5>
-      {renderKeyValueCountTable('name')}
-      {renderKeyValueCountTable('category')}
-      {showTable && renderEventTable()}
+      <p>Show/hide events from the timeline by clicking on the checkboxes.</p>
+      {!!Object.keys(eventNamesToFilter).length && (
+        <button
+          type='button'
+          data-glean-label='Show all events'
+          onClick={() => setEventNamesToFilter({})}
+          className='btn btn-sm btn-outline-secondary'
+          style={{ marginBottom: 15, marginTop: -10 }}
+        >
+          Show all events
+        </button>
+      )}
+      <KeyValueTable
+        property='name'
+        eventCounts={aggregateCountOfEventProperty(trimmedEvents, "name")}
+        onRowClick={eventNameClickHandler}
+        disabledEvents={eventNamesToFilter}
+      />
+      <KeyValueTable
+        property='category'
+        eventCounts={aggregateCountOfEventProperty(trimmedEvents, "category")}
+      />
+      {!!trimmedEvents.length && renderEventTable()}
     </div>
   );
 };
