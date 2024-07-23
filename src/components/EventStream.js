@@ -124,9 +124,15 @@ const EventStream = ({ debugId }) => {
               const newDate = new Date(startTime);
               const dateAsMs = newDate.getTime();
               const adjustedTimeAsMs = dateAsMs + pingEvent.timestamp;
+
+              let sessionId;
+              if (parsedPing && parsedPing.client_info && parsedPing.client_info.session_id) {
+                sessionId = parsedPing.client_info.session_id;
+              }
               allEvents.push({
                 ...pingEvent,
-                timestamp: adjustedTimeAsMs
+                timestamp: adjustedTimeAsMs,
+                sessionId
               });
             });
           }

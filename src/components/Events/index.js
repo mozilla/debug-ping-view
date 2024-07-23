@@ -32,7 +32,8 @@ const Events = ({ events, header, isEventStream }) => {
   const listRefs = useRef([]);
 
   /// state ///
-  const [filterValue, setFilterValue] = useState("");
+  const [timeRangeFilterValue, setTimeRangeFilterValue] = useState("");
+  const [sessionFilterValue, setSessionFilterValue] = useState("");
   const [lastFilterHadNoEvents, setLastFilterHadNoEvents] = useState(undefined);
   const [scrollingKey, setScrollingKey] = useState("");
   const [eventNamesToFilter, setEventNamesToFilter] = useState({});
@@ -49,10 +50,10 @@ const Events = ({ events, header, isEventStream }) => {
     }
 
     // Filter out events based on timeline filter.
-    if (!!filterValue) {
+    if (!!timeRangeFilterValue) {
       const filterDate = new Date();
 
-      switch (filterValue) {
+      switch (timeRangeFilterValue) {
         case "Last 15 minutes":
           filterDate.setMinutes(filterDate.getMinutes() - 15);
           break;
@@ -100,7 +101,20 @@ const Events = ({ events, header, isEventStream }) => {
     }
 
     return normalizedEvents;
-  }, [events, filterValue]);
+  }, [events, timeRangeFilterValue]);
+
+  const sessionIds = useMemo(() => {
+    const ids = new Set();
+
+    trimmedEvents.forEach((event) => {
+      const sessionId = event.sessionId;
+      if (sessionId) {
+        ids.add(sessionId);
+      }
+    });
+
+    return Array.from(ids);
+  }, [trimmedEvents]);
 
   useEffect(() => {
     listRefs.current = listRefs.current.slice(0, trimmedEvents.length);
@@ -148,6 +162,11 @@ const Events = ({ events, header, isEventStream }) => {
       );
     }
 
+    // Filter out events based on session filter.
+    if (!!sessionFilterValue) {
+      timelineEvents = timelineEvents.filter((event) => event.sessionId === sessionFilterValue);
+    }
+
     if (timelineEvents.length === 0) {
       return <p><strong>No events to show.</strong></p>
     }
@@ -165,8 +184,6 @@ const Events = ({ events, header, isEventStream }) => {
           </strong>{' '}
           that the event occurred. All timestamps are recorded in <strong>milliseconds</strong>.
         </p>}
-        {isEventStream && renderTimelineFilter()}
-        {lastFilterHadNoEvents && !!filterValue && <p>Your current selection has no events, showing all events.</p>}
         <Timeline events={[...timelineEvents]} plotClickHandler={plotClickHandler} />
       </div>
     );
@@ -177,9 +194,21 @@ const Events = ({ events, header, isEventStream }) => {
       <Dropdown
         name='timeRange'
         defaultValue='Time range'
-        state={filterValue}
-        setState={setFilterValue}
+        state={timeRangeFilterValue}
+        setState={setTimeRangeFilterValue}
         values={filterValues}
+      />
+    );
+  };
+
+  const renderSessionIdFilter = () => {
+    return (
+      <Dropdown
+        name='sessionId'
+        defaultValue='Session Id'
+        state={sessionFilterValue}
+        setState={setSessionFilterValue}
+        values={sessionIds}
       />
     );
   };
@@ -200,10 +229,16 @@ const Events = ({ events, header, isEventStream }) => {
           </thead>
           <tbody>
             {trimmedEvents.map((event, i) => {
-              const { name, category, timestamp, extra } = event;
+              const { name, category, timestamp, extra, sessionId } = event;
 
               const fullEventName = `${category}.${name}`;
-              const disabled = eventNamesToFilter[fullEventName];
+
+              let disabled;
+              if (eventNamesToFilter[fullEventName]) {
+                disabled = true;
+              } else if (!!sessionFilterValue && sessionId !== sessionFilterValue) {
+                disabled = true;
+              }
               return (
                 <tr
                   key={`${fullEventName}${i}`}
@@ -235,6 +270,9 @@ const Events = ({ events, header, isEventStream }) => {
           <strong>Only the first 500 events are displayed.</strong>
         </p>
       )}
+      {isEventStream && renderTimelineFilter()}
+      {lastFilterHadNoEvents && !!timeRangeFilterValue && <p>Your current selection has no events, showing all events.</p>}
+      {!!sessionIds.length && renderSessionIdFilter()}
       {!!trimmedEvents.length && trimmedEvents.length > 1 && renderTimeline()}
       <h5>Aggregate Counts</h5>
       <p>Show/hide events from the timeline by clicking on the checkboxes.</p>
