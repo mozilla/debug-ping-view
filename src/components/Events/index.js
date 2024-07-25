@@ -28,7 +28,7 @@ const filterValues = [
   "Last 21 days"
 ];
 
-const Events = ({ events, header, isEventStream }) => {
+const Events = ({ events, header, isEventStream, fragmentIdentifier }) => {
   const listRefs = useRef([]);
 
   /// state ///
@@ -113,8 +113,12 @@ const Events = ({ events, header, isEventStream }) => {
       }
     });
 
+    if (isEventStream && ids.has(fragmentIdentifier)) {
+      setSessionFilterValue(fragmentIdentifier);
+    }
+
     return Array.from(ids);
-  }, [trimmedEvents]);
+  }, [trimmedEvents, isEventStream, fragmentIdentifier]);
 
   useEffect(() => {
     listRefs.current = listRefs.current.slice(0, trimmedEvents.length);
@@ -303,7 +307,10 @@ const Events = ({ events, header, isEventStream }) => {
 };
 
 Events.propTypes = {
-  events: PropTypes.array.isRequired
+  events: PropTypes.array.isRequired,
+  header: PropTypes.string,
+  isEventStream: PropTypes.bool,
+  fragmentIdentifier: PropTypes.string
 };
 
 export default Events;
