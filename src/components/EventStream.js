@@ -154,7 +154,7 @@ const EventStream = ({ debugId }) => {
       {!!events && !!events.length && (
         <Events
           events={events}
-          header={`Event Steam for ${debugId}`}
+          header={`Event Stream for ${debugId}`}
           isEventStream
           fragmentIdentifier={hash.replace('#', '')}
         />
