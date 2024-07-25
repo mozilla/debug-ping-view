@@ -5,6 +5,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import {
   collection,
   getFirestore,
@@ -20,6 +21,8 @@ import ReturnToTop from "./ReturnToTop";
 import Events from "./Events";
 
 const EventStream = ({ debugId }) => {
+  const { hash } = useLocation();
+
   /// state ///
   const [isFirstSnapshot, setIsFirstSnapshot] = useState(true);
   const [pings, setPings] = useState([]);
@@ -149,7 +152,12 @@ const EventStream = ({ debugId }) => {
     <div className='container-fluid m-2'>
       <ReturnToTop />
       {!!events && !!events.length && (
-        <Events events={events} header={`Event Steam for ${debugId}`} isEventStream />
+        <Events
+          events={events}
+          header={`Event Steam for ${debugId}`}
+          isEventStream
+          fragmentIdentifier={hash.replace('#', '')}
+        />
       )}
       {!isFirstSnapshot && !events.length && <h3>No events recorded for this Debug Id.</h3>}
     </div>
