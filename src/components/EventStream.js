@@ -123,10 +123,15 @@ const EventStream = ({ debugId }) => {
   
           if (pingEvents) {
             pingEvents.forEach((pingEvent) => {
-              const startTime = parsedPing.ping_info.start_time;
-              const newDate = new Date(startTime);
-              const dateAsMs = newDate.getTime();
-              const adjustedTimeAsMs = dateAsMs + pingEvent.timestamp;
+              let timestamp;
+              if (pingEvent && pingEvent.extra && pingEvent.extra.glean_timestamp) {
+                timestamp = pingEvent.extra.glean_timestamp;
+              } else {
+                const startTime = parsedPing.ping_info.start_time;
+                const newDate = new Date(startTime);
+                const dateAsMs = newDate.getTime();
+                timestamp = dateAsMs + pingEvent.timestamp;
+              }
 
               let sessionId;
               if (parsedPing && parsedPing.client_info && parsedPing.client_info.session_id) {
@@ -134,7 +139,7 @@ const EventStream = ({ debugId }) => {
               }
               allEvents.push({
                 ...pingEvent,
-                timestamp: adjustedTimeAsMs,
+                timestamp,
                 sessionId
               });
             });
