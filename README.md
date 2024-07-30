@@ -7,7 +7,7 @@ Since this repository is private, CircleCI is not able to build from forks. As a
 
 ## Development
 
-**Required node version**: 14.20.1
+**Required node version**: 20
 
 ### Clean checkout
 If you just cloned this repository, first you should install dependencies:
