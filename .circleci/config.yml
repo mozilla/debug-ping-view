@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node_with_python_executor:
     docker:
-      - image: cimg/node:14.20.1 # Cloud Functions Node.js 14 runtime is based on Node.js version 14.20.1
+      - image: cimg/node:20.16.0 # Cloud Functions Node.js 20 runtime is based on Node.js version 20.16.0
       - image: cimg/python:3.9.6 # Glean requirement: https://mozilla.github.io/glean/book/user/adding-glean-to-your-project/javascript.html#requirements
     # working_directory: /app
 
