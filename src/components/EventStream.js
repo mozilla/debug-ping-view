@@ -5,6 +5,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import {
   collection,
   getFirestore,
@@ -20,6 +21,8 @@ import ReturnToTop from "./ReturnToTop";
 import Events from "./Events";
 
 const EventStream = ({ debugId }) => {
+  const { hash } = useLocation();
+
   /// state ///
   const [isFirstSnapshot, setIsFirstSnapshot] = useState(true);
   const [pings, setPings] = useState([]);
@@ -120,13 +123,24 @@ const EventStream = ({ debugId }) => {
   
           if (pingEvents) {
             pingEvents.forEach((pingEvent) => {
-              const startTime = parsedPing.ping_info.start_time;
-              const newDate = new Date(startTime);
-              const dateAsMs = newDate.getTime();
-              const adjustedTimeAsMs = dateAsMs + pingEvent.timestamp;
+              let timestamp;
+              if (pingEvent && pingEvent.extra && pingEvent.extra.glean_timestamp) {
+                timestamp = pingEvent.extra.glean_timestamp;
+              } else {
+                const startTime = parsedPing.ping_info.start_time;
+                const newDate = new Date(startTime);
+                const dateAsMs = newDate.getTime();
+                timestamp = dateAsMs + pingEvent.timestamp;
+              }
+
+              let sessionId;
+              if (parsedPing && parsedPing.client_info && parsedPing.client_info.session_id) {
+                sessionId = parsedPing.client_info.session_id;
+              }
               allEvents.push({
                 ...pingEvent,
-                timestamp: adjustedTimeAsMs
+                timestamp,
+                sessionId
               });
             });
           }
@@ -143,7 +157,12 @@ const EventStream = ({ debugId }) => {
     <div className='container-fluid m-2'>
       <ReturnToTop />
       {!!events && !!events.length && (
-        <Events events={events} header={`Event Steam for ${debugId}`} isEventStream />
+        <Events
+          events={events}
+          header={`Event Stream for ${debugId}`}
+          isEventStream
+          fragmentIdentifier={hash.replace('#', '')}
+        />
       )}
       {!isFirstSnapshot && !events.length && <h3>No events recorded for this Debug Id.</h3>}
     </div>
