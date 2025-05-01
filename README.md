@@ -68,6 +68,8 @@ Ping collection is [indexed](firestore.indexes.json).
 ### Data expiration
 Pings are retained for a limited time. Every day, a [function](functions/garbageCollector.js) that deletes pings and client entries modified earlier than 21 days ago is triggered via Cloud Scheduler.
 
+**NOTE:** Should pings or debug tags need to be deleted, this can be accomplished using the [Google Cloud Console for Firestore for this project](https://console.cloud.google.com/firestore/databases/-default-/data/panel/clients?project=debug-ping-preview). This might require both `clients` (by `debugId`) and `pings` (can also be filtered by `debugId`) to be deleted for all data sent to the Debug View to be removed for a specific tag.
+
 ### Web application
 Views are leveraging Firestore's realtime query updates.
 
