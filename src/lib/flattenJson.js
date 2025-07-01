@@ -50,7 +50,7 @@ export const flattenJson = (json) => {
         flatten(value, `${name} [${i.toString()}].`);
         i += 1;
       });
-    } else if (typeof valueToFlatten === 'object') {
+    } else if (valueToFlatten != null && typeof valueToFlatten === 'object') {
       Object.keys(valueToFlatten).forEach((key) => {
         flatten(valueToFlatten[key], name + key + '.');
       });
