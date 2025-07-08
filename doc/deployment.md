@@ -1,56 +1,89 @@
 # Deployment
+
 This projects leverages two GCP projects to separate development and production environments:
+
 * `glean-debug-view-dev-237806` - dev project
 * `debug-ping-preview` - production
 
-## Building React frontend
-React application contains environment-specific configuration, therefore for deployment to one of the environments it needs to be built with corresponding profile. It can be controlled with `REACT_APP_ENV` environment variable.
+React application contains environment-specific configuration, therefore for deployment to one of the environments it needs to be built with corresponding profile.
+It can be controlled with `REACT_APP_ENV` environment variable.
 
-In order to prepare production build, run:
-```
-REACT_APP_ENV=prod npm run build
-```
-For development build:
+## Deploy a development build
+
+Build the React frontend:
+
 ```
 REACT_APP_ENV=dev npm run build
 ```
 
-## Deploying
-For deploying to production, switch firebase to production project:
+Deploy the frontend:
+
+```
+firebase use dev
+firebase deploy --only hosting
+```
+
+## Deploy a production build
+
+Build the React frontend:
+
+```
+REACT_APP_ENV=prod npm run build
+```
+
+Deploy the frontend:
+
 ```
 firebase use prod
+firebase deploy --only hosting
 ```
-for development environment:
+
+## Deploy the functions
+
+First select the right environment.
+
+For the development environment:
+
 ```
 firebase use dev
 ```
-Then project can be deployed with:
+
+For the production environment:
+
 ```
-firebase deploy
+firebase use prod
 ```
-We can also deploy only selected component, for example functions:
+
+Then deploy the functions:
+
 ```
 firebase deploy --only functions
 ```
 
 ## PubSub configuration
+
+_Note: This should be rarely needed as PubSub is already deployed and configured correctly._
+
 PubSub subscriptions are needed to consume pings from the pipeline. They are pushing messages to non-public
 HTTP functions, therefore need to authenticate. Here's how to configure them:
 
 First, select the project id:
 For production run:
+
 ```shell script
 PROJECT_ID=debug-ping-preview
 ```
 
 For dev:
+
 ```shell script
 PROJECT_ID=glean-debug-view-dev-237806
 ```
 
 Then create subscriptions:
+
 ```shell script
-PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT" --format="value(PROJECT_NUMBER)")
+PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT_ID" --format="value(PROJECT_NUMBER)")
 
 gcloud config set project $PROJECT_ID
 
