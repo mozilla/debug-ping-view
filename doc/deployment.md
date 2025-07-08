@@ -51,7 +51,7 @@ firebase use dev
 For the production environment:
 
 ```
-fireabase use prod
+firebase use prod
 ```
 
 Then deploy the functions:
