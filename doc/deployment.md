@@ -50,7 +50,7 @@ PROJECT_ID=glean-debug-view-dev-237806
 
 Then create subscriptions:
 ```shell script
-PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT" --format="value(PROJECT_NUMBER)")
+PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT_ID" --format="value(PROJECT_NUMBER)")
 
 gcloud config set project $PROJECT_ID
 
