@@ -19,7 +19,7 @@
   },
   "functions": {
     "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
+      "\"$RESOURCE_DIR\"/lint.sh"
     ],
     "postdeploy": [
       "./make_http_functions_private.sh"
