@@ -46,6 +46,27 @@ async function getJsonValidator() {
 
 const schemaValidator = getJsonValidator();
 
+// Firestore document size limit is approximately 1MB, but we'll use a conservative limit
+const MAX_PAYLOAD_SIZE = 900000; // 900KB to leave room for other fields
+
+/**
+ * Truncates a payload if it exceeds the maximum size limit
+ */
+function truncatePayloadIfNeeded(payload) {
+  const payloadSize = Buffer.byteLength(payload, 'utf8');
+  if (payloadSize <= MAX_PAYLOAD_SIZE) {
+    return payload;
+  }
+
+  console.warn(`Payload size (${payloadSize} bytes) exceeds limit. Truncating to ${MAX_PAYLOAD_SIZE} bytes.`);
+  
+  // Truncate the payload and add a note
+  const truncatedPayload = payload.substring(0, MAX_PAYLOAD_SIZE - 200); // Leave room for truncation message
+  const truncationNote = `\n\n[TRUNCATED: Original payload was ${payloadSize} bytes, truncated to fit Firestore limits]`;
+  
+  return truncatedPayload + truncationNote;
+}
+
 /**
  * Push ping data to Firestore
  */
@@ -81,14 +102,18 @@ async function storePing(pubSubMessage, rawPing, error) {
 
   const pingType = pubSubMessage.attributes.document_type;
 
+  // Handle payload truncation if needed
+  const payload = truncatePayloadIfNeeded(rawPing);
+
   const pingRef = db.collection("pings").doc(pubSubMessage.attributes.document_id);
   const errorFields = await revalidateAndGetErrorFields(pubSubMessage, rawPing, error);
   const baseFields = {
     addedAt: pubSubMessage.publishTime,
     debugId: debugId,
-    payload: rawPing,
+    payload: payload,
     pingType: pingType,
   };
+
   batch.set(pingRef, {
     ...baseFields,
     ...errorFields,
