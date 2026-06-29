@@ -48,6 +48,12 @@ const PingSection = ({ pingSection, header, isNested }) => {
                   value = value.toString();
                 }
 
+                // Have to convert nulls to a fixed string or else nothing
+                // is printed in the table.
+                if (value == null) {
+                  value = "<null>";
+                }
+
                 return (
                   <tr key={key}>
                     <td>{key}</td>

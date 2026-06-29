@@ -22,7 +22,7 @@ export const getNestedAndNonNestedKeysFromObject = (obj) => {
   Object.keys(obj).forEach((key) => {
     const value = obj[key];
 
-    if (typeof value === 'object') {
+    if (typeof value === 'object' && value != null) {
       nestedKeys.push(key);
     } else {
       nonNestedKeys.push(key);
@@ -37,7 +37,7 @@ export const getNestedAndNonNestedKeysFromObject = (obj) => {
 
 /**
  * Pad a string to a specified length with a specified character.
- * 
+ *
  * @param {string} s The original string.
  * @param {number} desiredStringLength How long the string should be after padding.
  * @param {string} padChar The character to pad the string with.
