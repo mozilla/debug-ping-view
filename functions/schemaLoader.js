@@ -100,7 +100,9 @@ exports.gleanSchemaLoader = functions.pubsub.schedule('*/15 * * * *').onRun(asyn
 
 function extractSchemaInfo(schemasBuildIdLabel) {
   const split = schemasBuildIdLabel.split("_");
-  return {hash: split[1], timestamp: split[0]};
+  const hash = split[split.length - 1];
+  const timestamp = split.length > 1 ? split[0] : hash;
+  return {hash, timestamp};
 }
 
 exports.testables = {
