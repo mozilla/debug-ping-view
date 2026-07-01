@@ -17,5 +17,11 @@ describe('Schema loader', () => {
       let extractedHash = schemaLoader.testables.extractSchemaHash(schemasBuildIdLabel);
       assert.deepEqual(extractedHash, {hash: "a381200", timestamp: "202005050149"})
     });
+
+    it('should handle v2 bare commit SHA labels with no timestamp (SVCSE-4252)', () => {
+      const schemasBuildIdLabel = "a381200";
+      let extractedHash = schemaLoader.testables.extractSchemaHash(schemasBuildIdLabel);
+      assert.deepEqual(extractedHash, {hash: "a381200", timestamp: "a381200"})
+    });
   });
 })
