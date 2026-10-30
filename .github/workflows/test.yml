@@ -1,0 +1,46 @@
+name: "Test"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - &checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build webapp
+        run: npm run build
+
+  test-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - *checkout
+
+      - name: Install dependencies
+        run: cd functions && npm install
+
+      - name: Test Cloud Functions in offline mode
+        run: cd functions && npm test
+
+  test-app:
+    runs-on: ubuntu-latest
+    steps:
+      - *checkout
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run app tests
+        run: npm test
