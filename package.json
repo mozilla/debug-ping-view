@@ -35,6 +35,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "bootstrap": "^4.3.1"
+    "bootstrap": "^5.3.9"
   }
 }
